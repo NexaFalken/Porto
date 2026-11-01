@@ -1,0 +1,132 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --bg: 12 13 15;
+  --surface: 20 22 26;
+  --surface-2: 28 31 36;
+  --line: 42 46 54;
+  --fg: 236 233 226;
+  --muted: 150 155 164;
+  --accent: 125 211 192;
+  --accent-fg: 12 13 15;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg: 247 246 242;
+  --surface: 255 255 255;
+  --surface-2: 238 236 231;
+  --line: 218 214 205;
+  --fg: 24 24 27;
+  --muted: 96 101 110;
+  --accent: 15 118 110;
+  --accent-fg: 255 255 255;
+}
+
+@layer components {
+  .font-display {
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+}
+
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  body {
+    @apply bg-bg font-sans text-fg antialiased;
+    line-height: 1.5;
+  }
+
+  ::selection {
+    background: rgb(var(--accent) / 0.3);
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--accent));
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html[data-theme-switching],
+html[data-theme-switching] *,
+html[data-theme-switching] *::before,
+html[data-theme-switching] *::after {
+  transition-property: background-color, border-color, color, fill, stroke !important;
+  transition-duration: 600ms !important;
+  transition-timing-function: ease !important;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translate3d(0, 28px, 0);
+  transition:
+    opacity 900ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 900ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 900ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  animation-delay: var(--delay, 0ms);
+}
+
+@keyframes marquee {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 45s linear infinite;
+}
+
+.marquee:hover .animate-marquee {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .animate-fade-up,
+  .animate-marquee {
+    animation: none;
+  }
+}
