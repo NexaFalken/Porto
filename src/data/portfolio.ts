@@ -276,26 +276,18 @@ export const activities: Activity[] = [
     alt: 'Black and white geometric ceiling design',
     featured: true,
   },
-  {
-    category: 'Creative',
-    caption: 'Geometry, Ceiling pattern',
-    image: 'https://cdn.corenexis.com/f/uiOcYdnT.jpg',
-    alt: 'Black and white geometric ceiling design',
-    featured: true,
-  },
-  {
-    category: 'Creative',
-    caption: 'Geometry, Ceiling pattern',
-    image: 'https://cdn.corenexis.com/f/r2wutGV1.jpg',
-    alt: 'Black and white geometric ceiling design',
-    featured: true,
-  },
-  {
+    {
     category: 'Community',
     caption: 'Workshop, Peer session',
     image: 'https://images.pexels.com/photos/39562205/pexels-photo-39562205.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
     alt: 'Group of adults attending a seminar in a modern indoor setting',
     featured: true,
+  },
+    {
+    category: 'Community',
+    caption: 'Ideation, Team session',
+    image: 'https://images.pexels.com/photos/34520939/pexels-photo-34520939.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+    alt: 'Creative team engaged in a brainstorming session in a studio',
   },
   {
     category: 'Community',
@@ -303,6 +295,22 @@ export const activities: Activity[] = [
     image: 'https://images.pexels.com/photos/34520939/pexels-photo-34520939.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
     alt: 'Creative team engaged in a brainstorming session in a studio',
   },
+  {
+    category: 'Creative',
+    caption: 'Geometry, Ceiling pattern',
+    image: 'https://cdn.corenexis.com/f/uiOcYdnT.jpg',
+    alt: 'Black and white geometric ceiling design',
+    featured: true,
+  },
+
+  {
+    category: 'Creative',
+    caption: 'Geometry, Ceiling pattern',
+    image: 'https://cdn.corenexis.com/f/r2wutGV1.jpg',
+    alt: 'Black and white geometric ceiling design',
+    featured: true,
+  },
+
   {
     category: 'Community',
     caption: 'Outdoor art, Community day',
