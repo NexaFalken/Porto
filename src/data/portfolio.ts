@@ -267,24 +267,28 @@ export const activities: Activity[] = [
     caption: 'Monochrome, Spiral stair',
     image: 'https://i.imgur.com/xDHIL1g.jpeg',
     alt: 'Abstract black and white view of a spiral staircase',
+    featured: true,
   },
   {
     category: 'Creative',
     caption: 'Geometry, Ceiling pattern',
     image: 'https://i.imgur.com/oLIfM3o.jpeg',
     alt: 'Black and white geometric ceiling design',
+    featured: true,
   },
   {
     category: 'Creative',
     caption: 'Geometry, Ceiling pattern',
     image: 'https://i.imgur.com/eexrG4v.jpeg',
     alt: 'Black and white geometric ceiling design',
+    featured: true,
   },
   {
     category: 'Creative',
     caption: 'Geometry, Ceiling pattern',
     image: 'https://i.imgur.com/c6GCnx2.jpeg',
     alt: 'Black and white geometric ceiling design',
+    featured: true,
   },
   {
     category: 'Community',
