@@ -258,20 +258,32 @@ export const activities: Activity[] = [
   {
     category: 'Creative',
     caption: 'Study in form, Elevator light',
-    image: 'https://images.pexels.com/photos/12623606/pexels-photo-12623606.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+    image: 'https://i.imgur.com/IfJhLcN.jpeg',
     alt: 'Circular light in a modern elevator shaft with sleek metal lines',
     featured: true,
   },
   {
     category: 'Creative',
     caption: 'Monochrome, Spiral stair',
-    image: 'https://images.pexels.com/photos/16955371/pexels-photo-16955371.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+    image: 'https://i.imgur.com/xDHIL1g.jpeg',
     alt: 'Abstract black and white view of a spiral staircase',
   },
   {
     category: 'Creative',
     caption: 'Geometry, Ceiling pattern',
-    image: 'https://images.pexels.com/photos/2081184/pexels-photo-2081184.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+    image: 'https://i.imgur.com/oLIfM3o.jpeg',
+    alt: 'Black and white geometric ceiling design',
+  },
+  {
+    category: 'Creative',
+    caption: 'Geometry, Ceiling pattern',
+    image: 'https://i.imgur.com/eexrG4v.jpeg',
+    alt: 'Black and white geometric ceiling design',
+  },
+  {
+    category: 'Creative',
+    caption: 'Geometry, Ceiling pattern',
+    image: 'https://i.imgur.com/c6GCnx2.jpeg',
     alt: 'Black and white geometric ceiling design',
   },
   {
