@@ -286,7 +286,7 @@ export const activities: Activity[] = [
   {
     category: 'Creative',
     caption: 'Geometry, Ceiling pattern',
-    image: 'https://i.imgur.com/UiwsFzr.jpeg',
+    image: 'https://i.imgur.com/mhTYQia.jpeg',
     alt: 'Black and white geometric ceiling design',
     featured: true,
   },
