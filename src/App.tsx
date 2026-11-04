@@ -10,6 +10,7 @@ import Expertise from '@/components/sections/Expertise';
 import Gallery from '@/components/sections/Gallery';
 import Hero from '@/components/sections/Hero';
 import Portfolio from '@/components/sections/Portfolio';
+import Projects from './components/sections/Projects';
 
 export default function App() {
   const { theme, toggleTheme } = useTheme();
@@ -24,6 +25,7 @@ export default function App() {
         <Expertise />
         <Portfolio />
         <Gallery />
+        <Projects />
         <Contact />
       </main>
       <Footer />
