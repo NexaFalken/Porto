@@ -156,7 +156,7 @@ export default function Gallery() {
                           onClick={() => setSelectedId(design.id)}
                           className="group relative flex h-full w-full flex-col overflow-hidden rounded-3xl border border-line bg-surface text-left transition-colors duration-300 hover:border-accent"
                         >
-                          <span className="block aspect-[4/3] overflow-hidden bg-surface-2">
+                          <span className="block w-full min-w-0 aspect-[4/3] overflow-hidden bg-surface-2">
                             <img
                               src={design.imageUrl}
                               alt={design.title}
@@ -164,7 +164,7 @@ export default function Gallery() {
                               className="h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
                             />
                           </span>
-                          <span className="flex flex-1 items-center justify-between gap-4 p-6">
+                          <span className="flex w-full min-w-0 flex-1 items-center justify-between gap-4 p-6">
                             <span className="min-w-0">
                               {design.category && (
                                 <span className="block text-xs font-medium uppercase tracking-[0.18em] text-muted">
