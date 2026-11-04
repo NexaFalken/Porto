@@ -114,61 +114,49 @@ export interface Project {
 }
 
 // export const projects: Project[] = [
-  {
-    id: 'javaarch',
-    title: 'JavaArch',
-    category: 'Digital Agency',
-    status: 'Website in development',
-    summary:
-      'A digital agency focused on branding and digital services. The agency website is still in development.',
-    image: javaArchLogo,
-    imageAlt: 'JavaArch Official Agency logo',
-    links: [],
-    stack: ['Figma', 'Canva', 'Affinity', 'Adobe Lightroom'],
-  },
-  {
-    id: 'neodatara',
-    title: 'NeoDatara',
-    category: 'Startup Incubator',
-    summary: 'Startup incubation, programmes, mentoring, competitions, and digital development.',
-    image: neoDataraLogo,
-    imageAlt: 'NeoDatara logo',
-    links: [],
-  },
-  {
-    id: 'the-celesthar',
-    title: 'The Celesthar',
-    category: 'Independent Bounty Hunter Collective',
-    summary:
-      'A collective of independent bounty hunters exploring cybersecurity, vulnerability research, and responsible disclosure. Its members are individually registered as bug hunters with BSSN. My role: Aposhtle Fallkenrath IV, Bounty Hunter.',
-    image: celestharRing,
-    imageAlt: 'Dark geometric ring sculpture on a black background',
-    links: [],
-  },
-  {
-    id: 'lhc-research',
-    title: 'LHC Research',
-    category: 'Independent Research',
-    status: 'Ongoing',
-    summary:
-      'An ongoing independent research project focused on Large Hadron Collider machinery, accelerator technology, and engineering.',
-    image: 'https://images.pexels.com/photos/6855582/pexels-photo-6855582.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
-    imageAlt: 'Close-up view of intricate machinery inside a particle accelerator',
-    links: [],
-  },
-  {
-    id: 'genshin-profile-viewer',
-    title: 'Genshin Profile Viewer',
-    category: 'Game Profile Web Application',
-    status: 'Ongoing',
-    summary:
-      'A web application that retrieves Genshin Impact player profiles through UID, presenting character builds and profile details in an organised interface.',
-    image: genshin,
-    imageAlt: 'Sunset view through a natural rock arch over a grassy landscape',
-    links: [],
-    stack: ['HTML', 'CSS', 'JavaScript', 'React', 'Next.js'],
-  },
-]; 
+//   {
+//     id: 'neodatara',
+//     title: 'NeoDatara',
+//     category: 'Startup Incubator',
+//     summary: 'Startup incubation, programmes, NeoDatara is a youth-driven innovation hub that empowers young people through technology, education, and collaboration, turning ideas into meaningful impact.',
+//     image: neoDataraLogo,
+//     imageAlt: 'NeoDatara logo',
+//     links: [],
+//   },
+//   {
+//     id: 'the-celesthar',
+//     title: 'The Celesthar',
+//     category: 'Independent Bounty Hunter Collective',
+//     summary:
+//       'A collective of independent bounty hunters exploring cybersecurity, vulnerability research, and responsible disclosure. Its members are individually registered as bug hunters with BSSN. My role: Aposhtle Fallkenrath IV, Bounty Hunter.',
+//     image: celestharRing,
+//     imageAlt: 'Dark geometric ring sculpture on a black background',
+//     links: [],
+//   },
+//   {
+//     id: 'lhc-research',
+//     title: 'LHC Research',
+//     category: 'Independent Research',
+//     status: 'Ongoing',
+//     summary:
+//       'An ongoing independent research project focused on Large Hadron Collider machinery, accelerator technology, and engineering.',
+//     image: 'https://images.pexels.com/photos/6855582/pexels-photo-6855582.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+//     imageAlt: 'Close-up view of intricate machinery inside a particle accelerator',
+//     links: [],
+//   },
+//   {
+//     id: 'genshin-profile-viewer',
+//     title: 'Genshin Profile Viewer',
+//     category: 'Game Profile Web Application',
+//     status: 'Ongoing',
+//     summary:
+//       'A web application that retrieves Genshin Impact player profiles through UID, presenting character builds and profile details in an organised interface.',
+//     image: genshin,
+//     imageAlt: 'Sunset view through a natural rock arch over a grassy landscape',
+//     links: [],
+//     stack: ['HTML', 'CSS', 'JavaScript', 'React', 'Next.js'],
+//   },
+// ]; 
 
 
 
