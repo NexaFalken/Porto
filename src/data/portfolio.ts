@@ -195,17 +195,23 @@ export const experienceGroups: TimelineGroup[] = [
   {
     title: 'National volunteering',
     entries: [
-      { title: 'Volunteer', organisation: 'Peka Nusantara, Lombok' },
-      { title: 'Volunteer', organisation: 'Peka Nusantara, Halmahera Barat' },
-      { title: 'Volunteer', organisation: 'UNEV Indonesia, Bali Timur' },
+      { title: 'Volunteer', organisation: 'Peka Nusantara | West Lombok' },
+      { title: 'Volunteer', organisation: 'Peka Nusantara | West Halmahera' },
+      { title: 'Volunteer', organisation: 'UNEV Indonesia | East Bali' },
+      { title: 'Volunteer', organisation: 'Rekan JemberID | East Java' },
+      { title: 'Volunteer', organisation: 'WCD  Indonesia | East Java' },
     ],
   },
   {
-    title: 'Internships',
+    title: 'Work & Intern',
     entries: [
-      { title: 'Designer', organisation: 'Peka Nusantara' },
+      { title: 'Creative Designer', organisation: 'Peka Nusantara' },
       { title: 'Kitchen Staff', organisation: 'D Kriuk' },
-      { title: 'Intern', organisation: 'NAYS Indonesia' },
+      { title: 'Intern Creative', organisation: 'NAYS Indonesia' },
+      { title: 'Head of Media', organisation: 'Al Miswati Banyuwangi' },
+      { title: 'Creative Media', organisation: 'Continuum' },
+      { title: 'Creative Media', organisation: 'UNEV Indonesia' },
+      { title: 'Creative Media', organisation: 'Cerdas Mandiri' },
     ],
   },
 ];
