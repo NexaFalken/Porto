@@ -15,10 +15,10 @@ export default function Portfolio() {
       </div>
 
       <div className="space-y-32 md:space-y-40">
-        <Projects />
         <Experience />
         <Achievements />
         <Activities />
+        <Projects />
       </div>
     </section>
   );
