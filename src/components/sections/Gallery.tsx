@@ -1,5 +1,5 @@
 
-import { ArrowUpRight, ImagePlus, Loader2, Plus, RefreshCw } from 'lucide-react';
+import { ArrowUpRight, ImagePlus, Loader2, Plus, RefreshCw, ChevronDown } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import Reveal from '@/components/Reveal';
 import SectionHeader from '@/components/SectionHeader';
@@ -24,6 +24,7 @@ export default function Gallery() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [addOpen, setAddOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [showAll, setShowAll] = useState(false);
 
   const loadDesigns = useCallback(async () => {
     setLoadState('loading');
@@ -50,6 +51,10 @@ export default function Gallery() {
             selectedCategory.toLowerCase(),
         );
 
+  const visibleDesigns = showAll
+    ? filteredDesigns
+    : filteredDesigns.slice(0, 6);
+
   const closeViewer = useCallback(() => setSelectedId(null), []);
   const closeAdd = useCallback(() => setAddOpen(false), []);
 
@@ -59,6 +64,11 @@ export default function Gallery() {
 
   const handleDeleted = (id: string) => {
     setDesigns((current) => current.filter((design) => design.id !== id));
+  };
+
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+    setShowAll(false);
   };
 
   return (
@@ -123,7 +133,7 @@ export default function Gallery() {
                 <button
                   key={category}
                   type="button"
-                  onClick={() => setSelectedCategory(category)}
+                  onClick={() => handleCategoryChange(category)}
                   className={`rounded-full border px-5 py-2.5 text-sm transition-all duration-300 ${
                     selectedCategory === category
                       ? 'border-fg bg-fg text-bg'
@@ -136,41 +146,63 @@ export default function Gallery() {
             </div>
 
             {filteredDesigns.length > 0 ? (
-              <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {filteredDesigns.map((design, index) => (
-                  <li key={design.id} className="list-none">
-                    <Reveal delay={Math.min(index, 5) * 80} className="h-full">
-                      <button
-                        type="button"
-                        onClick={() => setSelectedId(design.id)}
-                        className="group relative flex h-full w-full flex-col overflow-hidden rounded-3xl border border-line bg-surface text-left transition-colors duration-300 hover:border-accent"
-                      >
-                        <span className="block aspect-[4/3] overflow-hidden bg-surface-2">
-                          <img
-                            src={design.imageUrl}
-                            alt={design.title}
-                            loading="lazy"
-                            className="h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
-                          />
-                        </span>
-                        <span className="flex flex-1 items-center justify-between gap-4 p-6">
-                          <span className="min-w-0">
-                            {design.category && (
-                              <span className="block text-xs font-medium uppercase tracking-[0.18em] text-muted">
-                                {design.category}
-                              </span>
-                            )}
-                            <span className="mt-2 block truncate font-display text-xl leading-tight">
-                              {design.title}
-                            </span>
+              <>
+                <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {visibleDesigns.map((design, index) => (
+                    <li key={design.id} className="list-none">
+                      <Reveal delay={Math.min(index, 5) * 80} className="h-full">
+                        <button
+                          type="button"
+                          onClick={() => setSelectedId(design.id)}
+                          className="group relative flex h-full w-full flex-col overflow-hidden rounded-3xl border border-line bg-surface text-left transition-colors duration-300 hover:border-accent"
+                        >
+                          <span className="block aspect-[4/3] overflow-hidden bg-surface-2">
+                            <img
+                              src={design.imageUrl}
+                              alt={design.title}
+                              loading="lazy"
+                              className="h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
+                            />
                           </span>
-                          <ArrowUpRight className="h-5 w-5 shrink-0 text-muted transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent" />
-                        </span>
-                      </button>
-                    </Reveal>
-                  </li>
-                ))}
-              </ul>
+                          <span className="flex flex-1 items-center justify-between gap-4 p-6">
+                            <span className="min-w-0">
+                              {design.category && (
+                                <span className="block text-xs font-medium uppercase tracking-[0.18em] text-muted">
+                                  {design.category}
+                                </span>
+                              )}
+                              <span className="mt-2 block truncate font-display text-xl leading-tight">
+                                {design.title}
+                              </span>
+                            </span>
+                            <ArrowUpRight className="h-5 w-5 shrink-0 text-muted transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent" />
+                          </span>
+                        </button>
+                      </Reveal>
+                    </li>
+                  ))}
+                </ul>
+
+                {filteredDesigns.length > 6 && (
+                  <div className="relative mt-[-100px] flex justify-center pt-24">
+                    {!showAll && (
+                      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-bg" />
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => setShowAll((current) => !current)}
+                      className="relative z-10 inline-flex items-center gap-2 rounded-full border border-line bg-bg/90 px-6 py-3 text-sm font-medium text-fg backdrop-blur-sm transition-all duration-300 hover:border-accent hover:text-accent"
+                    >
+                      {showAll ? 'Show Less' : 'See More'}
+                      <ChevronDown
+                        className={`h-4 w-4 transition-transform duration-300 ${
+                          showAll ? 'rotate-180' : ''
+                        }`}
+                      />
+                    </button>
+                  </div>
+                )}
+              </>
             ) : (
               <div className="rounded-3xl border border-dashed border-line bg-surface px-8 py-16 text-center">
                 <p className="font-display text-xl">No items in this category</p>
