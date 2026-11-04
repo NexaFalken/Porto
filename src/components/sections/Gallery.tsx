@@ -51,14 +51,14 @@ export default function Gallery() {
               title="Design Gallery"
               description="A collection of visual work, from concept sketches to finished pieces."
             />
-            <button
+            {/* <button
               type="button"
               onClick={() => setAddOpen(true)}
               className="mb-14 inline-flex shrink-0 items-center gap-2 self-start rounded-full bg-fg px-6 py-3 text-sm font-medium text-bg transition-transform duration-300 hover:-translate-y-0.5 md:mb-20 md:self-auto"
             >
               <Plus className="h-4 w-4" />
               Add design
-            </button>
+            </button> */}
           </div>
         </Reveal>
 
@@ -133,7 +133,7 @@ export default function Gallery() {
       </div>
 
       {selected && <DesignViewerDialog design={selected} onClose={closeViewer} onDeleted={handleDeleted} />}
-      {addOpen && <AddDesignDialog onClose={closeAdd} onCreated={handleCreated} />}
+      {/* {addOpen && <AddDesignDialog onClose={closeAdd} onCreated={handleCreated} />} */}
     </section>
   );
 }
