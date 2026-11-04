@@ -220,6 +220,7 @@ export const experienceGroups: TimelineGroup[] = [
     entries: [
       { title: 'Creative Designer', organisation: 'Peka Nusantara' },
       { title: 'Kitchen Staff', organisation: 'D Kriuk Jember' },
+      { title: 'Cashier', organisation: 'D Kriuk Jember' },
       { title: 'Intern Creative', organisation: 'NAYS Indonesia' },
       { title: 'Head of Media', organisation: 'Al Miswati Banyuwangi' },
       { title: 'Creative Media', organisation: 'Continuum' },
