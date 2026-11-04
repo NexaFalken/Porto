@@ -1,6 +1,7 @@
 import { ArrowUpRight } from 'lucide-react';
 import Reveal from '@/components/Reveal';
 import { projects, type Project } from '@/data/portfolio';
+import SectionHeader from '@/components/SectionHeader';
 
 function ProjectCard({ project, index }: { project: Project; index: number }) {
   const reversed = index % 2 === 1;
@@ -73,7 +74,16 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 export default function Projects() {
   return (
     <div className="mx-auto max-w-7xl px-6 md:px-10 lg:px-16">
-      <div className="space-y-24 md:space-y-32">
+      <Reveal>
+        <SectionHeader
+          number="05"
+          eyebrow="Projects"
+          title="Selected Projects"
+          description="A showcase of projects, ideas, and digital creations."
+        />
+      </Reveal>
+
+      <div className="mt-16 space-y-24 md:mt-20 md:space-y-32">
         {projects.map((project, index) => (
           <ProjectCard key={project.id} project={project} index={index} />
         ))}
