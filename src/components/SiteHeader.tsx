@@ -41,6 +41,9 @@ export default function SiteHeader({ activeId, theme, onToggleTheme }: SiteHeade
     ? 'border-line bg-bg/85 backdrop-blur-md'
     : 'border-transparent bg-transparent';
 
+  const featuredClass =
+    'relative isolate overflow-hidden rounded-lg border border-white/25 bg-accent text-black shadow-[0_0_18px_rgb(var(--accent)/0.32)] transition-all duration-300 hover:shadow-[0_0_24px_rgb(var(--accent)/0.48)] hover:-translate-y-0.5';
+
   return (
     <>
       <header
@@ -69,24 +72,41 @@ export default function SiteHeader({ activeId, theme, onToggleTheme }: SiteHeade
 
           <div className="flex shrink-0 items-center gap-2">
             <nav aria-label="Primary" className="hidden xl:block">
-              <ul className="flex items-center gap-6">
-                {navSections.map((section, index) => {
+              <ul className="flex items-center gap-3">
+                {navSections.map((section) => {
                   const active = section.id === activeId;
+                  const featured = section.id === 'portfolio';
 
                   return (
                     <li key={section.id}>
                       <a
                         href={`#${section.id}`}
                         aria-current={active ? 'location' : undefined}
-                        className={`group relative inline-flex py-2 text-sm transition-colors duration-300 ${active ? 'text-fg' : 'text-muted hover:text-fg'}`}
+                        className={
+                          featured
+                            ? `${featuredClass} inline-flex items-center px-4 py-2 text-sm font-semibold`
+                            : `group relative inline-flex items-center rounded-lg px-3 py-2 text-sm transition-colors duration-300 ${
+                                active
+                                  ? 'text-fg'
+                                  : 'text-muted hover:text-fg'
+                              }`
+                        }
                       >
-                        <span className="mr-1.5 font-display text-sm text-accent">
-                          {String(index + 1).padStart(2, '0')}
-                        </span>
-                        {section.label}
-                        <span
-                          className={`absolute inset-x-0 -bottom-0.5 h-px origin-left bg-accent transition-transform duration-500 ${active ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}
-                        />
+                        {featured ? (
+                          <>
+                            <span className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-white/30 via-white/5 to-transparent" />
+                            <span className="relative z-10">Portfolio</span>
+                          </>
+                        ) : (
+                          <>
+                            {section.label}
+                            <span
+                              className={`absolute inset-x-3 -bottom-0.5 h-px origin-left bg-accent transition-transform duration-500 ${
+                                active ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+                              }`}
+                            />
+                          </>
+                        )}
                       </a>
                     </li>
                   );
@@ -112,26 +132,40 @@ export default function SiteHeader({ activeId, theme, onToggleTheme }: SiteHeade
 
       <div
         id="mobile-menu"
-        className={`fixed inset-0 z-40 h-dvh w-full max-w-full overflow-x-clip overflow-y-auto bg-bg pt-28 transition-[opacity,transform,visibility] duration-500 xl:hidden ${menuOpen ? 'visible translate-y-0 opacity-100' : 'invisible -translate-y-3 opacity-0'}`}
+        className={`fixed inset-0 z-40 h-dvh w-full max-w-full overflow-x-clip overflow-y-auto bg-bg pt-28 transition-[opacity,transform,visibility] duration-500 xl:hidden ${
+          menuOpen
+            ? 'visible translate-y-0 opacity-100'
+            : 'invisible -translate-y-3 opacity-0'
+        }`}
       >
         <nav aria-label="Mobile" className="w-full min-w-0 px-6 pb-12 md:px-10">
           <ul className="w-full min-w-0 divide-y divide-line border-y border-line">
-            {navSections.map((section, index) => {
+            {navSections.map((section) => {
               const active = section.id === activeId;
+              const featured = section.id === 'portfolio';
 
               return (
-                <li key={section.id} className="min-w-0">
+                <li key={section.id} className="min-w-0 py-1">
                   <a
                     href={`#${section.id}`}
                     onClick={() => setMenuOpen(false)}
-                    className={`flex min-w-0 items-baseline justify-between gap-4 py-5 transition-colors duration-300 hover:text-accent ${active ? 'text-accent' : 'text-fg'}`}
+                    aria-current={active ? 'location' : undefined}
+                    className={
+                      featured
+                        ? `${featuredClass} my-2 flex items-center px-5 py-4 font-display text-4xl font-semibold`
+                        : `flex min-w-0 items-center rounded-lg py-5 font-display text-4xl leading-none transition-colors duration-300 hover:text-accent ${
+                            active ? 'text-accent' : 'text-fg'
+                          }`
+                    }
                   >
-                    <span className="min-w-0 break-words font-display text-4xl leading-none md:text-5xl">
-                      {section.label}
-                    </span>
-                    <span className="shrink-0 font-display text-sm text-muted">
-                      {String(index + 1).padStart(2, '0')}
-                    </span>
+                    {featured ? (
+                      <>
+                        <span className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-white/30 via-white/5 to-transparent" />
+                        <span className="relative z-10">Portfolio</span>
+                      </>
+                    ) : (
+                      section.label
+                    )}
                   </a>
                 </li>
               );
