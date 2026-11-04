@@ -186,7 +186,7 @@ export default function Gallery() {
                 {filteredDesigns.length > 6 && (
                   <div className="relative mt-[-100px] flex justify-center pt-24">
                     {!showAll && (
-                      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-bg" />
+                      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-64 bg-gradient-to-b from-transparent via-bg/80 to-bg" />
                     )}
                     <button
                       type="button"
