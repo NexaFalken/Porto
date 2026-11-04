@@ -187,8 +187,18 @@ export const experienceGroups: TimelineGroup[] = [
     entries: [
       {
         title: 'Duta Persada Jawa Timur',
-        organisation: 'Education',
+        organisation: 'Duta Persada',
         summary: 'Contribution to educational initiatives, youth development, and community education. Served from Junior to Senior level over half a year.',
+      },
+      {
+        title: 'Python Programming Course',
+        organisation: 'Dicoding',
+        summary: 'Successfully completed [Memulai Pemrograman dengan Python] by Dicoding Indonesia, gaining foundational knowledge of Python syntax, programming logic, and core concepts.',
+      },
+      {
+        title: 'Data Science Bootcamp',
+        organisation: 'Digital Skola',
+        summary: 'Completed a Data Science Bootcamp, gaining practical insights into data analysis, data processing, and fundamental data science concepts.',
       },
     ],
   },
@@ -196,17 +206,18 @@ export const experienceGroups: TimelineGroup[] = [
     title: 'National volunteering',
     entries: [
       { title: 'Volunteer', organisation: 'Peka Nusantara | West Lombok' },
-      { title: 'Volunteer', organisation: 'Peka Nusantara | West Halmahera' },
+      { title: 'Volunteer', organisation: 'Rekan Jember | East Java' },
       { title: 'Volunteer', organisation: 'UNEV Indonesia | East Bali' },
-      { title: 'Volunteer', organisation: 'Rekan JemberID | East Java' },
-      { title: 'Volunteer', organisation: 'WCD  Indonesia | East Java' },
+      { title: 'Volunteer', organisation: 'WCD Indonesia | East Java' },
+      { title: 'Volunteer', organisation: 'Color Runing | East Java' },
+      { title: 'Volunteer', organisation: 'Peka Nusantara | West Halmahera' },
     ],
   },
   {
     title: 'Work & Intern',
     entries: [
       { title: 'Creative Designer', organisation: 'Peka Nusantara' },
-      { title: 'Kitchen Staff', organisation: 'D Kriuk' },
+      { title: 'Kitchen Staff', organisation: 'D Kriuk Jember' },
       { title: 'Intern Creative', organisation: 'NAYS Indonesia' },
       { title: 'Head of Media', organisation: 'Al Miswati Banyuwangi' },
       { title: 'Creative Media', organisation: 'Continuum' },
