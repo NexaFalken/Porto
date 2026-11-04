@@ -72,10 +72,13 @@ export default function Gallery() {
   };
 
   return (
-    <section id="gallery" className="scroll-mt-20 border-t border-line px-6 py-24 md:px-10 md:py-32 lg:px-16">
-      <div className="mx-auto max-w-7xl">
+    <section
+      id="gallery"
+      className="scroll-mt-20 w-full min-w-0 overflow-x-clip border-t border-line px-6 py-24 md:px-10 md:py-32 lg:px-16"
+    >
+      <div className="mx-auto w-full min-w-0 max-w-7xl">
         <Reveal>
-          <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+          <div className="flex min-w-0 flex-col gap-8 md:flex-row md:items-end md:justify-between">
             <SectionHeader
               number="04"
               eyebrow="Gallery"
@@ -128,13 +131,13 @@ export default function Gallery() {
 
         {loadState === 'ready' && designs.length > 0 && (
           <>
-            <div className="mb-10 flex flex-wrap gap-2">
+            <div className="mb-10 flex w-full min-w-0 flex-wrap gap-2">
               {categories.map((category) => (
                 <button
                   key={category}
                   type="button"
                   onClick={() => handleCategoryChange(category)}
-                  className={`rounded-full border px-5 py-2.5 text-sm transition-all duration-300 ${
+                  className={`max-w-full rounded-full border px-5 py-2.5 text-sm transition-all duration-300 ${
                     selectedCategory === category
                       ? 'border-fg bg-fg text-bg'
                       : 'border-line bg-transparent text-muted hover:border-accent hover:text-fg'
@@ -147,16 +150,16 @@ export default function Gallery() {
 
             {filteredDesigns.length > 0 ? (
               <>
-                <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <ul className="grid w-full min-w-0 grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {visibleDesigns.map((design, index) => (
-                    <li key={design.id} className="list-none">
-                      <Reveal delay={Math.min(index, 5) * 80} className="h-full">
+                    <li key={design.id} className="min-w-0 list-none">
+                      <Reveal delay={Math.min(index, 5) * 80} className="h-full min-w-0">
                         <button
                           type="button"
                           onClick={() => setSelectedId(design.id)}
-                          className="group relative flex h-full w-full flex-col overflow-hidden rounded-3xl border border-line bg-surface text-left transition-colors duration-300 hover:border-accent"
+                          className="group relative flex h-full w-full min-w-0 flex-col overflow-hidden rounded-3xl border border-line bg-surface text-left transition-colors duration-300 hover:border-accent"
                         >
-                          <span className="block w-full min-w-0 aspect-[4/3] overflow-hidden bg-surface-2">
+                          <span className="block aspect-[4/3] w-full min-w-0 overflow-hidden bg-surface-2">
                             <img
                               src={design.imageUrl}
                               alt={design.title}
@@ -164,10 +167,11 @@ export default function Gallery() {
                               className="block h-full w-full max-w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
                             />
                           </span>
+
                           <span className="flex w-full min-w-0 flex-1 items-center justify-between gap-4 p-6">
-                            <span className="min-w-0">
+                            <span className="min-w-0 flex-1">
                               {design.category && (
-                                <span className="block text-xs font-medium uppercase tracking-[0.18em] text-muted">
+                                <span className="block truncate text-xs font-medium uppercase tracking-[0.18em] text-muted">
                                   {design.category}
                                 </span>
                               )}
@@ -175,6 +179,7 @@ export default function Gallery() {
                                 {design.title}
                               </span>
                             </span>
+
                             <ArrowUpRight className="h-5 w-5 shrink-0 text-muted transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent" />
                           </span>
                         </button>
@@ -188,6 +193,7 @@ export default function Gallery() {
                     {!showAll && (
                       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-64 bg-gradient-to-b from-transparent via-bg/80 to-bg" />
                     )}
+
                     <button
                       type="button"
                       onClick={() => setShowAll((current) => !current)}

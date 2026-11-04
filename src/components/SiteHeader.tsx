@@ -1,3 +1,4 @@
+
 import { Hexagon, Menu, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import ThemeToggle from '@/components/ThemeToggle';
@@ -43,27 +44,35 @@ export default function SiteHeader({ activeId, theme, onToggleTheme }: SiteHeade
   return (
     <>
       <header
-        className={`fixed inset-x-0 top-0 z-50 border-b transition-[background-color,border-color] duration-500 ${headerSurface}`}
+        className={`fixed inset-x-0 top-0 z-50 w-full max-w-full overflow-x-clip border-b transition-[background-color,border-color] duration-500 ${headerSurface}`}
       >
-        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 md:px-10 lg:px-16">
-          <a href="#intro" className="group flex items-center gap-3" aria-label="Haryo Bimo Wistoro, back to top">
-            <span className="flex h-9 w-9 items-center justify-center rounded-full border border-line bg-surface text-accent transition-transform duration-700 group-hover:rotate-[60deg]">
+        <div className="mx-auto flex h-20 w-full min-w-0 max-w-7xl items-center justify-between px-6 md:px-10 lg:px-16">
+          <a
+            href="#intro"
+            className="group flex min-w-0 items-center gap-3"
+            aria-label="Haryo Bimo Wistoro, back to top"
+          >
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-line bg-surface text-accent transition-transform duration-700 group-hover:rotate-[60deg]">
               <Hexagon className="h-4 w-4" />
             </span>
-            <span className="flex flex-col">
+
+            <span className="flex min-w-0 flex-col">
               <span className="whitespace-nowrap font-display text-xl leading-none sm:text-2xl">
                 <span className="sm:hidden">Haryo Bimo</span>
                 <span className="hidden sm:inline">{profile.name}</span>
               </span>
-              <span className="mt-1 text-[11px] leading-tight tracking-wide text-muted">{profile.alternateName}</span>
+              <span className="mt-1 truncate text-[11px] leading-tight tracking-wide text-muted">
+                {profile.alternateName}
+              </span>
             </span>
           </a>
 
-          <div className="flex items-center gap-2">
+          <div className="flex shrink-0 items-center gap-2">
             <nav aria-label="Primary" className="hidden xl:block">
               <ul className="flex items-center gap-6">
                 {navSections.map((section, index) => {
                   const active = section.id === activeId;
+
                   return (
                     <li key={section.id}>
                       <a
@@ -93,7 +102,7 @@ export default function SiteHeader({ activeId, theme, onToggleTheme }: SiteHeade
               aria-label={menuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={menuOpen}
               aria-controls="mobile-menu"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-line text-fg transition-colors duration-300 hover:border-accent hover:text-accent xl:hidden"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-line text-fg transition-colors duration-300 hover:border-accent hover:text-accent xl:hidden"
             >
               {menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
             </button>
@@ -103,21 +112,26 @@ export default function SiteHeader({ activeId, theme, onToggleTheme }: SiteHeade
 
       <div
         id="mobile-menu"
-        className={`fixed inset-0 z-40 overflow-y-auto bg-bg pt-28 transition-[opacity,transform,visibility] duration-500 xl:hidden ${menuOpen ? 'visible translate-y-0 opacity-100' : 'invisible -translate-y-3 opacity-0'}`}
+        className={`fixed inset-0 z-40 h-dvh w-full max-w-full overflow-x-clip overflow-y-auto bg-bg pt-28 transition-[opacity,transform,visibility] duration-500 xl:hidden ${menuOpen ? 'visible translate-y-0 opacity-100' : 'invisible -translate-y-3 opacity-0'}`}
       >
-        <nav aria-label="Mobile" className="px-6 pb-12 md:px-10">
-          <ul className="divide-y divide-line border-y border-line">
+        <nav aria-label="Mobile" className="w-full min-w-0 px-6 pb-12 md:px-10">
+          <ul className="w-full min-w-0 divide-y divide-line border-y border-line">
             {navSections.map((section, index) => {
               const active = section.id === activeId;
+
               return (
-                <li key={section.id}>
+                <li key={section.id} className="min-w-0">
                   <a
                     href={`#${section.id}`}
                     onClick={() => setMenuOpen(false)}
-                    className={`flex items-baseline justify-between py-5 transition-colors duration-300 hover:text-accent ${active ? 'text-accent' : 'text-fg'}`}
+                    className={`flex min-w-0 items-baseline justify-between gap-4 py-5 transition-colors duration-300 hover:text-accent ${active ? 'text-accent' : 'text-fg'}`}
                   >
-                    <span className="font-display text-4xl leading-none md:text-5xl">{section.label}</span>
-                    <span className="font-display text-sm text-muted">{String(index + 1).padStart(2, '0')}</span>
+                    <span className="min-w-0 break-words font-display text-4xl leading-none md:text-5xl">
+                      {section.label}
+                    </span>
+                    <span className="shrink-0 font-display text-sm text-muted">
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
                   </a>
                 </li>
               );
