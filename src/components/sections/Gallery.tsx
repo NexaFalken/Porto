@@ -1,3 +1,4 @@
+
 import { ArrowUpRight, ImagePlus, Loader2, Plus, RefreshCw } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import Reveal from '@/components/Reveal';
@@ -8,11 +9,21 @@ import { fetchDesigns, type Design } from '@/lib/designs';
 
 type LoadState = 'loading' | 'ready' | 'error';
 
+const categories = [
+  'All',
+  'Clothing Design',
+  'Random Designs',
+  'Logo Design',
+  'Poster Design',
+  'Photography',
+];
+
 export default function Gallery() {
   const [designs, setDesigns] = useState<Design[]>([]);
   const [loadState, setLoadState] = useState<LoadState>('loading');
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [addOpen, setAddOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('All');
 
   const loadDesigns = useCallback(async () => {
     setLoadState('loading');
@@ -29,6 +40,16 @@ export default function Gallery() {
   }, [loadDesigns]);
 
   const selected = designs.find((design) => design.id === selectedId) ?? null;
+
+  const filteredDesigns =
+    selectedCategory === 'All'
+      ? designs
+      : designs.filter(
+          (design) =>
+            design.category?.trim().toLowerCase() ===
+            selectedCategory.toLowerCase(),
+        );
+
   const closeViewer = useCallback(() => setSelectedId(null), []);
   const closeAdd = useCallback(() => setAddOpen(false), []);
 
@@ -96,44 +117,83 @@ export default function Gallery() {
         )}
 
         {loadState === 'ready' && designs.length > 0 && (
-          <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {designs.map((design, index) => (
-              <li key={design.id} className="list-none">
-                <Reveal delay={Math.min(index, 5) * 80} className="h-full">
-                  <button
-                    type="button"
-                    onClick={() => setSelectedId(design.id)}
-                    className="group relative flex h-full w-full flex-col overflow-hidden rounded-3xl border border-line bg-surface text-left transition-colors duration-300 hover:border-accent"
-                  >
-                    <span className="block aspect-[4/3] overflow-hidden bg-surface-2">
-                      <img
-                        src={design.imageUrl}
-                        alt={design.title}
-                        loading="lazy"
-                        className="h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
-                      />
-                    </span>
-                    <span className="flex flex-1 items-center justify-between gap-4 p-6">
-                      <span className="min-w-0">
-                        {design.category && (
-                          <span className="block text-xs font-medium uppercase tracking-[0.18em] text-muted">
-                            {design.category}
+          <>
+            <div className="mb-10 flex flex-wrap gap-2">
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  type="button"
+                  onClick={() => setSelectedCategory(category)}
+                  className={`rounded-full border px-5 py-2.5 text-sm transition-all duration-300 ${
+                    selectedCategory === category
+                      ? 'border-fg bg-fg text-bg'
+                      : 'border-line bg-transparent text-muted hover:border-accent hover:text-fg'
+                  }`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+
+            {filteredDesigns.length > 0 ? (
+              <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {filteredDesigns.map((design, index) => (
+                  <li key={design.id} className="list-none">
+                    <Reveal delay={Math.min(index, 5) * 80} className="h-full">
+                      <button
+                        type="button"
+                        onClick={() => setSelectedId(design.id)}
+                        className="group relative flex h-full w-full flex-col overflow-hidden rounded-3xl border border-line bg-surface text-left transition-colors duration-300 hover:border-accent"
+                      >
+                        <span className="block aspect-[4/3] overflow-hidden bg-surface-2">
+                          <img
+                            src={design.imageUrl}
+                            alt={design.title}
+                            loading="lazy"
+                            className="h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
+                          />
+                        </span>
+                        <span className="flex flex-1 items-center justify-between gap-4 p-6">
+                          <span className="min-w-0">
+                            {design.category && (
+                              <span className="block text-xs font-medium uppercase tracking-[0.18em] text-muted">
+                                {design.category}
+                              </span>
+                            )}
+                            <span className="mt-2 block truncate font-display text-xl leading-tight">
+                              {design.title}
+                            </span>
                           </span>
-                        )}
-                        <span className="mt-2 block truncate font-display text-xl leading-tight">{design.title}</span>
-                      </span>
-                      <ArrowUpRight className="h-5 w-5 shrink-0 text-muted transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent" />
-                    </span>
-                  </button>
-                </Reveal>
-              </li>
-            ))}
-          </ul>
+                          <ArrowUpRight className="h-5 w-5 shrink-0 text-muted transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent" />
+                        </span>
+                      </button>
+                    </Reveal>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="rounded-3xl border border-dashed border-line bg-surface px-8 py-16 text-center">
+                <p className="font-display text-xl">No items in this category</p>
+                <p className="mt-2 text-sm text-muted">
+                  There are no images available in {selectedCategory} yet.
+                </p>
+              </div>
+            )}
+          </>
         )}
       </div>
 
-      {selected && <DesignViewerDialog design={selected} onClose={closeViewer} onDeleted={handleDeleted} />}
-      {addOpen && <AddDesignDialog onClose={closeAdd} onCreated={handleCreated} />}
+      {selected && (
+        <DesignViewerDialog
+          design={selected}
+          onClose={closeViewer}
+          onDeleted={handleDeleted}
+        />
+      )}
+
+      {addOpen && (
+        <AddDesignDialog onClose={closeAdd} onCreated={handleCreated} />
+      )}
     </section>
   );
 }

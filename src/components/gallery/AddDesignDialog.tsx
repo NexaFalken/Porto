@@ -126,17 +126,22 @@ export default function AddDesignDialog({ onClose, onCreated }: AddDesignDialogP
 
           <div>
             <label htmlFor="design-category" className="mb-2 block text-sm font-medium">
-              Category
+              Category <span className="text-accent">*</span>
             </label>
-            <input
+            <select
               id="design-category"
-              type="text"
               value={category}
-              maxLength={60}
               onChange={(event) => setCategory(event.target.value)}
-              placeholder="e.g. Branding, Poster, UI"
+              required
               className={fieldClass}
-            />
+            >
+              <option value="">Select a category</option>
+              <option value="Clothing Design">Clothing Design</option>
+              <option value="Random Designs">Random Designs</option>
+              <option value="Logo Design">Logo Design</option>
+              <option value="Poster Design">Poster Design</option>
+              <option value="Photography">Photography</option>
+            </select>
           </div>
 
           <div>
