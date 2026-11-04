@@ -161,7 +161,7 @@ export default function Gallery() {
                               src={design.imageUrl}
                               alt={design.title}
                               loading="lazy"
-                              className="h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
+                              className="block h-full w-full max-w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
                             />
                           </span>
                           <span className="flex w-full min-w-0 flex-1 items-center justify-between gap-4 p-6">
