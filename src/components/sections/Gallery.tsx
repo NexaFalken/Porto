@@ -131,8 +131,8 @@ export default function Gallery() {
 
         {loadState === 'ready' && designs.length > 0 && (
           <>
-            <div className="mb-10 flex w-full min-w-0 flex-wrap gap-2">
-              {/* {categories.map((category) => (
+            {/* <div className="mb-10 flex w-full min-w-0 flex-wrap gap-2">
+              {categories.map((category) => (
                 <button
                   key={category}
                   type="button"
@@ -144,9 +144,9 @@ export default function Gallery() {
                   }`}
                 >
                   {category}
-                </button> */}
+                </button>
               ))}
-            </div>
+            </div> */}
 
             {filteredDesigns.length > 0 ? (
               <>
