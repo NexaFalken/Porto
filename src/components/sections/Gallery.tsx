@@ -132,7 +132,7 @@ export default function Gallery() {
         {loadState === 'ready' && designs.length > 0 && (
           <>
             <div className="mb-10 flex w-full min-w-0 flex-wrap gap-2">
-              {categories.map((category) => (
+              {/* {categories.map((category) => (
                 <button
                   key={category}
                   type="button"
@@ -144,7 +144,7 @@ export default function Gallery() {
                   }`}
                 >
                   {category}
-                </button>
+                </button> */}
               ))}
             </div>
 
@@ -229,9 +229,9 @@ export default function Gallery() {
         />
       )}
 
-      {addOpen && (
+      {/* {addOpen && (
         <AddDesignDialog onClose={closeAdd} onCreated={handleCreated} />
-      )}
+      )} */}
     </section>
   );
 }
