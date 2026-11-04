@@ -122,7 +122,7 @@ export const projects: Project[] = [
     category: 'Digital Agency',
     status: 'Website in development',
     summary:
-      'A digital agency focused on branding and digital services. The agency website is still in development.',
+      'A digital agency specialising in brand development, creative design, and digital solutions. Focused on helping businesses establish a strong online presence through strategic branding and modern digital services, with its official website currently in development.',
     image: javaArchLogo,
     imageAlt: 'JavaArch Official Agency logo',
     links: [],
@@ -132,7 +132,7 @@ export const projects: Project[] = [
     id: 'neodatara',
     title: 'NeoDatara',
     category: 'Startup Incubator',
-    summary: 'Startup incubation, programmes, mentoring, competitions, and digital development.',
+    summary: 'Startup incubation, programmes, mentoring, competitions, and digital development. NeoDatara is a youth-driven innovation hub that empowers young people through technology, education, and collaboration, turning ideas into meaningful impact.',
     image: neoDataraLogo,
     imageAlt: 'NeoDatara logo',
     links: [],
@@ -153,7 +153,7 @@ export const projects: Project[] = [
     category: 'Independent Research',
     status: 'Ongoing',
     summary:
-      'An ongoing independent research project focused on Large Hadron Collider machinery, accelerator technology, and engineering.',
+      'An ongoing independent research project exploring the Large Hadron Collider, its complex machinery, particle accelerator technology, and the engineering principles behind its operation, with a focus on scientific innovation and advanced research.',
     image: 'https://images.pexels.com/photos/6855582/pexels-photo-6855582.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
     imageAlt: 'Close-up view of intricate machinery inside a particle accelerator',
     links: [],
@@ -164,7 +164,7 @@ export const projects: Project[] = [
     category: 'Game Profile Web Application',
     status: 'Ongoing',
     summary:
-      'A web application that retrieves Genshin Impact player profiles through UID, presenting character builds and profile details in an organised interface.',
+      'A web application that retrieves Genshin Impact player profiles using their UID, displaying character builds, equipment details, and profile information through an organised and user-friendly interface, making player data easier to explore and review.',
     image: genshin,
     imageAlt: 'Sunset view through a natural rock arch over a grassy landscape',
     links: [],
