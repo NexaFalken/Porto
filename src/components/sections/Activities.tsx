@@ -75,7 +75,7 @@ export default function Activities() {
         </div>
       </Reveal>
 
-      <ul className="grid auto-rows-[240px] grid-cols-1 gap-4 sm:grid-cols-2 md:auto-rows-[260px] md:gap-5 lg:grid-cols-3">
+      {/* <ul className="grid auto-rows-[240px] grid-cols-1 gap-4 sm:grid-cols-2 md:auto-rows-[260px] md:gap-5 lg:grid-cols-3">
         {visible.map((item) => (
           <li
             key={item.image}
@@ -93,7 +93,7 @@ export default function Activities() {
             </figcaption>
           </li>
         ))}
-      </ul>
+      </ul> */}
     </div>
   );
 }
