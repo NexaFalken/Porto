@@ -16,8 +16,8 @@ export default function Portfolio() {
 
       <div className="space-y-32 md:space-y-40">
         <Experience />
-        <Achievements />
         <Activities />
+        <Achievements />
         <Projects />
       </div>
     </section>
