@@ -37,17 +37,19 @@ export default function Hero() {
       <div className="relative mx-auto grid w-full max-w-7xl items-center gap-16 lg:grid-cols-12 lg:gap-10">
         {/* Hero Text */}
         <div className="lg:col-span-7">
+          {/* Status */}
           <p
-            className="animate-fade-up inline-flex items-center gap-2 rounded-full border border-line bg-surface/60 px-3 py-1.5 text-[10px] font-medium uppercase tracking-[0.14em] text-muted whitespace-nowrap"
+            className="animate-fade-up inline-flex items-center gap-1.5 rounded-full border border-line bg-surface/60 px-2.5 py-1 text-[9px] font-medium uppercase tracking-[0.1em] text-muted whitespace-nowrap"
             style={{ '--delay': '0ms' } as CSSProperties}
           >
-            <span className="relative flex h-2 w-2">
+            <span className="relative flex h-1.5 w-1.5">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent" />
             </span>
             {profile.status}
           </p>
 
+          {/* Name */}
           <h1
             className="animate-fade-up mt-8 whitespace-nowrap font-display text-[clamp(2rem,5.2vw,5rem)] leading-tight tracking-[-0.04em]"
             style={{ '--delay': '120ms' } as CSSProperties}
@@ -55,11 +57,13 @@ export default function Hero() {
             {profile.name}
           </h1>
 
+          {/* Name Divider */}
           <div
             className="animate-fade-up mt-5 h-px w-full max-w-md bg-line"
             style={{ '--delay': '180ms' } as CSSProperties}
           />
 
+          {/* Role */}
           <p
             className="animate-fade-up mt-6 font-display text-2xl leading-[1.2] text-fg md:text-3xl"
             style={{ '--delay': '240ms' } as CSSProperties}
@@ -67,6 +71,7 @@ export default function Hero() {
             {profile.role}
           </p>
 
+          {/* Statement */}
           <p
             className="animate-fade-up mt-6 max-w-xl text-base leading-relaxed text-muted md:text-lg"
             style={{ '--delay': '360ms' } as CSSProperties}
