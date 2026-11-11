@@ -39,12 +39,12 @@ export default function Hero() {
         <div className="lg:col-span-7">
           {/* Status */}
           <p
-            className="animate-fade-up inline-flex items-center gap-1.5 rounded-full border border-line bg-surface/60 px-2.5 py-1 text-[9px] font-medium uppercase tracking-[0.1em] text-muted whitespace-nowrap"
+            className="animate-fade-up inline-flex items-center gap-3 rounded-full border border-line bg-surface/60 px-4 py-2 text-xs font-medium uppercase tracking-[0.18em] text-muted"
             style={{ '--delay': '0ms' } as CSSProperties}
           >
-            <span className="relative flex h-1.5 w-1.5">
+            <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
             </span>
             {profile.status}
           </p>
@@ -65,7 +65,7 @@ export default function Hero() {
 
           {/* Role */}
           <p
-            className="animate-fade-up mt-6 font-display text-2xl leading-[1.2] text-fg md:text-3xl"
+            className="animate-fade-up mt-6 font-display text-xl leading-[1.2] text-fg md:text-2xl"
             style={{ '--delay': '240ms' } as CSSProperties}
           >
             {profile.role}
