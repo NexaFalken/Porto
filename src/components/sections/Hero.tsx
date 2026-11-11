@@ -114,7 +114,7 @@ export default function Hero() {
             className="animate-fade-up relative lg:col-span-5"
             style={{
               '--delay': '300ms',
-              marginTop: '-40px',
+              marginTop: '-100px',
             } as CSSProperties}
           >
           <div className="relative mx-auto aspect-[4/5] w-full max-w-md">
