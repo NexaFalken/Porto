@@ -111,9 +111,9 @@ export default function Hero() {
         </div>
 
         <div
-          className="animate-fade-up relative lg:col-span-5"
-          style={{ '--delay': '300ms' } as CSSProperties}
-        >
+  className="animate-fade-up relative -translate-y-6 lg:col-span-5"
+  style={{ '--delay': '300ms' } as CSSProperties}
+>
           <div className="relative mx-auto aspect-[4/5] w-full max-w-md">
             <div
               className="absolute -inset-3 rounded-[2rem] border border-line"
