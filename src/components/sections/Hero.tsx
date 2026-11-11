@@ -69,7 +69,7 @@ export default function Hero() {
           </p>
 
           <div
-              className="animate-fade-up relative -translate-y-6 lg:col-span-5"
+              className="animate-fade-up relative -translate-y-4 lg:col-span-5"
               style={{ '--delay': '300ms' } as CSSProperties}
               >
           
