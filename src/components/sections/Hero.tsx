@@ -49,7 +49,7 @@ export default function Hero() {
           </p>
 
           <h1
-            className="animate-fade-up mt-8 font-display text-[clamp(3rem,8.5vw,7.5rem)] leading-[1.02] tracking-tight"
+            className="animate-fade-up mt-8 font-display text-[clamp(2.8rem,6vw,5.5rem)] leading-[1.08] tracking-tight"
             style={{ '--delay': '120ms' } as CSSProperties}
           >
             {profile.name}
