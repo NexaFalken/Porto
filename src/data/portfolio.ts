@@ -25,7 +25,7 @@ export type SectionId = (typeof sectionIds)[number];
 export const showGalleryAddDesign = false;
 
 export const profile = {
-  name: 'Haryo Bimo Wistoro',
+  name: 'Haryo Bimo W.',
   signature: 'Valeriant Toro de Falkenrath',
   alternateName: 'Valeriant Toro de Falkenrath IV',
   role: 'Digital Enthusiast, Traveler, Volunteer, Creative Designer',
