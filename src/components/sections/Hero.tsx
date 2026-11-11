@@ -124,7 +124,7 @@ export default function Hero() {
         {/* Hero Portrait */}
         <div
           className="relative lg:col-span-5"
-          style={{ marginTop: '-30px' }}
+          style={{ marginTop: '0px' }}
         >
           <div
             className="animate-fade-up"
