@@ -69,9 +69,10 @@ export default function Hero() {
           </p>
 
           <div
-            className="animate-fade-up mt-10 flex flex-wrap items-center gap-4"
-            style={{ '--delay': '480ms' } as CSSProperties}
-          >
+              className="animate-fade-up relative -translate-y-4 lg:col-span-5"
+              style={{ '--delay': '300ms' } as CSSProperties}
+              >
+          
             <a
               href="#portfolio"
               className="group inline-flex items-center gap-2 rounded-full bg-fg px-6 py-3 text-sm font-medium text-bg transition-transform duration-300 hover:-translate-y-0.5"
