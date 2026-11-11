@@ -59,13 +59,13 @@ export default function Hero() {
 
           {/* Name Divider */}
           <div
-            className="animate-fade-up mt-5 h-px w-full max-w-md bg-line"
+            className="animate-fade-up mt-1.5 h-px w-full max-w-md bg-line"
             style={{ '--delay': '180ms' } as CSSProperties}
           />
 
           {/* Role */}
           <p
-            className="animate-fade-up mt-6 font-display text-xl leading-[1.2] text-fg md:text-2xl"
+            className="animate-fade-up mt-2.5 font-display text-xl leading-[1.2] text-fg md:text-2xl"
             style={{ '--delay': '240ms' } as CSSProperties}
           >
             {profile.role}
