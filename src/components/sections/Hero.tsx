@@ -38,7 +38,7 @@ export default function Hero() {
         {/* Hero Text */}
         <div className="lg:col-span-7">
           <p
-            className="animate-fade-up inline-flex items-center gap-3 rounded-full border border-line bg-surface/60 px-4 py-2 text-xs font-medium uppercase tracking-[0.18em] text-muted"
+            className="animate-fade-up inline-flex items-center gap-2 rounded-full border border-line bg-surface/60 px-3 py-1.5 text-[10px] font-medium uppercase tracking-[0.14em] text-muted whitespace-nowrap"
             style={{ '--delay': '0ms' } as CSSProperties}
           >
             <span className="relative flex h-2 w-2">
@@ -54,6 +54,11 @@ export default function Hero() {
           >
             {profile.name}
           </h1>
+
+          <div
+            className="animate-fade-up mt-5 h-px w-full max-w-md bg-line"
+            style={{ '--delay': '180ms' } as CSSProperties}
+          />
 
           <p
             className="animate-fade-up mt-6 font-display text-2xl leading-[1.2] text-fg md:text-3xl"
