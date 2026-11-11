@@ -35,6 +35,7 @@ export default function Hero() {
       />
 
       <div className="relative mx-auto grid w-full max-w-7xl items-center gap-16 lg:grid-cols-12 lg:gap-10">
+        {/* Hero Text */}
         <div className="lg:col-span-7">
           <p
             className="animate-fade-up inline-flex items-center gap-3 rounded-full border border-line bg-surface/60 px-4 py-2 text-xs font-medium uppercase tracking-[0.18em] text-muted"
@@ -61,7 +62,6 @@ export default function Hero() {
             {profile.role}
           </p>
 
-
           <p
             className="animate-fade-up mt-6 max-w-xl text-base leading-relaxed text-muted md:text-lg"
             style={{ '--delay': '360ms' } as CSSProperties}
@@ -69,6 +69,7 @@ export default function Hero() {
             {profile.statement}
           </p>
 
+          {/* Hero Buttons */}
           <div
             className="animate-fade-up mt-10 flex flex-wrap items-center gap-4"
             style={{ '--delay': '480ms' } as CSSProperties}
@@ -89,6 +90,7 @@ export default function Hero() {
             </a>
           </div>
 
+          {/* Hero Information */}
           <dl
             className="animate-fade-up mt-14 flex gap-10 border-t border-line pt-6 text-sm"
             style={{ '--delay': '600ms' } as CSSProperties}
@@ -107,34 +109,37 @@ export default function Hero() {
               </dd>
             </div>
           </dl>
-
         </div>
 
+        {/* Hero Portrait */}
+        <div
+          className="relative lg:col-span-5"
+          style={{ marginTop: '-40px' }}
+        >
           <div
-            className="animate-fade-up relative lg:col-span-5"
-            style={{
-              '--delay': '300ms',
-              marginTop: '-100px',
-            } as CSSProperties}
+            className="animate-fade-up"
+            style={{ '--delay': '300ms' } as CSSProperties}
           >
-          <div className="relative mx-auto aspect-[4/5] w-full max-w-md">
-            <div
-              className="absolute -inset-3 rounded-[2rem] border border-line"
-              aria-hidden="true"
-            />
-
-            <div className="relative h-full w-full overflow-hidden rounded-[1.5rem] bg-surface-2">
-              <img
-                src={profile.portraitUrl}
-                alt={profile.portraitAlt}
-                className="h-full w-full object-cover grayscale transition-all duration-[1400ms] ease-out hover:scale-[1.03] hover:grayscale-0"
-                fetchPriority="high"
+            <div className="relative mx-auto aspect-[4/5] w-full max-w-md">
+              <div
+                className="absolute -inset-3 rounded-[2rem] border border-line"
+                aria-hidden="true"
               />
+
+              <div className="relative h-full w-full overflow-hidden rounded-[1.5rem] bg-surface-2">
+                <img
+                  src={profile.portraitUrl}
+                  alt={profile.portraitAlt}
+                  className="h-full w-full object-cover grayscale transition-all duration-[1400ms] ease-out hover:scale-[1.03] hover:grayscale-0"
+                  fetchPriority="high"
+                />
+              </div>
             </div>
           </div>
         </div>
       </div>
 
+      {/* Scroll Indicator */}
       <a
         href="#about"
         aria-label="Scroll to about"
