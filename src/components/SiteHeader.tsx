@@ -31,11 +31,37 @@ export default function SiteHeader({
     'relative isolate overflow-hidden rounded-lg border border-white/25 bg-accent text-black shadow-[0_0_18px_rgb(var(--accent)/0.32)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_24px_rgb(var(--accent)/0.48)]';
 
   return (
-    <div className="sticky top-4 z-50 flex w-full justify-center px-6 md:px-10 lg:px-16">
-      <div className="relative flex w-fit max-w-full items-center gap-2 rounded-xl border border-line/70 bg-bg/75 p-2 shadow-lg shadow-black/5 backdrop-blur-xl transition-colors duration-300">
+    <div className="sticky top-4 z-50 mt-7 mb-8 flex w-full justify-center px-4 sm:px-6 lg:px-8">
+      <div className="relative flex w-full max-w-7xl items-center justify-between gap-4 rounded-2xl border border-line/70 bg-bg/75 px-4 py-3 shadow-lg shadow-black/5 backdrop-blur-xl transition-colors duration-300 sm:px-6">
+
+        {/* Brand Identity */}
+        <a
+          href="#home"
+          aria-label="Haryo Bimo Wistoro - Home"
+          className="group flex min-w-0 shrink-0 items-center gap-3"
+        >
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-accent/20 bg-accent/10">
+            <Hexagon
+              className="h-7 w-7 text-accent transition-transform duration-700 ease-in-out group-hover:rotate-[360deg]"
+              strokeWidth={1.8}
+            />
+          </div>
+
+          <div className="flex min-w-0 flex-col">
+            <span className="truncate text-sm font-semibold tracking-tight text-fg sm:text-base">
+              Haryo Bimo Wistoro
+            </span>
+            <span className="truncate text-[10px] tracking-wide text-muted sm:text-xs">
+              Valeriant Toro de Falkenrath
+            </span>
+          </div>
+        </a>
 
         {/* Desktop Navigation */}
-        <nav aria-label="Primary" className="hidden items-center gap-1 lg:flex">
+        <nav
+          aria-label="Primary"
+          className="hidden items-center gap-1 lg:flex"
+        >
           {navSections.map((section) => {
             const active = section.id === activeId;
             const featured = section.id === 'portfolio';
@@ -47,8 +73,8 @@ export default function SiteHeader({
                 aria-current={active ? 'location' : undefined}
                 className={
                   featured
-                    ? `${featuredClass} inline-flex items-center px-4 py-2 text-sm font-semibold`
-                    : `group relative inline-flex items-center rounded-lg px-3 py-2 text-sm transition-colors duration-300 ${
+                    ? `${featuredClass} inline-flex items-center px-4 py-2.5 text-sm font-semibold`
+                    : `group relative inline-flex items-center rounded-lg px-3 py-2.5 text-sm transition-colors duration-300 ${
                         active
                           ? 'text-fg'
                           : 'text-muted hover:text-fg'
@@ -79,29 +105,34 @@ export default function SiteHeader({
           })}
         </nav>
 
-        {/* Mobile Menu Button */}
-        <button
-          type="button"
-          onClick={() => setMenuOpen((open) => !open)}
-          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-          aria-expanded={menuOpen}
-          aria-controls="mobile-menu"
-          className="flex h-9 w-9 items-center justify-center rounded-lg text-fg transition-colors duration-300 hover:bg-surface hover:text-accent lg:hidden"
-        >
-          {menuOpen ? (
-            <X className="h-4 w-4" />
-          ) : (
-            <Menu className="h-4 w-4" />
-          )}
-        </button>
+        {/* Right Controls */}
+        <div className="flex shrink-0 items-center gap-2">
+          <ThemeToggle
+            theme={theme}
+            onToggle={onToggleTheme}
+          />
 
-        {/* Theme Toggle */}
-        <ThemeToggle theme={theme} onToggle={onToggleTheme} />
+          {/* Mobile Menu Button */}
+          <button
+            type="button"
+            onClick={() => setMenuOpen((open) => !open)}
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-fg transition-colors duration-300 hover:bg-surface hover:text-accent lg:hidden"
+          >
+            {menuOpen ? (
+              <X className="h-4 w-4" />
+            ) : (
+              <Menu className="h-4 w-4" />
+            )}
+          </button>
+        </div>
 
         {/* Mobile Dropdown */}
         <div
           id="mobile-menu"
-          className={`absolute left-1/2 top-[calc(100%+0.75rem)] w-[min(22rem,calc(100vw-3rem))] -translate-x-1/2 rounded-xl border border-line/70 bg-bg/85 p-2 shadow-xl shadow-black/10 backdrop-blur-xl transition-all duration-300 lg:hidden ${
+          className={`absolute right-0 top-[calc(100%+0.75rem)] w-[min(22rem,calc(100vw-2rem))] rounded-xl border border-line/70 bg-bg/90 p-2 shadow-xl shadow-black/10 backdrop-blur-xl transition-all duration-300 lg:hidden ${
             menuOpen
               ? 'visible translate-y-0 opacity-100'
               : 'invisible -translate-y-2 opacity-0'
