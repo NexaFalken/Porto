@@ -1,3 +1,4 @@
+
 import { ArrowDown, ArrowUpRight } from 'lucide-react';
 import { useEffect, useState, type CSSProperties } from 'react';
 import { profile } from '@/data/portfolio';
@@ -21,7 +22,7 @@ export default function Hero() {
   return (
     <section
       id="intro"
-      className="relative flex min-h-[100svh] scroll-mt-20 items-center overflow-hidden px-6 pb-16 pt-32 md:px-10 md:pt-36 lg:px-16"
+      className="relative flex min-h-[100svh] scroll-mt-20 items-center overflow-hidden px-6 pb-16 pt-20 md:px-10 md:pt-24 lg:px-16"
     >
       <div
         aria-hidden="true"
@@ -78,6 +79,7 @@ export default function Hero() {
               Explore Projects
               <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </a>
+
             <a
               href="#contact"
               className="inline-flex items-center gap-2 rounded-full border border-line px-6 py-3 text-sm font-medium text-fg transition-colors duration-300 hover:border-accent hover:text-accent"
@@ -86,16 +88,22 @@ export default function Hero() {
             </a>
           </div>
 
-          <dl className="animate-fade-up mt-14 flex gap-10 border-t border-line pt-6 text-sm" style={{ '--delay': '600ms' } as CSSProperties}>
+          <dl
+            className="animate-fade-up mt-14 flex gap-10 border-t border-line pt-6 text-sm"
+            style={{ '--delay': '600ms' } as CSSProperties}
+          >
             <div>
               <dt className="text-muted">Local time</dt>
               <dd className="mt-1 font-display text-2xl text-fg">
                 <LocalClock />
               </dd>
             </div>
+
             <div>
               <dt className="text-muted">Focus</dt>
-              <dd className="mt-1 font-display text-2xl text-fg">Software &amp; Design</dd>
+              <dd className="mt-1 font-display text-2xl text-fg">
+                Software &amp; Design
+              </dd>
             </div>
           </dl>
         </div>
@@ -105,7 +113,11 @@ export default function Hero() {
           style={{ '--delay': '300ms' } as CSSProperties}
         >
           <div className="relative mx-auto aspect-[4/5] w-full max-w-md">
-            <div className="absolute -inset-3 rounded-[2rem] border border-line" aria-hidden="true" />
+            <div
+              className="absolute -inset-3 rounded-[2rem] border border-line"
+              aria-hidden="true"
+            />
+
             <div className="relative h-full w-full overflow-hidden rounded-[1.5rem] bg-surface-2">
               <img
                 src={profile.portraitUrl}
