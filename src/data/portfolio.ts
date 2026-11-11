@@ -28,7 +28,7 @@ export const profile = {
   name: 'Haryo Bimo Wistoro',
   signature: 'Valeriant Toro de Falkenrath',
   alternateName: 'Valeriant Toro de Falkenrath IV',
-  role: 'Digital Enthusiast, Traveler, Volunteer, Creative Designer',
+  role: 'Digitalist || Traveler || Volunteer || Creative Designer',
   status: 'Exploring New Horizons',
   statement: 'Digital enthusiast focused on software engineering and creative design.',
   focus: ['Software Engineering', 'Creative Design'],
