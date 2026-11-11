@@ -1,3 +1,4 @@
+
 import BackToTop from '@/components/BackToTop';
 import Footer from '@/components/Footer';
 import SiteHeader from '@/components/SiteHeader';
@@ -18,9 +19,15 @@ export default function App() {
 
   return (
     <>
-      <SiteHeader activeId={activeId} theme={theme} onToggleTheme={toggleTheme} />
       <main>
         <Hero />
+
+        <SiteHeader
+          activeId={activeId}
+          theme={theme}
+          onToggleTheme={toggleTheme}
+        />
+
         <About />
         <Expertise />
         <Portfolio />
@@ -28,6 +35,7 @@ export default function App() {
         <Projects />
         <Contact />
       </main>
+
       <Footer />
       <BackToTop />
     </>
