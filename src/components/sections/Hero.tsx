@@ -51,7 +51,7 @@ export default function Hero() {
 
           {/* Name */}
           <h1
-            className="animate-fade-up mt-8 whitespace-nowrap font-display text-[clamp(2rem,5.2vw,5rem)] leading-tight tracking-[-0.04em]"
+            className="animate-fade-up mt-8 whitespace-nowrap font-display text-[clamp(2.5rem,8vw,5rem)] leading-tight tracking-[-0.04em]"
             style={{ '--delay': '120ms' } as CSSProperties}
           >
             {profile.name}
@@ -160,3 +160,4 @@ export default function Hero() {
     </section>
   );
 }
+
