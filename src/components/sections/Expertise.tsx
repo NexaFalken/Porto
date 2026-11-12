@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import * as SimpleIcons from 'simple-icons';
-
+import { Code2 } from 'lucide-react';
 import Reveal from '@/components/Reveal';
 import SectionHeader from '@/components/SectionHeader';
 import { expertiseAreas } from '@/data/portfolio';
