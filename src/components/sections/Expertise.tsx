@@ -1,8 +1,17 @@
 
 import { useState } from 'react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import {
+  ChevronDown,
+  ChevronUp,
+  Code2,
+  Bot,
+  Palette,
+  Shapes,
+  Aperture,
+  Scissors,
+  type LucideIcon,
+} from 'lucide-react';
 import * as SimpleIcons from 'simple-icons';
-import { Code2 } from 'lucide-react';
 import Reveal from '@/components/Reveal';
 import SectionHeader from '@/components/SectionHeader';
 import { expertiseAreas } from '@/data/portfolio';
@@ -18,42 +27,59 @@ const iconRegistry = SimpleIcons as unknown as Record<
   SimpleIconData | undefined
 >;
 
+const fallbackIcons: Record<string, LucideIcon> = {
+  Code2,
+  Bot,
+  Palette,
+  Shapes,
+  Aperture,
+  Scissors,
+};
+
 function ToolkitIcon({
   icon,
+  fallback,
   monochrome = false,
 }: {
-  icon: string;
+  icon?: string;
+  fallback?: string;
   monochrome?: boolean;
 }) {
-  const brand = iconRegistry[icon];
+  const brand = icon ? iconRegistry[icon] : undefined;
 
-  if (!brand) {
+  if (brand) {
     return (
-      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-surface-2 text-xs font-bold text-fg">
-        ?
-      </span>
+      <svg
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        aria-hidden="true"
+        className={[
+          'h-8 w-8 shrink-0 transition-all duration-300',
+          monochrome ? 'text-fg' : '',
+          'group-hover:scale-110',
+          'group-hover:drop-shadow-[0_0_5px_currentColor]',
+        ].join(' ')}
+        style={{
+          color: monochrome ? 'var(--toolkit-monochrome)' : `#${brand.hex}`,
+        }}
+      >
+        <path d={brand.path} />
+      </svg>
     );
   }
 
+  const FallbackIcon = fallback
+    ? fallbackIcons[fallback]
+    : undefined;
+
+  const Icon = FallbackIcon || Code2;
+
   return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="currentColor"
+    <Icon
       aria-hidden="true"
-      className={[
-        'h-8 w-8 shrink-0 transition-all duration-300',
-        monochrome
-          ? 'text-fg'
-          : '',
-        'group-hover:scale-110',
-        'group-hover:drop-shadow-[0_0_5px_currentColor]',
-      ].join(' ')}
-      style={{
-        color: monochrome ? 'currentColor' : `#${brand.hex}`,
-      }}
-    >
-      <path d={brand.path} />
-    </svg>
+      className="h-8 w-8 shrink-0 text-fg transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-[0_0_5px_currentColor]"
+      strokeWidth={1.8}
+    />
   );
 }
 
@@ -166,6 +192,7 @@ export default function Expertise() {
                 >
                   <ToolkitIcon
                     icon={item.icon}
+                    fallback={item.fallback}
                     monochrome={item.monochrome}
                   />
 
