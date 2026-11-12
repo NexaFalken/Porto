@@ -95,7 +95,7 @@ export default function About() {
                 </div>
 
                 {/* Editor Content */}
-                  <div className="h-[160px] overflow-y-auto overscroll-contain p-5 font-mono text-[12px] leading-7 sm:h-[190px] sm:p-7 sm:text-[13px]">
+                  <div className="h-[210px] overflow-y-auto overscroll-contain p-5 font-mono text-[12px] leading-7 sm:h-[190px] sm:p-7 sm:text-[13px]">
                   {aboutContent.paragraphs.map((paragraph, index) => {
                     const lineStart = index * 4 + 1;
                     const variableName =
