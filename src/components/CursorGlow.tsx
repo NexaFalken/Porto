@@ -25,16 +25,28 @@ export default function CursorGlow() {
     let animationFrame = 0;
 
     const updatePosition = () => {
-      const easing = prefersReducedMotion ? 1 : 0.12;
+      const easing = prefersReducedMotion ? 1 : 0.16;
 
       currentX += (targetX - currentX) * easing;
       currentY += (targetY - currentY) * easing;
 
-      glow.style.setProperty('--pointer-x', `${currentX}px`);
-      glow.style.setProperty('--pointer-y', `${currentY}px`);
+      const position = `at ${currentX}px ${currentY}px`;
 
-      grid.style.setProperty('--pointer-x', `${currentX}px`);
-      grid.style.setProperty('--pointer-y', `${currentY}px`);
+      glow.style.background = `
+        radial-gradient(220px circle ${position},
+          rgb(var(--fg) / 0.13) 0%,
+          rgb(var(--fg) / 0.06) 35%,
+          transparent 75%)
+      `;
+
+      grid.style.maskImage = `
+        radial-gradient(220px circle ${position},
+          black 0%,
+          rgba(0,0,0,0.65) 48%,
+          transparent 100%)
+      `;
+
+      grid.style.webkitMaskImage = grid.style.maskImage;
 
       const distance = Math.hypot(
         targetX - currentX,
@@ -81,40 +93,51 @@ export default function CursorGlow() {
   }, []);
 
   return (
-    <>
-      {/* Interactive Grid Reveal */}
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
+    >
+      {/* Subtle Grid Across Entire Page */}
       <div
-        ref={gridRef}
-        aria-hidden="true"
-        className="pointer-events-none fixed inset-0 z-0 opacity-0"
+        className="absolute inset-0"
         style={{
           backgroundImage: `
-            linear-gradient(to right, rgb(var(--line) / 0.85) 1px, transparent 1px),
-            linear-gradient(to bottom, rgb(var(--line) / 0.85) 1px, transparent 1px)
+            linear-gradient(to right, rgb(var(--line) / 0.12) 1px, transparent 1px),
+            linear-gradient(to bottom, rgb(var(--line) / 0.12) 1px, transparent 1px)
           `,
           backgroundSize: '72px 72px',
-          maskImage:
-            'radial-gradient(circle 430px at var(--pointer-x) var(--pointer-y), black 0%, rgba(0,0,0,0.75) 42%, transparent 100%)',
-          WebkitMaskImage:
-            'radial-gradient(circle 430px at var(--pointer-x) var(--pointer-y), black 0%, rgba(0,0,0,0.75) 42%, transparent 100%)',
-          transition: 'opacity 500ms ease',
-          willChange: 'mask-image, opacity',
         }}
       />
 
-      {/* Soft Cursor Light */}
+      {/* Interactive Grid Reveal */}
       <div
-        ref={glowRef}
-        aria-hidden="true"
-        className="pointer-events-none fixed inset-0 z-0 opacity-0"
+        ref={gridRef}
+        className="absolute inset-0 opacity-0"
         style={{
-          background:
-            'radial-gradient(520px circle at var(--pointer-x) var(--pointer-y), rgb(var(--fg) / 0.12) 0%, rgb(var(--fg) / 0.055) 32%, transparent 72%)',
-          filter: 'blur(35px)',
-          transition: 'opacity 500ms ease',
-          willChange: 'background, opacity',
+          backgroundImage: `
+            linear-gradient(to right, rgb(var(--line) / 0.9) 1px, transparent 1px),
+            linear-gradient(to bottom, rgb(var(--line) / 0.9) 1px, transparent 1px)
+          `,
+          backgroundSize: '72px 72px',
+          maskImage:
+            'radial-gradient(circle 220px at -1000px -1000px, black, transparent)',
+          WebkitMaskImage:
+            'radial-gradient(circle 220px at -1000px -1000px, black, transparent)',
+          transition: 'opacity 350ms ease',
         }}
       />
-    </>
+
+      {/* Cursor Light */}
+      <div
+        ref={glowRef}
+        className="absolute inset-0 opacity-0"
+        style={{
+          background:
+            'radial-gradient(220px circle at -1000px -1000px, rgb(var(--fg) / 0.13), transparent 75%)',
+          filter: 'blur(30px)',
+          transition: 'opacity 350ms ease',
+        }}
+      />
+    </div>
   );
 }
