@@ -12,6 +12,7 @@ import Contact from '@/components/sections/Contact';
 import Expertise from '@/components/sections/Expertise';
 import Gallery from '@/components/sections/Gallery';
 import Hero from '@/components/sections/Hero';
+import JourneyFilm from '@/components/sections/JourneyFilm';
 import Portfolio from '@/components/sections/Portfolio';
 import Projects from '@/components/sections/Projects';
 
@@ -21,7 +22,6 @@ export default function App() {
 
   return (
     <div className="relative isolate">
-      {/* Global Cursor Glow */}
       <CursorGlow />
 
       <main className="relative z-10">
@@ -37,6 +37,7 @@ export default function App() {
         <Expertise />
         <Portfolio />
         <Gallery />
+        <JourneyFilm />
         <Projects />
         <Contact />
       </main>
