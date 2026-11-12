@@ -218,14 +218,14 @@ export const experienceGroups: TimelineGroup[] = [
   {
     title: 'Work & Intern',
     entries: [
+      { title: 'Software Engineer', organisation: 'JavaArch Agency' },
       { title: 'Creative Designer', organisation: 'Peka Nusantara' },
       { title: 'Kitchen Staff', organisation: 'D Kriuk Jember' },
-      { title: 'Cashier', organisation: 'D Kriuk Jember' },
+      { title: 'Bug Bounty Hunter', organisation: 'Amartha || HackerOne' },
       { title: 'Intern Creative', organisation: 'NAYS Indonesia' },
       { title: 'Head of Media', organisation: 'Al Miswati Banyuwangi' },
       { title: 'Creative Media', organisation: 'Continuum' },
       { title: 'Creative Media', organisation: 'UNEV Indonesia' },
-      { title: 'Creative Media', organisation: 'Cerdas Mandiri' },
     ],
   },
 ];
