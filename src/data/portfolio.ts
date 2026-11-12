@@ -213,6 +213,7 @@ export const experienceGroups: TimelineGroup[] = [
       { title: 'Volunteer', organisation: 'WCD Indonesia | East Java' },
       { title: 'Volunteer', organisation: 'Color Runing | East Java' },
       { title: 'Volunteer', organisation: 'Peka Nusantara | West Halmahera' },
+      { title: 'Bug Hunter', organisation: '[BSSN] Badan Sandi Siber Negara' },
     ],
   },
   {
