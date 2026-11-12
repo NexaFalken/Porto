@@ -1,10 +1,55 @@
 
+import { useState } from 'react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
+import * as SimpleIcons from 'simple-icons';
+
 import Reveal from '@/components/Reveal';
 import SectionHeader from '@/components/SectionHeader';
-import { expertiseAreas, toolsMarquee } from '@/data/portfolio';
+import { expertiseAreas } from '@/data/portfolio';
+import { toolkitItems } from '@/data/toolkit';
+
+interface SimpleIconData {
+  path: string;
+  hex: string;
+}
+
+const iconRegistry = SimpleIcons as unknown as Record<
+  string,
+  SimpleIconData
+>;
+
+function ToolkitIcon({
+  name,
+  icon,
+}: {
+  name: string;
+  icon: string;
+}) {
+  const brand = iconRegistry[icon];
+
+  if (!brand) {
+    return (
+      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-surface text-sm font-semibold text-accent">
+        {name.slice(0, 2)}
+      </span>
+    );
+  }
+
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className="h-8 w-8 transition-all duration-300 drop-shadow-[0_0_3px_currentColor] group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_currentColor]"
+      style={{ color: `#${brand.hex}` }}
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <path d={brand.path} />
+    </svg>
+  );
+}
 
 export default function Expertise() {
-  const tools = [...toolsMarquee, ...toolsMarquee];
+  const [expanded, setExpanded] = useState(false);
 
   return (
     <section
@@ -60,26 +105,85 @@ export default function Expertise() {
             );
           })}
         </div>
-      </div>
 
-      <div
-        className="marquee mt-20 w-full min-w-0 overflow-hidden border-y border-line py-6"
-        aria-label="Tools and technologies"
-      >
-        <div className="animate-marquee flex w-max items-center gap-12 whitespace-nowrap">
-          {tools.map((tool, index) => (
-            <span
-              key={`${tool}-${index}`}
-              className="flex items-center gap-12 font-display text-3xl text-muted"
+        {/* Technology & Creative Toolkit */}
+        <Reveal delay={360}>
+          <section className="mt-10 rounded-3xl border border-line bg-surface p-6 md:p-8">
+            <div className="mb-7 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+              <div>
+                <span className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
+                  My Ecosystem
+                </span>
+
+                <h3 className="mt-2 font-display text-2xl md:text-3xl">
+                  Technology & Creative Toolkit
+                </h3>
+
+                <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted">
+                  Technologies, platforms, and creative tools I use to
+                  explore ideas and bring digital projects to life.
+                </p>
+              </div>
+
+              <span className="text-sm text-muted">
+                {toolkitItems.length} tools
+              </span>
+            </div>
+
+            <div
+              id="toolkit-list"
+              className={`grid grid-cols-3 gap-3 overflow-hidden transition-[max-height] duration-500 ease-in-out sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-9 ${
+                expanded ? 'max-h-[2000px]' : 'max-h-[172px]'
+              }`}
+              style={
+                expanded
+                  ? undefined
+                  : {
+                      maskImage:
+                        'linear-gradient(to bottom, black 78%, transparent 100%)',
+                      WebkitMaskImage:
+                        'linear-gradient(to bottom, black 78%, transparent 100%)',
+                    }
+              }
             >
-              {tool}
-              <span
-                aria-hidden="true"
-                className="h-1.5 w-1.5 rounded-full bg-accent"
-              />
-            </span>
-          ))}
-        </div>
+              {toolkitItems.map((tool) => (
+                <div
+                  key={tool.name}
+                  title={`${tool.name} · ${tool.category}`}
+                  className="group flex min-h-[104px] flex-col items-center justify-center gap-3 rounded-2xl border border-line bg-surface-2/50 px-2 py-4 transition-all duration-300 hover:-translate-y-1 hover:border-accent hover:bg-surface-2"
+                >
+                  <ToolkitIcon name={tool.name} icon={tool.icon} />
+
+                  <span className="max-w-full text-center text-[11px] font-medium leading-tight text-muted transition-colors duration-300 group-hover:text-fg">
+                    {tool.name}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-6 flex justify-center">
+              <button
+                type="button"
+                onClick={() => setExpanded((previous) => !previous)}
+                aria-expanded={expanded}
+                aria-controls="toolkit-list"
+                className="inline-flex items-center gap-2 rounded-full border border-line bg-surface-2 px-5 py-2.5 text-sm font-medium text-fg transition-all duration-300 hover:border-accent hover:text-accent"
+              >
+                {expanded ? (
+                  <>
+                    Show less
+                    <ChevronUp className="h-4 w-4" />
+                  </>
+                ) : (
+                  <>
+                    Show all tools
+                    <ChevronDown className="h-4 w-4" />
+                  </>
+                )}
+              </button>
+            </div>
+          </section>
+        </Reveal>
       </div>
     </section>
   );
