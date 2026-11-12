@@ -28,7 +28,12 @@ export default function SiteHeader({
   }, []);
 
   const featuredClass =
-    'relative isolate overflow-hidden rounded-lg border border-white/25 bg-accent text-black shadow-[0_0_18px_rgb(var(--accent)/0.32)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_24px_rgb(var(--accent)/0.48)]';
+    'relative isolate overflow-hidden rounded-lg border border-white/25 bg-accent text-black shadow-[0_0_18px_rgb(var(--accent)/0.32)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_24px_rgb(var(--accent)/0.48)] dark:bg-accent dark:text-black dark:shadow-[0_0_18px_rgb(var(--accent)/0.32)] dark:hover:shadow-[0_0_24px_rgb(var(--accent)/0.48)]';
+
+  const featuredLightClass =
+    theme === 'light'
+      ? ' !bg-slate-900 !text-white !shadow-[0_0_16px_rgb(15_23_42/0.16)] hover:!shadow-[0_0_22px_rgb(15_23_42/0.24)]'
+      : '';
 
   return (
     <div className="sticky top-4 z-50 mt-7 mb-8 flex w-full justify-center px-4 sm:px-6 lg:px-8">
@@ -73,7 +78,7 @@ export default function SiteHeader({
                 aria-current={active ? 'location' : undefined}
                 className={
                   featured
-                    ? `${featuredClass} inline-flex items-center px-4 py-2.5 text-sm font-semibold`
+                    ? `${featuredClass}${featuredLightClass} inline-flex items-center px-4 py-2.5 text-sm font-semibold`
                     : `group relative inline-flex items-center rounded-lg px-3 py-2.5 text-sm transition-colors duration-300 ${
                         active
                           ? 'text-fg'
@@ -152,7 +157,7 @@ export default function SiteHeader({
                       aria-current={active ? 'location' : undefined}
                       className={
                         featured
-                          ? `${featuredClass} flex items-center px-4 py-3 text-sm font-semibold`
+                          ? `${featuredClass}${featuredLightClass} flex items-center px-4 py-3 text-sm font-semibold`
                           : `flex items-center rounded-lg px-4 py-3 text-sm transition-colors duration-300 ${
                               active
                                 ? 'bg-surface text-accent'
