@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -22,7 +23,7 @@
   --line: 218 214 205;
   --fg: 24 24 27;
   --muted: 96 101 110;
-  --accent: 15 118 110;
+  --accent: 11 31 58;
   --accent-fg: 255 255 255;
 }
 

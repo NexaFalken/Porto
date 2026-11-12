@@ -43,12 +43,12 @@ export default function Hero() {
           </p>
 
           {/* Name */}
-          <h1
-            className="animate-fade-up mt-8 whitespace-nowrap font-display text-[clamp(2.5rem,8vw,5rem)] leading-tight tracking-[-0.04em]"
-            style={{ '--delay': '120ms' } as CSSProperties}
-          >
-            {profile.name}
-          </h1>
+<h1
+  className="animate-fade-up mt-8 whitespace-nowrap font-display text-[clamp(2.5rem,8vw,5rem)] leading-tight tracking-[-0.04em] lg:text-[4.4rem]"
+  style={{ '--delay': '120ms' } as CSSProperties}
+>
+  {profile.name}
+</h1>
 
           {/* Name Divider */}
           <div
