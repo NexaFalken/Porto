@@ -13,7 +13,10 @@ function LocalClock() {
 
   return (
     <span className="tabular-nums">
-      {now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+      {now.toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+      })}
     </span>
   );
 }
@@ -24,16 +27,6 @@ export default function Hero() {
       id="intro"
       className="relative flex min-h-[100svh] scroll-mt-20 items-center overflow-hidden px-6 pb-16 pt-8 md:px-10 md:pt-12 lg:px-16"
     >
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-60 [mask-image:radial-gradient(ellipse_at_center,black_25%,transparent_72%)]"
-        style={{
-          backgroundImage:
-            'linear-gradient(to right, rgb(var(--line) / 0.5) 1px, transparent 1px), linear-gradient(to bottom, rgb(var(--line) / 0.5) 1px, transparent 1px)',
-          backgroundSize: '72px 72px',
-        }}
-      />
-
       <div className="relative mx-auto grid w-full max-w-7xl items-center gap-16 lg:grid-cols-12 lg:gap-10">
         {/* Hero Text */}
         <div className="lg:col-span-7">
@@ -160,4 +153,3 @@ export default function Hero() {
     </section>
   );
 }
-
