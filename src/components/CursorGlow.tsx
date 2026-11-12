@@ -139,7 +139,7 @@ export default function CursorGlow() {
         }}
       />
 
- {/* Interactive Grid Spotlight */}
+{/* Interactive Grid Spotlight */}
 <div
   ref={gridRef}
   className="absolute inset-0 opacity-0"
@@ -147,19 +147,15 @@ export default function CursorGlow() {
     backgroundImage: `
       linear-gradient(
         to right,
-        rgb(var(--fg) / 0.85) 0px,
-        rgb(var(--fg) / 0.85) 1px,
+        rgb(var(--fg) / 0.95) 0px,
         rgb(var(--line) / 0.9) 1px,
-        rgb(var(--line) / 0.9) 2px,
-        transparent 2px
+        transparent 1px
       ),
       linear-gradient(
         to bottom,
-        rgb(var(--fg) / 0.85) 0px,
-        rgb(var(--fg) / 0.85) 1px,
+        rgb(var(--fg) / 0.95) 0px,
         rgb(var(--line) / 0.9) 1px,
-        rgb(var(--line) / 0.9) 2px,
-        transparent 2px
+        transparent 1px
       )
     `,
     backgroundSize: '72px 72px',
@@ -167,6 +163,10 @@ export default function CursorGlow() {
       'radial-gradient(circle 220px at -1000px -1000px, black, transparent)',
     WebkitMaskImage:
       'radial-gradient(circle 220px at -1000px -1000px, black, transparent)',
+    filter: `
+      drop-shadow(0 1px 1px rgb(var(--fg) / 0.45))
+      drop-shadow(0 -1px 1px rgb(0 0 0 / 0.3))
+    `,
     transition: 'opacity 350ms ease',
   }}
 />
