@@ -1,4 +1,5 @@
 
+import { ArrowUpRight, Globe } from 'lucide-react';
 import Reveal from '@/components/Reveal';
 import SectionHeader from '@/components/SectionHeader';
 import { aboutContent, profile } from '@/data/portfolio';
@@ -19,7 +20,6 @@ export default function About() {
         </Reveal>
 
         <div className="grid gap-16 lg:grid-cols-12 lg:gap-12">
-
           {/* Left Column */}
           <div className="lg:col-span-5">
             {/* Portrait */}
@@ -63,7 +63,6 @@ export default function About() {
 
           {/* Right Column */}
           <div className="lg:col-span-7">
-
             {/* Introduction */}
             <Reveal>
               <p className="font-display text-3xl leading-[1.2] md:text-4xl">
@@ -98,41 +97,51 @@ export default function About() {
                     Featured In
                   </h3>
 
-                  <span className="text-xs text-muted">
+                  <span className="flex items-center gap-2 text-xs text-muted">
+                    <Globe size={14} />
                     External Publication
                   </span>
                 </div>
 
-                <div className="mt-6">
-                  <p className="font-display text-2xl font-medium tracking-tight md:text-3xl">
-                    Kompasiana.
-                  </p>
+                {/* Article Card - Always Dark */}
+                <div className="mt-6 overflow-hidden rounded-2xl border border-[#344457] bg-[#111C2B] p-6 text-white shadow-[0_12px_40px_rgba(0,0,0,0.12)] transition-all duration-300 hover:border-[#4B647E] md:p-8">
+                  {/* Original Publication Logo */}
+                  <div className="inline-flex rounded-lg bg-white p-2">
+                    <img
+                      src="https://assets.kompasiana.com/items/microsite/kompasianaputih-small-png-1610335055.jpg"
+                      alt="Publication logo"
+                      loading="lazy"
+                      className="h-10 w-auto object-contain"
+                    />
+                  </div>
 
-                  <h4 className="mt-5 text-lg leading-snug text-fg md:text-xl">
+                  {/* Article Content */}
+                  <h4 className="mt-7 max-w-2xl font-display text-xl leading-snug text-white md:text-2xl">
                     Haryo Bimo Wistoro: Pelajar Homeschooling 16 Tahun yang
                     Mengukir Prestasi dan Berkontribusi untuk Negeri
                   </h4>
 
-                  <p className="mt-3 text-sm leading-relaxed text-muted">
+                  <p className="mt-4 max-w-xl text-sm leading-relaxed text-[#A9B7C8]">
                     A profile highlighting personal achievements, growth,
                     and contributions to the community.
                   </p>
 
+                  {/* Read Article Button */}
                   <a
                     href="https://www.kompasiana.com/riszuanhardiansyah2670/6a06b8a0c925c408793629d2/haryo-bimo-wistoro-pelajar-homeschooling-16-tahun-yang-mengukir-prestasi-dan-berkontribusi-untuk-negeri"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group mt-6 inline-flex items-center gap-2 text-sm font-medium text-fg transition-colors duration-300 hover:text-accent"
+                    className="group mt-7 inline-flex items-center gap-2 rounded-lg bg-[#20C5E8] px-5 py-3 text-sm font-semibold text-[#071923] shadow-[0_0_18px_rgba(32,197,232,0.18)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#47D3EF] hover:shadow-[0_0_24px_rgba(32,197,232,0.3)]"
                   >
                     Read Article
-                    <span className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
-                      ↗
-                    </span>
+                    <ArrowUpRight
+                      size={16}
+                      className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                    />
                   </a>
                 </div>
               </div>
             </Reveal>
-
           </div>
         </div>
       </div>
