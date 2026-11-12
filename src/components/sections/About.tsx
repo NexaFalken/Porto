@@ -106,14 +106,12 @@ export default function About() {
                 {/* Article Card - Always Dark */}
                 <div className="mt-6 overflow-hidden rounded-2xl border border-[#344457] bg-[#111C2B] p-6 text-white shadow-[0_12px_40px_rgba(0,0,0,0.12)] transition-all duration-300 hover:border-[#4B647E] md:p-8">
                   {/* Original Publication Logo */}
-                  <div className="inline-flex rounded-lg bg-white p-2">
-                    <img
-                      src="https://assets.kompasiana.com/items/microsite/kompasianaputih-small-png-1610335055.jpg"
-                      alt="Publication logo"
-                      loading="lazy"
-                      className="h-10 w-auto object-contain"
-                    />
-                  </div>
+                  <img
+                    src="https://assets.kompasiana.com/items/microsite/kompasianaputih-small-png-1610335055.jpg"
+                    alt="Publication logo"
+                    loading="lazy"
+                    className="h-12 w-auto object-contain"
+                  />
 
                   {/* Article Content */}
                   <h4 className="mt-7 max-w-2xl font-display text-xl leading-snug text-white md:text-2xl">
