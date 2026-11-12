@@ -8,29 +8,29 @@ import SectionHeader from '@/components/SectionHeader';
 import { expertiseAreas } from '@/data/portfolio';
 import { toolkitItems } from '@/data/toolkit';
 
-interface SimpleIconData {
+type SimpleIconData = {
   path: string;
   hex: string;
-}
+};
 
 const iconRegistry = SimpleIcons as unknown as Record<
   string,
-  SimpleIconData
+  SimpleIconData | undefined
 >;
 
 function ToolkitIcon({
-  name,
   icon,
+  monochrome = false,
 }: {
-  name: string;
   icon: string;
+  monochrome?: boolean;
 }) {
   const brand = iconRegistry[icon];
 
   if (!brand) {
     return (
-      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-surface text-sm font-semibold text-accent">
-        {name.slice(0, 2)}
+      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-surface-2 text-xs font-bold text-fg">
+        ?
       </span>
     );
   }
@@ -38,10 +38,19 @@ function ToolkitIcon({
   return (
     <svg
       viewBox="0 0 24 24"
-      className="h-8 w-8 transition-all duration-300 drop-shadow-[0_0_3px_currentColor] group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_currentColor]"
-      style={{ color: `#${brand.hex}` }}
       fill="currentColor"
       aria-hidden="true"
+      className={[
+        'h-8 w-8 shrink-0 transition-all duration-300',
+        monochrome
+          ? 'text-fg'
+          : '',
+        'group-hover:scale-110',
+        'group-hover:drop-shadow-[0_0_5px_currentColor]',
+      ].join(' ')}
+      style={{
+        color: monochrome ? 'currentColor' : `#${brand.hex}`,
+      }}
     >
       <path d={brand.path} />
     </svg>
@@ -66,6 +75,7 @@ export default function Expertise() {
           />
         </Reveal>
 
+        {/* Expertise Cards */}
         <div className="grid gap-6 md:grid-cols-2">
           {expertiseAreas.map((area, index) => {
             const Icon = area.icon;
@@ -77,6 +87,7 @@ export default function Expertise() {
                     <span className="flex h-12 w-12 items-center justify-center rounded-2xl border border-line bg-surface-2 text-accent transition-colors duration-500 group-hover:border-accent">
                       <Icon className="h-5 w-5" />
                     </span>
+
                     <span className="font-display text-lg text-muted">
                       0{index + 1}
                     </span>
@@ -107,82 +118,91 @@ export default function Expertise() {
         </div>
 
         {/* Technology & Creative Toolkit */}
-        <Reveal delay={360}>
-          <section className="mt-10 rounded-3xl border border-line bg-surface p-6 md:p-8">
-            <div className="mb-7 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+        <Reveal>
+          <div className="mt-20 rounded-3xl border border-line bg-surface p-6 md:p-8">
+            <div className="mb-7 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
               <div>
                 <span className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
-                  My Ecosystem
+                  My Digital Arsenal
                 </span>
 
                 <h3 className="mt-2 font-display text-2xl md:text-3xl">
                   Technology & Creative Toolkit
                 </h3>
 
-                <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted">
-                  Technologies, platforms, and creative tools I use to
-                  explore ideas and bring digital projects to life.
+                <p className="mt-2 text-sm text-muted">
+                  Tools, technologies, and platforms I use to build and create.
                 </p>
               </div>
 
-              <span className="text-sm text-muted">
-                {toolkitItems.length} tools
+              <span className="text-xs text-muted">
+                {toolkitItems.length} tools & technologies
               </span>
             </div>
 
             <div
-              id="toolkit-list"
-              className={`grid grid-cols-3 gap-3 overflow-hidden transition-[max-height] duration-500 ease-in-out sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-9 ${
-                expanded ? 'max-h-[2000px]' : 'max-h-[172px]'
-              }`}
+              className={[
+                'grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6',
+                'transition-[max-height] duration-500 ease-in-out',
+                expanded
+                  ? 'max-h-[2000px]'
+                  : 'max-h-[172px] overflow-hidden',
+              ].join(' ')}
               style={
                 expanded
                   ? undefined
                   : {
                       maskImage:
-                        'linear-gradient(to bottom, black 78%, transparent 100%)',
+                        'linear-gradient(to bottom, black 75%, transparent 100%)',
                       WebkitMaskImage:
-                        'linear-gradient(to bottom, black 78%, transparent 100%)',
+                        'linear-gradient(to bottom, black 75%, transparent 100%)',
                     }
               }
             >
-              {toolkitItems.map((tool) => (
+              {toolkitItems.map((item) => (
                 <div
-                  key={tool.name}
-                  title={`${tool.name} · ${tool.category}`}
-                  className="group flex min-h-[104px] flex-col items-center justify-center gap-3 rounded-2xl border border-line bg-surface-2/50 px-2 py-4 transition-all duration-300 hover:-translate-y-1 hover:border-accent hover:bg-surface-2"
+                  key={item.name}
+                  className="group flex min-h-[104px] flex-col items-start justify-between rounded-2xl border border-line bg-surface-2 p-4 transition-all duration-300 hover:border-accent hover:bg-bg"
                 >
-                  <ToolkitIcon name={tool.name} icon={tool.icon} />
+                  <ToolkitIcon
+                    icon={item.icon}
+                    monochrome={item.monochrome}
+                  />
 
-                  <span className="max-w-full text-center text-[11px] font-medium leading-tight text-muted transition-colors duration-300 group-hover:text-fg">
-                    {tool.name}
-                  </span>
+                  <div className="mt-4 min-w-0">
+                    <p className="truncate text-sm font-medium text-fg">
+                      {item.name}
+                    </p>
+
+                    <p className="mt-1 truncate text-[10px] text-muted">
+                      {item.category}
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>
 
-            <div className="mt-6 flex justify-center">
+            <div className="mt-5 flex justify-center border-t border-line pt-5">
               <button
                 type="button"
-                onClick={() => setExpanded((previous) => !previous)}
+                onClick={() => setExpanded((current) => !current)}
+                className="inline-flex items-center gap-2 rounded-full border border-line px-5 py-2.5 text-sm font-medium text-muted transition-all duration-300 hover:border-accent hover:text-fg"
                 aria-expanded={expanded}
-                aria-controls="toolkit-list"
-                className="inline-flex items-center gap-2 rounded-full border border-line bg-surface-2 px-5 py-2.5 text-sm font-medium text-fg transition-all duration-300 hover:border-accent hover:text-accent"
               >
                 {expanded ? (
                   <>
-                    Show less
+                    Show Less
                     <ChevronUp className="h-4 w-4" />
                   </>
                 ) : (
                   <>
-                    Show all tools
+                    Explore All Tools
                     <ChevronDown className="h-4 w-4" />
                   </>
                 )}
               </button>
             </div>
-          </section>
+          </div>
         </Reveal>
       </div>
     </section>

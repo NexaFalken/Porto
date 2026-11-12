@@ -1,23 +1,27 @@
 
-export interface ToolkitItem {
+
+export type ToolkitItem = {
   name: string;
   category: string;
   icon: string;
-}
+  monochrome?: boolean;
+};
 
 export const toolkitItems: ToolkitItem[] = [
-  // Development tools
-  { name: 'Visual Studio Code', category: 'Development', icon: 'siVisualstudiocode' },
-  { name: 'PyCharm', category: 'Development', icon: 'siPycharm' },
-  { name: 'Replit', category: 'Development', icon: 'siReplit' },
-  { name: 'GitHub', category: 'Development', icon: 'siGithub' },
+  // Development Tools
+  { name: 'Visual Studio Code', category: 'Development Tools', icon: 'siVisualstudiocode' },
+  { name: 'PyCharm', category: 'Development Tools', icon: 'siPycharm' },
+  { name: 'Replit', category: 'Development Tools', icon: 'siReplit' },
   { name: 'Vercel', category: 'Deployment & Hosting', icon: 'siVercel',},
   { name: 'Git', category: 'Deployment', icon: 'siGit',},
   
-  // Programming languages & data formats
-  { name: 'TypeScript', category: 'Languages', icon: 'siTypescript' },
+  // Version Control & Collaboration
+  { name: 'Git', category: 'Version Control', icon: 'siGit' },
+  { name: 'GitHub', category: 'Version Control', icon: 'siGithub' },
+
+  // Languages
   { name: 'JavaScript', category: 'Languages', icon: 'siJavascript' },
-  { name: 'Python', category: 'Languages', icon: 'siPython' },
+  { name: 'TypeScript', category: 'Languages', icon: 'siTypescript' },
   { name: 'PHP', category: 'Languages', icon: 'siPhp' },
   { name: 'Ruby', category: 'Languages', icon: 'siRuby' },
   { name: 'Go', category: 'Languages', icon: 'siGo' },
@@ -25,31 +29,37 @@ export const toolkitItems: ToolkitItem[] = [
   { name: 'C++', category: 'Languages', icon: 'siCplusplus' },
   { name: 'Kotlin', category: 'Languages', icon: 'siKotlin' },
   { name: 'Rust', category: 'Languages', icon: 'siRust' },
-  { name: 'HTML', category: 'Languages', icon: 'siHtml5' },
-  { name: 'CSS', category: 'Languages', icon: 'siCss3' },
+  { name: 'Python', category: 'Languages', icon: 'siPython' },
+
+  // Web Technologies & Data
+  { name: 'HTML5', category: 'Web Technologies', icon: 'siHtml5' },
+  { name: 'CSS3', category: 'Web Technologies', icon: 'siCss3' },
   { name: 'JSON', category: 'Data Format', icon: 'siJson' },
 
-  // Frameworks & runtime
+  // Frameworks & Runtime
   { name: 'React', category: 'Frameworks', icon: 'siReact' },
-  { name: 'Next.js', category: 'Frameworks', icon: 'siNextdotjs' },
+  { name: 'Next.js', category: 'Frameworks', icon: 'siNextdotjs', monochrome: true },
   { name: 'Tailwind CSS', category: 'Frameworks', icon: 'siTailwindcss' },
   { name: 'Node.js', category: 'Runtime', icon: 'siNodedotjs' },
 
   // Backend
   { name: 'Supabase', category: 'Backend', icon: 'siSupabase' },
 
-  // AI
-  { name: 'ChatGPT', category: 'AI', icon: 'siOpenai' },
-  { name: 'Claude', category: 'AI', icon: 'siClaude' },
+  // AI Tools
+  { name: 'ChatGPT', category: 'AI Tools', icon: 'siOpenai', monochrome: true },
+  { name: 'Claude', category: 'AI Tools', icon: 'siClaude' },
 
-  // Creative tools
-  { name: 'Figma', category: 'Creative', icon: 'siFigma' },
-  { name: 'Canva', category: 'Creative', icon: 'siCanva' },
-  { name: 'Affinity', category: 'Creative', icon: 'siAffinity' },
-  { name: 'Adobe Lightroom', category: 'Creative', icon: 'siAdobelightroom' },
-  { name: 'CapCut', category: 'Creative', icon: 'siCapcut' },
+  // Creative Tools
+  { name: 'Figma', category: 'Creative Tools', icon: 'siFigma' },
+  { name: 'Canva', category: 'Creative Tools', icon: 'siCanva' },
+  { name: 'Affinity', category: 'Creative Tools', icon: 'siAffinitydesigner' },
+  { name: 'Adobe Lightroom', category: 'Creative Tools', icon: 'siAdobelightroom' },
+  { name: 'CapCut', category: 'Creative Tools', icon: 'siCapcut' },
 
-  // Operating systems
-  { name: 'Ubuntu', category: 'Environment', icon: 'siUbuntu' },
-  { name: 'Arch Linux', category: 'Environment', icon: 'siArchlinux' },
+  // Operating Systems
+  { name: 'Ubuntu', category: 'Operating Systems', icon: 'siUbuntu' },
+  { name: 'Arch Linux', category: 'Operating Systems', icon: 'siArchlinux' },
+
+  // Deployment & Hosting
+  { name: 'Vercel', category: 'Deployment & Hosting', icon: 'siVercel', monochrome: true },
 ];
