@@ -18,6 +18,7 @@ export const toolkitItems: ToolkitItem[] = [
     name: 'PyCharm',
     category: 'Development Tools',
     icon: 'siPycharm',
+    monochrome: true,
   },
   {
     name: 'Replit',
@@ -35,6 +36,7 @@ export const toolkitItems: ToolkitItem[] = [
     name: 'GitHub',
     category: 'Version Control',
     icon: 'siGithub',
+    monochrome: true,
   },
 
   // Programming Languages
@@ -82,6 +84,7 @@ export const toolkitItems: ToolkitItem[] = [
     name: 'Rust',
     category: 'Languages',
     icon: 'siRust',
+    monochrome: true,
   },
   {
     name: 'Python',
@@ -104,6 +107,7 @@ export const toolkitItems: ToolkitItem[] = [
     name: 'JSON',
     category: 'Data Format',
     icon: 'siJson',
+    monochrome: true,
   },
 
   // Frameworks & Runtime
