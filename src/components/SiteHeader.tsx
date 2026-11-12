@@ -32,8 +32,8 @@ export default function SiteHeader({
 
   const featuredLightClass =
     theme === 'light'
-      ? ' !bg-slate-900 !text-white !shadow-[0_0_16px_rgb(15_23_42/0.16)] hover:!shadow-[0_0_22px_rgb(15_23_42/0.24)]'
-      : '';
+      ? ' !bg-[#173B70] !text-white !border-[#31578B] !shadow-[0_0_16px_rgb(23_59_112/0.20)] hover:!shadow-[0_0_22px_rgb(23_59_112/0.32)]'
+    : '';
 
   return (
     <div className="sticky top-4 z-50 mt-7 mb-8 flex w-full justify-center px-4 sm:px-6 lg:px-8">
