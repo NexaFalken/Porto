@@ -119,7 +119,7 @@ export default function CursorGlow() {
       ctx.clip();
 
       ctx.strokeStyle = gradient;
-      ctx.lineWidth = 1.25;
+      ctx.lineWidth = 2;
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
 
