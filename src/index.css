@@ -131,3 +131,12 @@ html[data-theme-switching] *::after {
     animation: none;
   }
 }
+
+/* Toolkit Monochrome Icons */
+:root {
+  --toolkit-monochrome: #171717;
+}
+
+.dark {
+  --toolkit-monochrome: #ffffff;
+}
