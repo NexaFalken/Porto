@@ -22,6 +22,11 @@ export default function CursorGlow() {
     let targetY = -1000;
     let currentX = -1000;
     let currentY = -1000;
+
+    let lastClientX = 0;
+    let lastClientY = 0;
+
+    let pointerActive = false;
     let animationFrame = 0;
 
     const updatePosition = () => {
@@ -30,23 +35,27 @@ export default function CursorGlow() {
       currentX += (targetX - currentX) * easing;
       currentY += (targetY - currentY) * easing;
 
-      const position = `at ${currentX}px ${currentY}px`;
-
-      glow.style.background = `
-        radial-gradient(220px circle ${position},
+      const glowGradient = `
+        radial-gradient(
+          circle 220px at ${currentX}px ${currentY}px,
           rgb(var(--fg) / 0.13) 0%,
           rgb(var(--fg) / 0.06) 35%,
-          transparent 75%)
+          transparent 75%
+        )
       `;
 
-      grid.style.maskImage = `
-        radial-gradient(220px circle ${position},
+      const gridMask = `
+        radial-gradient(
+          circle 220px at ${currentX}px ${currentY}px,
           black 0%,
           rgba(0,0,0,0.65) 48%,
-          transparent 100%)
+          transparent 100%
+        )
       `;
 
-      grid.style.webkitMaskImage = grid.style.maskImage;
+      glow.style.background = glowGradient;
+      grid.style.maskImage = gridMask;
+      grid.style.webkitMaskImage = gridMask;
 
       const distance = Math.hypot(
         targetX - currentX,
@@ -60,31 +69,52 @@ export default function CursorGlow() {
       }
     };
 
-    const handlePointerMove = (event: PointerEvent) => {
-      if (event.pointerType === 'touch') return;
-
-      targetX = event.clientX;
-      targetY = event.clientY;
-
-      glow.style.opacity = '1';
-      grid.style.opacity = '1';
-
+    const startAnimation = () => {
       if (!animationFrame) {
         animationFrame = window.requestAnimationFrame(updatePosition);
       }
     };
 
+    const updateTargetPosition = () => {
+      targetX = lastClientX + window.scrollX;
+      targetY = lastClientY + window.scrollY;
+
+      startAnimation();
+    };
+
+    const handlePointerMove = (event: PointerEvent) => {
+      if (event.pointerType === 'touch') return;
+
+      lastClientX = event.clientX;
+      lastClientY = event.clientY;
+      pointerActive = true;
+
+      updateTargetPosition();
+
+      glow.style.opacity = '1';
+      grid.style.opacity = '1';
+    };
+
+    const handleScroll = () => {
+      if (!pointerActive) return;
+
+      updateTargetPosition();
+    };
+
     const hideEffect = () => {
+      pointerActive = false;
       glow.style.opacity = '0';
       grid.style.opacity = '0';
     };
 
     window.addEventListener('pointermove', handlePointerMove);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     document.addEventListener('mouseleave', hideEffect);
     window.addEventListener('blur', hideEffect);
 
     return () => {
       window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('scroll', handleScroll);
       document.removeEventListener('mouseleave', hideEffect);
       window.removeEventListener('blur', hideEffect);
 
@@ -97,7 +127,7 @@ export default function CursorGlow() {
       aria-hidden="true"
       className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
     >
-      {/* Subtle Grid Across Entire Page */}
+      {/* Base Grid - Entire Page */}
       <div
         className="absolute inset-0"
         style={{
@@ -109,7 +139,7 @@ export default function CursorGlow() {
         }}
       />
 
-      {/* Interactive Grid Reveal */}
+      {/* Interactive Grid Spotlight */}
       <div
         ref={gridRef}
         className="absolute inset-0 opacity-0"
@@ -127,13 +157,13 @@ export default function CursorGlow() {
         }}
       />
 
-      {/* Cursor Light */}
+      {/* Soft Cursor Light */}
       <div
         ref={glowRef}
         className="absolute inset-0 opacity-0"
         style={{
           background:
-            'radial-gradient(220px circle at -1000px -1000px, rgb(var(--fg) / 0.13), transparent 75%)',
+            'radial-gradient(circle 220px at -1000px -1000px, rgb(var(--fg) / 0.13), transparent 75%)',
           filter: 'blur(30px)',
           transition: 'opacity 350ms ease',
         }}
