@@ -118,8 +118,8 @@ export default function CursorGlow() {
       ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
       ctx.clip();
 
-      ctx.strokeStyle = '#00d9ff';
-      ctx.lineWidth = 4;
+      ctx.strokeStyle = 'gradient';
+      ctx.lineWidth = 1.5;
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
 
