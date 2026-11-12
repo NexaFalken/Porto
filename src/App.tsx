@@ -1,10 +1,12 @@
 
 import BackToTop from '@/components/BackToTop';
+import CursorGlow from '@/components/CursorGlow';
 import Footer from '@/components/Footer';
 import SiteHeader from '@/components/SiteHeader';
 import { sectionIds } from '@/data/portfolio';
 import { useActiveSection } from '@/hooks/useActiveSection';
 import { useTheme } from '@/hooks/useTheme';
+
 import About from '@/components/sections/About';
 import Contact from '@/components/sections/Contact';
 import Expertise from '@/components/sections/Expertise';
@@ -18,8 +20,11 @@ export default function App() {
   const activeId = useActiveSection(sectionIds);
 
   return (
-    <>
-      <main>
+    <div className="relative isolate">
+      {/* Global Cursor Glow */}
+      <CursorGlow />
+
+      <main className="relative z-10">
         <Hero />
 
         <SiteHeader
@@ -36,8 +41,11 @@ export default function App() {
         <Contact />
       </main>
 
-      <Footer />
+      <div className="relative z-10">
+        <Footer />
+      </div>
+
       <BackToTop />
-    </>
+    </div>
   );
 }
