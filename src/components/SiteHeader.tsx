@@ -1,6 +1,6 @@
 
-import { Hexagon, Menu, X } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { Menu, X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import ThemeToggle from '@/components/ThemeToggle';
 import { navSections, type SectionId } from '@/data/portfolio';
 import type { Theme } from '@/hooks/useTheme';
@@ -17,7 +17,9 @@ export default function SiteHeader({
   onToggleTheme,
 }: SiteHeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const logoRef = useRef<SVGSVGElement>(null);
 
+  // Close mobile menu with Escape
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setMenuOpen(false);
@@ -27,13 +29,34 @@ export default function SiteHeader({
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
+  // Rotate logo based on page scroll position
+  useEffect(() => {
+    const logo = logoRef.current;
+    if (!logo) return;
+
+    const updateRotation = () => {
+      const rotation = window.scrollY * 0.3;
+      logo.style.transform = `rotate(${rotation}deg)`;
+    };
+
+    updateRotation();
+
+    window.addEventListener('scroll', updateRotation, {
+      passive: true,
+    });
+
+    return () => {
+      window.removeEventListener('scroll', updateRotation);
+    };
+  }, []);
+
   const featuredClass =
     'relative isolate overflow-hidden rounded-lg border border-white/25 bg-accent text-black shadow-[0_0_18px_rgb(var(--accent)/0.32)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_24px_rgb(var(--accent)/0.48)] dark:bg-accent dark:text-black dark:shadow-[0_0_18px_rgb(var(--accent)/0.32)] dark:hover:shadow-[0_0_24px_rgb(var(--accent)/0.48)]';
 
   const featuredLightClass =
     theme === 'light'
       ? ' !bg-[#173B70] !text-white !border-[#31578B] !shadow-[0_0_16px_rgb(23_59_112/0.20)] hover:!shadow-[0_0_22px_rgb(23_59_112/0.32)]'
-    : '';
+      : '';
 
   return (
     <div className="sticky top-4 z-50 mt-7 mb-8 flex w-full justify-center px-4 sm:px-6 lg:px-8">
@@ -46,10 +69,23 @@ export default function SiteHeader({
           className="group flex min-w-0 shrink-0 items-center gap-3"
         >
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-accent/20 bg-accent/10">
-            <Hexagon
-              className="h-7 w-7 text-accent transition-transform duration-700 ease-in-out group-hover:rotate-[360deg]"
-              strokeWidth={1.8}
-            />
+            <svg
+              ref={logoRef}
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-7 w-7 text-accent will-change-transform"
+              style={{ transformOrigin: 'center' }}
+              aria-hidden="true"
+            >
+              <path
+                d="M12.5 2.5L21 19.5L3 15.5L12.5 2.5Z"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
           </div>
 
           <div className="flex min-w-0 flex-col">
