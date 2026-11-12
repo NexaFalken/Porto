@@ -81,9 +81,11 @@ export default function About() {
                       size={16}
                       className="text-[#4389B8] dark:text-[#69C8E8]"
                     />
+
                     <span className="font-mono text-xs font-medium text-[#344457] dark:text-[#E1EAF2]">
                       about.tsx
                     </span>
+
                     <span className="h-1.5 w-1.5 rounded-full bg-[#4389B8] dark:bg-[#69C8E8]" />
                   </div>
 
@@ -92,64 +94,68 @@ export default function About() {
                   </span>
                 </div>
 
+                {/* Editor Content */}
+                <div className="h-[220px] overflow-y-auto overscroll-contain p-4 font-mono text-[11px] leading-6 sm:h-[260px] sm:p-5 sm:text-[12px]">
+                  {aboutContent.paragraphs.map((paragraph, index) => {
+                    const lineStart = index * 4 + 1;
+                    const variableName =
+                      index === 0 ? 'introduction' : 'background';
 
-{/* Editor Content */}
-<div className="h-[300px] overflow-y-auto overscroll-contain p-5 font-mono text-[12px] leading-7 scrollbar-thin scrollbar-thumb-[#B8C4D0] scrollbar-track-transparent dark:scrollbar-thumb-[#405469] sm:h-[340px] sm:p-7 sm:text-[13px]">
-  {aboutContent.paragraphs.map((paragraph, index) => {
-    const lineStart = index * 4 + 1;
-    const variableName =
-      index === 0 ? 'introduction' : 'background';
+                    return (
+                      <div
+                        key={index}
+                        className={index > 0 ? 'mt-9' : ''}
+                      >
+                        {/* Opening Line */}
+                        <div className="grid grid-cols-[2rem_minmax(0,1fr)] gap-3">
+                          <span className="select-none text-right text-[#9AA8B8] dark:text-[#607589]">
+                            {String(lineStart).padStart(2, '0')}
+                          </span>
 
-    return (
-      <div
-        key={index}
-        className={index > 0 ? 'mt-9' : ''}
-      >
-        <div className="grid grid-cols-[2rem_minmax(0,1fr)] gap-3">
-          <span className="select-none text-right text-[#9AA8B8] dark:text-[#607589]">
-            {String(lineStart).padStart(2, '0')}
-          </span>
+                          <div className="whitespace-nowrap">
+                            <span className="text-[#A04FC5] dark:text-[#C792EA]">
+                              const
+                            </span>{' '}
 
-          <div className="whitespace-nowrap">
-            <span className="text-[#A04FC5] dark:text-[#C792EA]">
-              const
-            </span>{' '}
-            <span className="text-[#3479B8] dark:text-[#82AAFF]">
-              {variableName}
-            </span>{' '}
-            <span className="text-[#596B7D] dark:text-[#D1DCE8]">
-              =
-            </span>{' '}
-            <span className="text-[#568D42] dark:text-[#C3E88D]">
-              {'`'}
-            </span>
-          </div>
-        </div>
+                            <span className="text-[#3479B8] dark:text-[#82AAFF]">
+                              {variableName}
+                            </span>{' '}
 
-        <div className="mt-1 grid grid-cols-[2rem_minmax(0,1fr)] gap-3">
-          <span className="select-none text-right text-[#9AA8B8] dark:text-[#607589]">
-            {String(lineStart + 1).padStart(2, '0')}
-          </span>
+                            <span className="text-[#596B7D] dark:text-[#D1DCE8]">
+                              =
+                            </span>{' '}
 
-          <p className="min-w-0 border-l border-[#C8D5E1] pl-5 text-[#568D42] dark:border-[#344C45] dark:text-[#C3E88D]">
-            {paragraph}
-          </p>
-        </div>
+                            <span className="text-[#568D42] dark:text-[#C3E88D]">
+                              {'`'}
+                            </span>
+                          </div>
+                        </div>
 
-        <div className="mt-1 grid grid-cols-[2rem_minmax(0,1fr)] gap-3">
-          <span className="select-none text-right text-[#9AA8B8] dark:text-[#607589]">
-            {String(lineStart + 2).padStart(2, '0')}
-          </span>
+                        {/* Paragraph Text */}
+                        <div className="mt-1 grid grid-cols-[2rem_minmax(0,1fr)] gap-3">
+                          <span className="select-none text-right text-[#9AA8B8] dark:text-[#607589]">
+                            {String(lineStart + 1).padStart(2, '0')}
+                          </span>
 
-          <span className="text-[#568D42] dark:text-[#C3E88D]">
-            {'`;'}
-          </span>
-        </div>
-      </div>
-    );
-  })}
-</div>
+                          <p className="min-w-0 border-l border-[#C8D5E1] pl-5 text-[#568D42] dark:border-[#344C45] dark:text-[#C3E88D]">
+                            {paragraph}
+                          </p>
+                        </div>
 
+                        {/* Closing Line */}
+                        <div className="mt-1 grid grid-cols-[2rem_minmax(0,1fr)] gap-3">
+                          <span className="select-none text-right text-[#9AA8B8] dark:text-[#607589]">
+                            {String(lineStart + 2).padStart(2, '0')}
+                          </span>
+
+                          <span className="text-[#568D42] dark:text-[#C3E88D]">
+                            {'`;'}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
 
                 {/* Editor Footer */}
                 <div className="flex items-center justify-between border-t border-[#DCE3EB] bg-[#E9EEF4] px-4 py-2 dark:border-[#344454] dark:bg-[#192633]">
@@ -213,6 +219,7 @@ export default function About() {
                     className="group mt-7 inline-flex items-center gap-2 rounded-lg bg-[#20C5E8] px-5 py-3 text-sm font-semibold text-[#071923] shadow-[0_0_18px_rgba(32,197,232,0.18)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#47D3EF] hover:shadow-[0_0_24px_rgba(32,197,232,0.3)]"
                   >
                     Read Article
+
                     <ArrowUpRight
                       size={16}
                       className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
