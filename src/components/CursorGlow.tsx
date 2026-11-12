@@ -139,23 +139,37 @@ export default function CursorGlow() {
         }}
       />
 
-      {/* Interactive Grid Spotlight */}
-      <div
-        ref={gridRef}
-        className="absolute inset-0 opacity-0"
-        style={{
-          backgroundImage: `
-            linear-gradient(to right, rgb(var(--line) / 0.9) 1px, transparent 1px),
-            linear-gradient(to bottom, rgb(var(--line) / 0.9) 1px, transparent 1px)
-          `,
-          backgroundSize: '72px 72px',
-          maskImage:
-            'radial-gradient(circle 220px at -1000px -1000px, black, transparent)',
-          WebkitMaskImage:
-            'radial-gradient(circle 220px at -1000px -1000px, black, transparent)',
-          transition: 'opacity 350ms ease',
-        }}
-      />
+ {/* Interactive Grid Spotlight */}
+<div
+  ref={gridRef}
+  className="absolute inset-0 opacity-0"
+  style={{
+    backgroundImage: `
+      linear-gradient(
+        to right,
+        rgb(var(--fg) / 0.85) 0px,
+        rgb(var(--fg) / 0.85) 1px,
+        rgb(var(--line) / 0.9) 1px,
+        rgb(var(--line) / 0.9) 2px,
+        transparent 2px
+      ),
+      linear-gradient(
+        to bottom,
+        rgb(var(--fg) / 0.85) 0px,
+        rgb(var(--fg) / 0.85) 1px,
+        rgb(var(--line) / 0.9) 1px,
+        rgb(var(--line) / 0.9) 2px,
+        transparent 2px
+      )
+    `,
+    backgroundSize: '72px 72px',
+    maskImage:
+      'radial-gradient(circle 220px at -1000px -1000px, black, transparent)',
+    WebkitMaskImage:
+      'radial-gradient(circle 220px at -1000px -1000px, black, transparent)',
+    transition: 'opacity 350ms ease',
+  }}
+/>
 
       {/* Soft Cursor Light */}
       <div
