@@ -147,26 +147,21 @@ export default function CursorGlow() {
     backgroundImage: `
       linear-gradient(
         to right,
-        rgb(var(--fg) / 0.95) 0px,
         rgb(var(--line) / 0.9) 1px,
         transparent 1px
       ),
       linear-gradient(
         to bottom,
-        rgb(var(--fg) / 0.95) 0px,
         rgb(var(--line) / 0.9) 1px,
         transparent 1px
       )
     `,
     backgroundSize: '72px 72px',
     maskImage:
-      'radial-gradient(circle 220px at -1000px -1000px, black, transparent)',
+      'radial-gradient(circle 220px at -1000px -1000px, black 0%, rgba(0,0,0,0.8) 45%, transparent 100%)',
     WebkitMaskImage:
-      'radial-gradient(circle 220px at -1000px -1000px, black, transparent)',
-    filter: `
-      drop-shadow(0 1px 1px rgb(var(--fg) / 0.45))
-      drop-shadow(0 -1px 1px rgb(0 0 0 / 0.3))
-    `,
+      'radial-gradient(circle 220px at -1000px -1000px, black 0%, rgba(0,0,0,0.8) 45%, transparent 100%)',
+    filter: 'drop-shadow(0 0 0.6px rgb(var(--fg) / 0.35))',
     transition: 'opacity 350ms ease',
   }}
 />
