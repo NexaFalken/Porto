@@ -92,65 +92,64 @@ export default function About() {
                   </span>
                 </div>
 
-                {/* Editor Content */}
-                <div className="overflow-x-auto p-5 font-mono text-[12px] leading-7 sm:p-7 sm:text-[13px]">
-                  {aboutContent.paragraphs.map((paragraph, index) => {
-                    const lineStart = index * 4 + 1;
-                    const variableName =
-                      index === 0 ? 'introduction' : 'background';
 
-                    return (
-                      <div
-                        key={index}
-                        className={index > 0 ? 'mt-9' : ''}
-                      >
-                        {/* Opening Line */}
-                        <div className="grid grid-cols-[2rem_minmax(0,1fr)] gap-3">
-                          <span className="select-none text-right text-[#9AA8B8] dark:text-[#607589]">
-                            {String(lineStart).padStart(2, '0')}
-                          </span>
+{/* Editor Content */}
+<div className="h-[300px] overflow-y-auto overscroll-contain p-5 font-mono text-[12px] leading-7 scrollbar-thin scrollbar-thumb-[#B8C4D0] scrollbar-track-transparent dark:scrollbar-thumb-[#405469] sm:h-[340px] sm:p-7 sm:text-[13px]">
+  {aboutContent.paragraphs.map((paragraph, index) => {
+    const lineStart = index * 4 + 1;
+    const variableName =
+      index === 0 ? 'introduction' : 'background';
 
-                          <div className="whitespace-nowrap">
-                            <span className="text-[#A04FC5] dark:text-[#C792EA]">
-                              const
-                            </span>{' '}
-                            <span className="text-[#3479B8] dark:text-[#82AAFF]">
-                              {variableName}
-                            </span>{' '}
-                            <span className="text-[#596B7D] dark:text-[#D1DCE8]">
-                              =
-                            </span>{' '}
-                            <span className="text-[#568D42] dark:text-[#C3E88D]">
-                              {'`'}
-                            </span>
-                          </div>
-                        </div>
+    return (
+      <div
+        key={index}
+        className={index > 0 ? 'mt-9' : ''}
+      >
+        <div className="grid grid-cols-[2rem_minmax(0,1fr)] gap-3">
+          <span className="select-none text-right text-[#9AA8B8] dark:text-[#607589]">
+            {String(lineStart).padStart(2, '0')}
+          </span>
 
-                        {/* Paragraph Text */}
-                        <div className="mt-1 grid grid-cols-[2rem_minmax(0,1fr)] gap-3">
-                          <span className="select-none text-right text-[#9AA8B8] dark:text-[#607589]">
-                            {String(lineStart + 1).padStart(2, '0')}
-                          </span>
+          <div className="whitespace-nowrap">
+            <span className="text-[#A04FC5] dark:text-[#C792EA]">
+              const
+            </span>{' '}
+            <span className="text-[#3479B8] dark:text-[#82AAFF]">
+              {variableName}
+            </span>{' '}
+            <span className="text-[#596B7D] dark:text-[#D1DCE8]">
+              =
+            </span>{' '}
+            <span className="text-[#568D42] dark:text-[#C3E88D]">
+              {'`'}
+            </span>
+          </div>
+        </div>
 
-                          <p className="min-w-0 border-l border-[#C8D5E1] pl-5 text-[#568D42] dark:border-[#344C45] dark:text-[#C3E88D]">
-                            {paragraph}
-                          </p>
-                        </div>
+        <div className="mt-1 grid grid-cols-[2rem_minmax(0,1fr)] gap-3">
+          <span className="select-none text-right text-[#9AA8B8] dark:text-[#607589]">
+            {String(lineStart + 1).padStart(2, '0')}
+          </span>
 
-                        {/* Closing Line */}
-                        <div className="mt-1 grid grid-cols-[2rem_minmax(0,1fr)] gap-3">
-                          <span className="select-none text-right text-[#9AA8B8] dark:text-[#607589]">
-                            {String(lineStart + 2).padStart(2, '0')}
-                          </span>
+          <p className="min-w-0 border-l border-[#C8D5E1] pl-5 text-[#568D42] dark:border-[#344C45] dark:text-[#C3E88D]">
+            {paragraph}
+          </p>
+        </div>
 
-                          <span className="text-[#568D42] dark:text-[#C3E88D]">
-                            {'`;'}
-                          </span>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
+        <div className="mt-1 grid grid-cols-[2rem_minmax(0,1fr)] gap-3">
+          <span className="select-none text-right text-[#9AA8B8] dark:text-[#607589]">
+            {String(lineStart + 2).padStart(2, '0')}
+          </span>
+
+          <span className="text-[#568D42] dark:text-[#C3E88D]">
+            {'`;'}
+          </span>
+        </div>
+      </div>
+    );
+  })}
+</div>
+
 
                 {/* Editor Footer */}
                 <div className="flex items-center justify-between border-t border-[#DCE3EB] bg-[#E9EEF4] px-4 py-2 dark:border-[#344454] dark:bg-[#192633]">
