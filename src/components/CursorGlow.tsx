@@ -13,10 +13,6 @@ const MOBILE_MAX_DURATION = 3000;
 const MOBILE_MIN_DELAY = 1200;
 const MOBILE_MAX_DELAY = 3200;
 
-// Mobile glow
-const MOBILE_GLOW_RADIUS = 260;
-const MOBILE_GLOW_STRENGTH = 0.2;
-
 type Bump = {
   x: number;
   y: number;
@@ -37,10 +33,6 @@ export default function CursorGlow() {
     if (!container || !canvas || !glow) return;
 
     const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
-    const isMobileLayout =
-      window.matchMedia('(max-width: 768px)').matches ||
-      window.matchMedia('(pointer: coarse)').matches;
-
     const prefersReducedMotion = window.matchMedia(
       '(prefers-reduced-motion: reduce)',
     ).matches;
@@ -53,14 +45,6 @@ export default function CursorGlow() {
 
     const randomBetween = (min: number, max: number) =>
       Math.random() * (max - min) + min;
-
-    const getCSSColor = (property: string, fallback: string) =>
-      getComputedStyle(document.documentElement)
-        .getPropertyValue(property)
-        .trim() || fallback;
-
-    const getLineColor = () => getCSSColor('--line', '42 46 54');
-    const getForegroundColor = () => getCSSColor('--fg', '236 233 226');
 
     const resizeCanvas = () => {
       const rect = container.getBoundingClientRect();
@@ -78,50 +62,6 @@ export default function CursorGlow() {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
-    // Draw soft radial glow
-    const drawGlow = (
-      centerX: number,
-      centerY: number,
-      radius: number,
-      opacity: number,
-    ) => {
-      const fgColor = getForegroundColor();
-
-      const gradient = ctx.createRadialGradient(
-        centerX,
-        centerY,
-        0,
-        centerX,
-        centerY,
-        radius,
-      );
-
-      gradient.addColorStop(
-        0,
-        `rgb(${fgColor} / ${MOBILE_GLOW_STRENGTH * opacity})`,
-      );
-      gradient.addColorStop(
-        0.35,
-        `rgb(${fgColor} / ${0.09 * opacity})`,
-      );
-      gradient.addColorStop(
-        0.7,
-        `rgb(${fgColor} / ${0.035 * opacity})`,
-      );
-      gradient.addColorStop(1, `rgb(${fgColor} / 0)`);
-
-      ctx.save();
-      ctx.fillStyle = gradient;
-      ctx.fillRect(
-        centerX - radius,
-        centerY - radius,
-        radius * 2,
-        radius * 2,
-      );
-      ctx.restore();
-    };
-
-    // Draw convex grid distortion
     const drawBump = (
       centerX: number,
       centerY: number,
@@ -129,7 +69,11 @@ export default function CursorGlow() {
       strength: number,
       opacity = 1,
     ) => {
-      const lineColor = getLineColor();
+      const lineColor = getComputedStyle(
+        document.documentElement,
+      )
+        .getPropertyValue('--line')
+        .trim();
 
       const distortPoint = (x: number, y: number) => {
         const dx = x - centerX;
@@ -234,7 +178,7 @@ export default function CursorGlow() {
     window.addEventListener('resize', resizeCanvas);
 
     // MOBILE: Two independent ambient bumps
-    if (isMobileLayout || !hasFinePointer) {
+    if (!hasFinePointer) {
       const bumps: Array<Bump | null> = [null, null];
       const timers: Array<number | null> = [null, null];
 
@@ -279,17 +223,6 @@ export default function CursorGlow() {
           });
         });
 
-        // Draw all glows first
-        activeBumps.forEach(({ bump, opacity }) => {
-          drawGlow(
-            bump.x,
-            bump.y,
-            MOBILE_GLOW_RADIUS,
-            opacity,
-          );
-        });
-
-        // Draw all distortions afterwards
         activeBumps.forEach(({ bump, opacity, strength }) => {
           drawBump(
             bump.x,
@@ -307,33 +240,6 @@ export default function CursorGlow() {
         }
       };
 
-      const startBump = (index: number) => {
-        if (!running) return;
-
-        const marginX = Math.min(40, canvasWidth / 2);
-        const marginY = Math.min(60, canvasHeight / 2);
-
-        bumps[index] = {
-          x: randomBetween(
-            marginX,
-            Math.max(marginX + 1, canvasWidth - marginX),
-          ),
-          y: randomBetween(
-            marginY,
-            Math.max(marginY + 1, canvasHeight - marginY),
-          ),
-          start: performance.now(),
-          duration: randomBetween(
-            MOBILE_MIN_DURATION,
-            MOBILE_MAX_DURATION,
-          ),
-        };
-
-        if (!animationFrame) {
-          animationFrame = window.requestAnimationFrame(renderBumps);
-        }
-      };
-
       const scheduleBump = (index: number, initial = false) => {
         if (!running) return;
 
@@ -343,7 +249,22 @@ export default function CursorGlow() {
 
         timers[index] = window.setTimeout(() => {
           timers[index] = null;
-          startBump(index);
+
+          if (!running) return;
+
+          bumps[index] = {
+            x: randomBetween(40, Math.max(41, canvasWidth - 40)),
+            y: randomBetween(60, Math.max(61, canvasHeight - 60)),
+            start: performance.now(),
+            duration: randomBetween(
+              MOBILE_MIN_DURATION,
+              MOBILE_MAX_DURATION,
+            ),
+          };
+
+          if (!animationFrame) {
+            animationFrame = window.requestAnimationFrame(renderBumps);
+          }
         }, delay);
       };
 
