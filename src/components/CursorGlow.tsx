@@ -5,12 +5,20 @@ const GRID_SIZE = 72;
 const SPOTLIGHT_RADIUS = 220;
 const DISTORTION_STRENGTH = 0.32;
 
-// Mobile ambient animation
-const MOBILE_RADIUS = 240;
-const MOBILE_STRENGTH = 0.65;
-const MOBILE_DURATION = 3200;
-const MOBILE_MIN_DELAY = 3000;
-const MOBILE_MAX_DELAY = 5000;
+// Mobile ambient bumps
+const MOBILE_RADIUS = 230;
+const MOBILE_STRENGTH = 0.5;
+const MOBILE_MIN_DURATION = 2200;
+const MOBILE_MAX_DURATION = 3000;
+const MOBILE_MIN_DELAY = 1200;
+const MOBILE_MAX_DELAY = 3200;
+
+type Bump = {
+  x: number;
+  y: number;
+  start: number;
+  duration: number;
+};
 
 export default function CursorGlow() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -24,28 +32,19 @@ export default function CursorGlow() {
 
     if (!container || !canvas || !glow) return;
 
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
     const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
     const prefersReducedMotion = window.matchMedia(
       '(prefers-reduced-motion: reduce)',
     ).matches;
 
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
     let canvasWidth = 0;
     let canvasHeight = 0;
 
-    let animationFrame = 0;
-    let mobileTimeout: ReturnType<typeof setTimeout> | undefined;
-
-    let targetX = -1000;
-    let targetY = -1000;
-    let currentX = -1000;
-    let currentY = -1000;
-
-    let lastClientX = 0;
-    let lastClientY = 0;
-    let pointerActive = false;
+    const randomBetween = (min: number, max: number) =>
+      Math.random() * (max - min) + min;
 
     const resizeCanvas = () => {
       const rect = container.getBoundingClientRect();
@@ -68,42 +67,38 @@ export default function CursorGlow() {
         .getPropertyValue('--line')
         .trim();
 
-    const distortPoint = (
-      x: number,
-      y: number,
-      centerX: number,
-      centerY: number,
-      radius: number,
-      strength: number,
-    ) => {
-      const dx = x - centerX;
-      const dy = y - centerY;
-      const distance = Math.hypot(dx, dy);
-
-      const influence = Math.exp(
-        -(distance * distance) / (radius * radius * 0.65),
-      );
-
-      const scale = 1 + strength * influence;
-
-      return {
-        x: centerX + dx * scale,
-        y: centerY + dy * scale,
-      };
-    };
-
+    // Draw a distorted grid around a point
     const drawBump = (
       centerX: number,
       centerY: number,
       radius: number,
       strength: number,
       opacity = 1,
+      clear = true,
     ) => {
-      ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-
-      if (strength <= 0.001) return;
+      if (clear) {
+        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+      }
 
       const lineColor = getLineColor();
+
+      const distortPoint = (x: number, y: number) => {
+        const dx = x - centerX;
+        const dy = y - centerY;
+        const distance = Math.hypot(dx, dy);
+
+        const influence = Math.exp(
+          -(distance * distance) /
+            (radius * radius * 0.65),
+        );
+
+        const scale = 1 + strength * influence;
+
+        return {
+          x: centerX + dx * scale,
+          y: centerY + dy * scale,
+        };
+      };
 
       const gradient = ctx.createRadialGradient(
         centerX,
@@ -114,9 +109,9 @@ export default function CursorGlow() {
         radius,
       );
 
-      gradient.addColorStop(0, `rgb(${lineColor} / ${0.95 * opacity})`);
-      gradient.addColorStop(0.48, `rgb(${lineColor} / ${0.75 * opacity})`);
-      gradient.addColorStop(0.8, `rgb(${lineColor} / ${0.3 * opacity})`);
+      gradient.addColorStop(0, `rgb(${lineColor} / ${0.9 * opacity})`);
+      gradient.addColorStop(0.48, `rgb(${lineColor} / ${0.7 * opacity})`);
+      gradient.addColorStop(0.8, `rgb(${lineColor} / ${0.28 * opacity})`);
       gradient.addColorStop(1, `rgb(${lineColor} / 0)`);
 
       ctx.save();
@@ -127,7 +122,6 @@ export default function CursorGlow() {
 
       ctx.strokeStyle = gradient;
       ctx.lineWidth = 2;
-      ctx.globalAlpha = 1;
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
 
@@ -148,14 +142,7 @@ export default function CursorGlow() {
           y <= centerY + radius + 20;
           y += 4
         ) {
-          const point = distortPoint(
-            x,
-            y,
-            centerX,
-            centerY,
-            radius,
-            strength,
-          );
+          const point = distortPoint(x, y);
 
           if (y === centerY - radius - 20) {
             ctx.moveTo(point.x, point.y);
@@ -176,14 +163,7 @@ export default function CursorGlow() {
           x <= centerX + radius + 20;
           x += 4
         ) {
-          const point = distortPoint(
-            x,
-            y,
-            centerX,
-            centerY,
-            radius,
-            strength,
-          );
+          const point = distortPoint(x, y);
 
           if (x === centerX - radius - 20) {
             ctx.moveTo(point.x, point.y);
@@ -198,239 +178,278 @@ export default function CursorGlow() {
       ctx.restore();
     };
 
-    const clearCanvas = () => {
-      ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-    };
-
-    const resizeObserver = new ResizeObserver(() => {
-      resizeCanvas();
-
-      if (hasFinePointer && pointerActive) {
-        drawBump(
-          currentX,
-          currentY,
-          SPOTLIGHT_RADIUS,
-          DISTORTION_STRENGTH,
-        );
-      }
-    });
-
-    resizeObserver.observe(container);
     resizeCanvas();
 
-    // DESKTOP: Cursor-following distortion
-    if (hasFinePointer) {
-      const updatePosition = () => {
-        const easing = prefersReducedMotion ? 1 : 0.16;
+    const resizeObserver = new ResizeObserver(resizeCanvas);
+    resizeObserver.observe(container);
 
-        currentX += (targetX - currentX) * easing;
-        currentY += (targetY - currentY) * easing;
+    window.addEventListener('resize', resizeCanvas);
 
-        drawBump(
-          currentX,
-          currentY,
-          SPOTLIGHT_RADIUS,
-          DISTORTION_STRENGTH,
-        );
+    // MOBILE: Two independent random convex bumps
+    if (!hasFinePointer) {
+      if (prefersReducedMotion) {
+        return () => {
+          resizeObserver.disconnect();
+          window.removeEventListener('resize', resizeCanvas);
+        };
+      }
 
-        glow.style.background = `
-          radial-gradient(
-            circle ${SPOTLIGHT_RADIUS}px at ${currentX}px ${currentY}px,
-            rgb(var(--fg) / 0.13) 0%,
-            rgb(var(--fg) / 0.06) 35%,
-            transparent 75%
-          )
-        `;
+      const bumps: Array<Bump | null> = [null, null];
+      const timers: Array<number | null> = [null, null];
 
-        const distance = Math.hypot(
-          targetX - currentX,
-          targetY - currentY,
-        );
+      let animationFrame = 0;
+      let running = false;
 
-        if (distance > 0.5) {
-          animationFrame = window.requestAnimationFrame(updatePosition);
+      const clearBumps = () => {
+        bumps[0] = null;
+        bumps[1] = null;
+        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+      };
+
+      const renderBumps = (timestamp: number) => {
+        if (!running) return;
+
+        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+        let hasActiveBump = false;
+
+        bumps.forEach((bump, index) => {
+          if (!bump) return;
+
+          const progress = Math.min(
+            (timestamp - bump.start) / bump.duration,
+            1,
+          );
+
+          if (progress >= 1) {
+            bumps[index] = null;
+            scheduleBump(index);
+            return;
+          }
+
+          hasActiveBump = true;
+
+          // Smooth appearance and disappearance
+          const envelope = Math.sin(progress * Math.PI);
+
+          drawBump(
+            bump.x,
+            bump.y,
+            MOBILE_RADIUS,
+            MOBILE_STRENGTH * envelope,
+            envelope,
+            false,
+          );
+        });
+
+        if (hasActiveBump) {
+          animationFrame = window.requestAnimationFrame(renderBumps);
         } else {
           animationFrame = 0;
         }
       };
 
-      const startAnimation = () => {
+      const startBump = (index: number) => {
+        if (!running) return;
+
+        bumps[index] = {
+          x: randomBetween(40, Math.max(41, canvasWidth - 40)),
+          y: randomBetween(60, Math.max(61, canvasHeight - 60)),
+          start: performance.now(),
+          duration: randomBetween(
+            MOBILE_MIN_DURATION,
+            MOBILE_MAX_DURATION,
+          ),
+        };
+
         if (!animationFrame) {
-          animationFrame = window.requestAnimationFrame(updatePosition);
+          animationFrame = window.requestAnimationFrame(renderBumps);
         }
       };
 
-      const updateTargetPosition = () => {
-        const rect = container.getBoundingClientRect();
+      const scheduleBump = (index: number, initial = false) => {
+        if (!running) return;
 
-        targetX = lastClientX - rect.left;
-        targetY = lastClientY - rect.top;
+        const delay = initial
+          ? randomBetween(200, 2200)
+          : randomBetween(MOBILE_MIN_DELAY, MOBILE_MAX_DELAY);
 
-        startAnimation();
+        timers[index] = window.setTimeout(() => {
+          timers[index] = null;
+          startBump(index);
+        }, delay);
       };
 
-      const handlePointerMove = (event: PointerEvent) => {
-        if (event.pointerType === 'touch') return;
+      const stopMobileAnimation = () => {
+        running = false;
 
-        lastClientX = event.clientX;
-        lastClientY = event.clientY;
-        pointerActive = true;
+        timers.forEach((timer, index) => {
+          if (timer !== null) {
+            window.clearTimeout(timer);
+            timers[index] = null;
+          }
+        });
 
-        updateTargetPosition();
+        if (animationFrame) {
+          window.cancelAnimationFrame(animationFrame);
+          animationFrame = 0;
+        }
 
-        glow.style.opacity = '1';
-        canvas.style.opacity = '1';
+        clearBumps();
       };
 
-      const handleScroll = () => {
-        if (pointerActive) updateTargetPosition();
+      const startMobileAnimation = () => {
+        if (running) return;
+
+        running = true;
+        scheduleBump(0, true);
+        scheduleBump(1, true);
       };
 
-      const hideEffect = () => {
-        pointerActive = false;
-
-        glow.style.opacity = '0';
-        canvas.style.opacity = '0';
-
-        clearCanvas();
-      };
-
-      window.addEventListener('pointermove', handlePointerMove);
-      window.addEventListener('scroll', handleScroll, { passive: true });
-      document.addEventListener('mouseleave', hideEffect);
-      window.addEventListener('blur', hideEffect);
-
-      return () => {
-        window.removeEventListener('pointermove', handlePointerMove);
-        window.removeEventListener('scroll', handleScroll);
-        document.removeEventListener('mouseleave', hideEffect);
-        window.removeEventListener('blur', hideEffect);
-
-        resizeObserver.disconnect();
-        window.cancelAnimationFrame(animationFrame);
-      };
-    }
-
-    // MOBILE: Slow random convex bumps
-    if (prefersReducedMotion) {
-      resizeObserver.disconnect();
-      return;
-    }
-
-    let mobileAnimationFrame = 0;
-    let animationStart = 0;
-
-    let bumpX = 0;
-    let bumpY = 0;
-
-    const randomBetween = (min: number, max: number) =>
-      min + Math.random() * (max - min);
-
-    const scheduleNextBump = () => {
-      if (document.hidden) return;
-
-      const delay = randomBetween(
-        MOBILE_MIN_DELAY,
-        MOBILE_MAX_DELAY,
-      );
-
-      mobileTimeout = setTimeout(startMobileBump, delay);
-    };
-
-    const startMobileBump = () => {
-      if (document.hidden || canvasWidth <= 0 || canvasHeight <= 0) {
-        scheduleNextBump();
-        return;
-      }
-
-      const padding = MOBILE_RADIUS + 20;
-
-      bumpX = randomBetween(
-        Math.min(padding, canvasWidth / 2),
-        Math.max(canvasWidth - padding, canvasWidth / 2),
-      );
-
-      bumpY = randomBetween(
-        Math.min(padding, canvasHeight / 2),
-        Math.max(canvasHeight - padding, canvasHeight / 2),
-      );
-
-      animationStart = 0;
-
-      canvas.style.opacity = '1';
-
-      const animateBump = (timestamp: number) => {
-        if (!animationStart) animationStart = timestamp;
-
-        const progress = Math.min(
-          (timestamp - animationStart) / MOBILE_DURATION,
-          1,
-        );
-
-        // Smooth appearance and disappearance
-        const envelope = Math.pow(
-        Math.sin(progress * Math.PI),
-        0.7,
-        );
-
-        // Gentle rise and fall
-        const strength = MOBILE_STRENGTH * envelope;
-
-        drawBump(
-          bumpX,
-          bumpY,
-          MOBILE_RADIUS,
-          strength,
-          envelope,
-        );
-
-        if (progress < 1) {
-          mobileAnimationFrame =
-            window.requestAnimationFrame(animateBump);
+      const handleVisibilityChange = () => {
+        if (document.hidden) {
+          stopMobileAnimation();
         } else {
-          clearCanvas();
-          canvas.style.opacity = '0';
-          mobileAnimationFrame = 0;
-
-          scheduleNextBump();
+          startMobileAnimation();
         }
       };
 
-      mobileAnimationFrame =
-        window.requestAnimationFrame(animateBump);
-    };
+      startMobileAnimation();
 
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        if (mobileTimeout) clearTimeout(mobileTimeout);
-
-        window.cancelAnimationFrame(mobileAnimationFrame);
-        mobileAnimationFrame = 0;
-
-        clearCanvas();
-        canvas.style.opacity = '0';
-      } else {
-        scheduleNextBump();
-      }
-    };
-
-    document.addEventListener(
-      'visibilitychange',
-      handleVisibilityChange,
-    );
-
-    scheduleNextBump();
-
-    return () => {
-      document.removeEventListener(
+      document.addEventListener(
         'visibilitychange',
         handleVisibilityChange,
       );
 
-      if (mobileTimeout) clearTimeout(mobileTimeout);
+      return () => {
+        stopMobileAnimation();
 
-      window.cancelAnimationFrame(mobileAnimationFrame);
+        document.removeEventListener(
+          'visibilitychange',
+          handleVisibilityChange,
+        );
+
+        resizeObserver.disconnect();
+        window.removeEventListener('resize', resizeCanvas);
+      };
+    }
+
+    // DESKTOP: Cursor-following distortion
+    let targetX = -1000;
+    let targetY = -1000;
+    let currentX = -1000;
+    let currentY = -1000;
+
+    let lastClientX = 0;
+    let lastClientY = 0;
+
+    let pointerActive = false;
+    let animationFrame = 0;
+
+    const drawDistortedGrid = () => {
+      ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+      if (!pointerActive) return;
+
+      drawBump(
+        currentX,
+        currentY,
+        SPOTLIGHT_RADIUS,
+        DISTORTION_STRENGTH,
+      );
+    };
+
+    const updatePosition = () => {
+      const easing = prefersReducedMotion ? 1 : 0.16;
+
+      currentX += (targetX - currentX) * easing;
+      currentY += (targetY - currentY) * easing;
+
+      drawDistortedGrid();
+
+      glow.style.background = `
+        radial-gradient(
+          circle ${SPOTLIGHT_RADIUS}px at ${currentX}px ${currentY}px,
+          rgb(var(--fg) / 0.13) 0%,
+          rgb(var(--fg) / 0.06) 35%,
+          transparent 75%
+        )
+      `;
+
+      const distance = Math.hypot(
+        targetX - currentX,
+        targetY - currentY,
+      );
+
+      if (distance > 0.5) {
+        animationFrame = window.requestAnimationFrame(updatePosition);
+      } else {
+        animationFrame = 0;
+      }
+    };
+
+    const startAnimation = () => {
+      if (!animationFrame) {
+        animationFrame = window.requestAnimationFrame(updatePosition);
+      }
+    };
+
+    const updateTargetPosition = () => {
+      const rect = container.getBoundingClientRect();
+
+      targetX = lastClientX - rect.left;
+      targetY = lastClientY - rect.top;
+
+      startAnimation();
+    };
+
+    const handlePointerMove = (event: PointerEvent) => {
+      if (event.pointerType === 'touch') return;
+
+      lastClientX = event.clientX;
+      lastClientY = event.clientY;
+      pointerActive = true;
+
+      updateTargetPosition();
+
+      glow.style.opacity = '1';
+      canvas.style.opacity = '1';
+    };
+
+    const handleScroll = () => {
+      if (pointerActive) {
+        updateTargetPosition();
+      }
+    };
+
+    const hideEffect = () => {
+      pointerActive = false;
+
+      glow.style.opacity = '0';
+      canvas.style.opacity = '0';
+
+      ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    };
+
+    window.addEventListener('pointermove', handlePointerMove);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    document.addEventListener('mouseleave', hideEffect);
+    window.addEventListener('blur', hideEffect);
+
+    drawDistortedGrid();
+
+    return () => {
+      window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('scroll', handleScroll);
+      document.removeEventListener('mouseleave', hideEffect);
+      window.removeEventListener('blur', hideEffect);
+
       resizeObserver.disconnect();
+      window.removeEventListener('resize', resizeCanvas);
+
+      if (animationFrame) {
+        window.cancelAnimationFrame(animationFrame);
+      }
     };
   }, []);
 
@@ -448,7 +467,7 @@ export default function CursorGlow() {
             linear-gradient(to right, rgb(var(--line) / 0.12) 1px, transparent 1px),
             linear-gradient(to bottom, rgb(var(--line) / 0.12) 1px, transparent 1px)
           `,
-          backgroundSize: `${GRID_SIZE}px ${GRID_SIZE}px`,
+          backgroundSize: '72px 72px',
         }}
       />
 
@@ -457,7 +476,7 @@ export default function CursorGlow() {
         ref={canvasRef}
         className="absolute inset-0 opacity-0"
         style={{
-          transition: 'opacity 500ms ease',
+          transition: 'opacity 350ms ease',
         }}
       />
 
