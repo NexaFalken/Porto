@@ -13,6 +13,10 @@ const MOBILE_MAX_DURATION = 3000;
 const MOBILE_MIN_DELAY = 1200;
 const MOBILE_MAX_DELAY = 3200;
 
+// Mobile glow
+const MOBILE_GLOW_RADIUS = 290;
+const MOBILE_GLOW_STRENGTH = 0.22;
+
 type Bump = {
   x: number;
   y: number;
@@ -67,6 +71,7 @@ export default function CursorGlow() {
         .getPropertyValue('--line')
         .trim();
 
+    // Convex grid distortion
     const drawBump = (
       centerX: number,
       centerY: number,
@@ -177,6 +182,47 @@ export default function CursorGlow() {
       ctx.restore();
     };
 
+    // Soft glow for mobile bumps
+    const drawBumpGlow = (
+      centerX: number,
+      centerY: number,
+      radius: number,
+      opacity: number,
+    ) => {
+      const glow = ctx.createRadialGradient(
+        centerX,
+        centerY,
+        0,
+        centerX,
+        centerY,
+        radius,
+      );
+
+      glow.addColorStop(
+        0,
+        `rgb(var(--fg) / ${MOBILE_GLOW_STRENGTH * opacity})`,
+      );
+      glow.addColorStop(
+        0.35,
+        `rgb(var(--fg) / ${0.09 * opacity})`,
+      );
+      glow.addColorStop(
+        0.7,
+        `rgb(var(--fg) / ${0.035 * opacity})`,
+      );
+      glow.addColorStop(1, 'rgb(var(--fg) / 0)');
+
+      ctx.save();
+      ctx.fillStyle = glow;
+      ctx.fillRect(
+        centerX - radius,
+        centerY - radius,
+        radius * 2,
+        radius * 2,
+      );
+      ctx.restore();
+    };
+
     resizeCanvas();
 
     const resizeObserver = new ResizeObserver(resizeCanvas);
@@ -223,6 +269,15 @@ export default function CursorGlow() {
 
           const envelope = Math.sin(progress * Math.PI);
 
+          // Soft light behind the convex distortion
+          drawBumpGlow(
+            bump.x,
+            bump.y,
+            MOBILE_GLOW_RADIUS,
+            envelope,
+          );
+
+          // Convex grid distortion
           drawBump(
             bump.x,
             bump.y,
