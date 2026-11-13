@@ -6,11 +6,11 @@ const SPOTLIGHT_RADIUS = 220;
 const DISTORTION_STRENGTH = 0.32;
 
 // Mobile ambient animation
-const MOBILE_RADIUS = 190;
-const MOBILE_STRENGTH = 0.28;
-const MOBILE_DURATION = 2400;
-const MOBILE_MIN_DELAY = 4500;
-const MOBILE_MAX_DELAY = 8000;
+const MOBILE_RADIUS = 240;
+const MOBILE_STRENGTH = 0.65;
+const MOBILE_DURATION = 3200;
+const MOBILE_MIN_DELAY = 3000;
+const MOBILE_MAX_DELAY = 5000;
 
 export default function CursorGlow() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -368,7 +368,10 @@ export default function CursorGlow() {
         );
 
         // Smooth appearance and disappearance
-        const envelope = Math.sin(progress * Math.PI);
+        const envelope = Math.pow(
+        Math.sin(progress * Math.PI),
+        0.7,
+        );
 
         // Gentle rise and fall
         const strength = MOBILE_STRENGTH * envelope;
