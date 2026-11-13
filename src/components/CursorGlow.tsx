@@ -67,7 +67,6 @@ export default function CursorGlow() {
         .getPropertyValue('--line')
         .trim();
 
-    // Draw a distorted grid around a point
     const drawBump = (
       centerX: number,
       centerY: number,
@@ -187,13 +186,6 @@ export default function CursorGlow() {
 
     // MOBILE: Two independent random convex bumps
     if (!hasFinePointer) {
-      if (prefersReducedMotion) {
-        return () => {
-          resizeObserver.disconnect();
-          window.removeEventListener('resize', resizeCanvas);
-        };
-      }
-
       const bumps: Array<Bump | null> = [null, null];
       const timers: Array<number | null> = [null, null];
 
@@ -229,7 +221,6 @@ export default function CursorGlow() {
 
           hasActiveBump = true;
 
-          // Smooth appearance and disappearance
           const envelope = Math.sin(progress * Math.PI);
 
           drawBump(
@@ -261,6 +252,8 @@ export default function CursorGlow() {
             MOBILE_MAX_DURATION,
           ),
         };
+
+        canvas.style.opacity = '1';
 
         if (!animationFrame) {
           animationFrame = window.requestAnimationFrame(renderBumps);
@@ -296,12 +289,15 @@ export default function CursorGlow() {
         }
 
         clearBumps();
+        canvas.style.opacity = '0';
       };
 
       const startMobileAnimation = () => {
         if (running) return;
 
         running = true;
+        canvas.style.opacity = '1';
+
         scheduleBump(0, true);
         scheduleBump(1, true);
       };
@@ -313,6 +309,15 @@ export default function CursorGlow() {
           startMobileAnimation();
         }
       };
+
+      if (prefersReducedMotion) {
+        canvas.style.opacity = '0';
+
+        return () => {
+          resizeObserver.disconnect();
+          window.removeEventListener('resize', resizeCanvas);
+        };
+      }
 
       startMobileAnimation();
 
