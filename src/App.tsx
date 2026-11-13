@@ -33,11 +33,11 @@ export default function App() {
           onToggleTheme={toggleTheme}
         />
 
+        <JourneyFilm />
         <About />
         <Expertise />
         <Portfolio />
         <Gallery />
-        <JourneyFilm />
         <Projects />
         <Contact />
       </main>
