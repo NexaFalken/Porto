@@ -6,15 +6,15 @@ import Reveal from '@/components/Reveal';
 const VIDEO_SRC = '/videos/beyond-the-journey.mp4';
 
 const HEXAGON_PATH =
-  'M 50 7 C 54 7 58 8 61 10 L 81 22 C 85 24 88 28 88 32 L 88 68 C 88 72 85 76 81 78 L 61 90 C 58 92 54 93 50 93 L 19 78 C 15 76 12 72 12 68 L 12 32 C 12 28 15 24 19 22 Z';
+  'M 50 7 C 63 7 70 14 82 25 C 93 36 93 64 82 75 C 70 86 63 93 50 93 C 37 93 30 86 18 75 C 7 64 7 36 18 25 C 30 14 37 7 50 7 Z';
 
 const SPHERE_PATH =
-  'M 50 7 C 56 7 62 9 66 13 L 77 24 C 84 31 89 40 89 50 L 89 50 C 89 60 84 69 77 76 L 66 87 C 62 91 56 93 50 93 L 34 87 C 26 83 18 75 13 66 L 11 50 C 11 40 16 31 23 24 Z';
+  'M 50 7 C 66 7 80 16 88 29 C 96 42 96 58 88 71 C 80 84 66 93 50 93 C 34 93 20 84 12 71 C 4 58 4 42 12 29 C 20 16 34 7 50 7 Z';
 
 function JourneyLoader() {
   return (
     <div
-      className="journey-loader absolute inset-0 z-10 flex items-center justify-center bg-surface"
+      className="absolute inset-0 flex items-center justify-center bg-surface"
       role="status"
       aria-label="Loading journey film"
     >
@@ -23,22 +23,20 @@ function JourneyLoader() {
         className="h-16 w-16 overflow-visible sm:h-20 sm:w-20"
         aria-hidden="true"
       >
-        <path
-          className="journey-loader__shape"
-          d={HEXAGON_PATH}
-          fill="#2563EB"
-        >
-          <animate
-            attributeName="d"
-            begin="5s"
-            dur="1.35s"
-            values={`${HEXAGON_PATH};${SPHERE_PATH}`}
-            calcMode="spline"
-            keyTimes="0;1"
-            keySplines="0.42 0 0.58 1"
-            fill="freeze"
-          />
-        </path>
+        <g className="journey-loader__ball">
+          <path d={HEXAGON_PATH} fill="#2563EB">
+            <animate
+              attributeName="d"
+              begin="5s"
+              dur="1.35s"
+              values={`${HEXAGON_PATH};${SPHERE_PATH}`}
+              calcMode="spline"
+              keyTimes="0;1"
+              keySplines="0.42 0 0.58 1"
+              fill="freeze"
+            />
+          </path>
+        </g>
 
         <g className="journey-loader__eyes">
           <path
@@ -62,10 +60,11 @@ function JourneyLoader() {
 export default function JourneyFilm() {
   const sectionRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const loadingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [isMuted, setIsMuted] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
   const [isVideoReady, setIsVideoReady] = useState(false);
+  const [showLoader, setShowLoader] = useState(false);
   const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
@@ -75,20 +74,36 @@ export default function JourneyFilm() {
     if (!section || !video) return;
 
     let sourceLoaded = false;
+    let loaderTimerStarted = false;
+
+    const clearLoadingTimer = () => {
+      if (loadingTimerRef.current) {
+        clearTimeout(loadingTimerRef.current);
+        loadingTimerRef.current = null;
+      }
+    };
 
     const loadAndPlay = () => {
       if (!sourceLoaded) {
-        setIsLoading(true);
-        setHasError(false);
-
         video.src = VIDEO_SRC;
         video.load();
-
         sourceLoaded = true;
+
+        if (!loaderTimerStarted) {
+          loaderTimerStarted = true;
+
+          // Loader hanya muncul jika video masih belum siap
+          // setelah 10 detik sejak proses loading dimulai.
+          loadingTimerRef.current = setTimeout(() => {
+            if (video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) {
+              setShowLoader(true);
+            }
+          }, 10000);
+        }
       }
 
       video.play().catch(() => {
-        // The browser may restrict autoplay.
+        // Autoplay may be restricted by the browser.
       });
     };
 
@@ -111,18 +126,29 @@ export default function JourneyFilm() {
     return () => {
       observer.disconnect();
       video.pause();
+      clearLoadingTimer();
     };
   }, []);
 
   const handleVideoReady = () => {
     setIsVideoReady(true);
-    setIsLoading(false);
+    setShowLoader(false);
     setHasError(false);
+
+    if (loadingTimerRef.current) {
+      clearTimeout(loadingTimerRef.current);
+      loadingTimerRef.current = null;
+    }
   };
 
   const handleVideoError = () => {
-    setIsLoading(false);
     setHasError(true);
+    setShowLoader(false);
+
+    if (loadingTimerRef.current) {
+      clearTimeout(loadingTimerRef.current);
+      loadingTimerRef.current = null;
+    }
   };
 
   const retryVideo = () => {
@@ -131,12 +157,18 @@ export default function JourneyFilm() {
 
     setHasError(false);
     setIsVideoReady(false);
-    setIsLoading(true);
+    setShowLoader(false);
 
     video.load();
     video.play().catch(() => {
       // Autoplay may be restricted by the browser.
     });
+
+    loadingTimerRef.current = setTimeout(() => {
+      if (video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) {
+        setShowLoader(true);
+      }
+    }, 10000);
   };
 
   const toggleSound = () => {
@@ -171,12 +203,15 @@ export default function JourneyFilm() {
           </div>
 
           <div className="group relative aspect-video w-full overflow-hidden rounded-2xl border border-line bg-surface">
+
+            {/* Video */}
             <video
               ref={videoRef}
+              onLoadedData={handleVideoReady}
               onCanPlay={handleVideoReady}
               onPlaying={handleVideoReady}
               onError={handleVideoError}
-              className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ease-in-out ${
+              className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-[1400ms] ease-in-out ${
                 isVideoReady && !hasError
                   ? 'opacity-100'
                   : 'opacity-0'
@@ -187,15 +222,15 @@ export default function JourneyFilm() {
               preload="none"
             />
 
-            {/* Loading animation */}
+            {/* Loader */}
             <div
-              className={`absolute inset-0 z-10 transition-opacity duration-1000 ease-in-out ${
-                isLoading && !isVideoReady && !hasError
+              className={`absolute inset-0 z-10 transition-opacity duration-[1400ms] ease-in-out ${
+                showLoader && !isVideoReady && !hasError
                   ? 'opacity-100'
                   : 'pointer-events-none opacity-0'
               }`}
             >
-              {isLoading && !isVideoReady && !hasError && (
+              {showLoader && !isVideoReady && !hasError && (
                 <JourneyLoader />
               )}
             </div>
@@ -217,9 +252,9 @@ export default function JourneyFilm() {
               </div>
             )}
 
-            {/* Video overlay */}
+            {/* Video gradient */}
             <div
-              className={`pointer-events-none absolute inset-0 z-[2] bg-gradient-to-t from-black/55 via-transparent to-black/10 transition-opacity duration-1000 ${
+              className={`pointer-events-none absolute inset-0 z-[2] bg-gradient-to-t from-black/55 via-transparent to-black/10 transition-opacity duration-[1400ms] ${
                 isVideoReady && !hasError
                   ? 'opacity-100'
                   : 'opacity-0'
@@ -228,7 +263,7 @@ export default function JourneyFilm() {
 
             {/* Video information */}
             <div
-              className={`absolute bottom-0 left-0 right-0 z-[3] flex items-end justify-between gap-4 p-5 transition-opacity duration-1000 sm:p-7 ${
+              className={`absolute bottom-0 left-0 right-0 z-[3] flex items-end justify-between gap-4 p-5 transition-opacity duration-[1400ms] sm:p-7 ${
                 isVideoReady && !hasError
                   ? 'opacity-100'
                   : 'pointer-events-none opacity-0'
@@ -265,26 +300,30 @@ export default function JourneyFilm() {
         .journey-loader__eyes {
           transform-box: fill-box;
           transform-origin: center;
-          animation: journey-eye-look 3.2s ease-in-out infinite,
-                     journey-eye-fade 500ms ease-in 5s forwards;
+          animation:
+            journey-eye-look 3.2s ease-in-out infinite,
+            journey-eye-fade 500ms ease-in 5s forwards;
         }
 
-        .journey-loader__shape {
+        .journey-loader__ball {
           transform-box: fill-box;
           transform-origin: center;
-          animation: journey-shape-bounce 780ms ease-in-out 6.35s infinite;
+          animation: journey-ball-bounce 780ms ease-in-out 6.35s infinite;
         }
 
         @keyframes journey-eye-look {
           0%, 15%, 100% {
             transform: translate(0, 0);
           }
+
           25%, 40% {
             transform: translate(4px, 0);
           }
+
           55%, 70% {
             transform: translate(-4px, 1px);
           }
+
           82% {
             transform: translate(0, -3px);
           }
@@ -296,13 +335,15 @@ export default function JourneyFilm() {
           }
         }
 
-        @keyframes journey-shape-bounce {
+        @keyframes journey-ball-bounce {
           0%, 100% {
             transform: translateY(0) scale(1, 1);
           }
+
           42% {
             transform: translateY(8px) scale(1.08, 0.91);
           }
+
           70% {
             transform: translateY(-3px) scale(0.96, 1.04);
           }
@@ -310,7 +351,7 @@ export default function JourneyFilm() {
 
         @media (prefers-reduced-motion: reduce) {
           .journey-loader__eyes,
-          .journey-loader__shape {
+          .journey-loader__ball {
             animation: none;
           }
         }
