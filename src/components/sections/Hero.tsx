@@ -1,7 +1,17 @@
 
 import { ArrowDown, ArrowUpRight } from 'lucide-react';
-import { useEffect, useState, type CSSProperties } from 'react';
+import {
+  useEffect,
+  useState,
+  type CSSProperties,
+  type RefObject,
+} from 'react';
 import { profile } from '@/data/portfolio';
+
+interface HeroProps {
+  nameRef: RefObject<HTMLHeadingElement>;
+  introComplete: boolean;
+}
 
 function LocalClock() {
   const [now, setNow] = useState(() => new Date());
@@ -21,7 +31,7 @@ function LocalClock() {
   );
 }
 
-export default function Hero() {
+export default function Hero({ nameRef, introComplete }: HeroProps) {
   return (
     <section
       id="intro"
@@ -43,12 +53,15 @@ export default function Hero() {
           </p>
 
           {/* Name */}
-<h1
-  className="animate-fade-up mt-8 whitespace-nowrap font-display text-[clamp(2.5rem,8vw,5rem)] leading-tight tracking-[-0.04em] lg:text-[4.4rem]"
-  style={{ '--delay': '120ms' } as CSSProperties}
->
-  {profile.name}
-</h1>
+          <h1
+            ref={nameRef}
+            className={`animate-fade-up mt-8 whitespace-nowrap font-display text-[clamp(2.5rem,8vw,5rem)] leading-tight tracking-[-0.04em] transition-opacity duration-500 lg:text-[4.4rem] ${
+              introComplete ? 'opacity-100' : '!opacity-0'
+            }`}
+            style={{ '--delay': '120ms' } as CSSProperties}
+          >
+            {profile.name}
+          </h1>
 
           {/* Name Divider */}
           <div

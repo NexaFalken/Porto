@@ -1,8 +1,12 @@
 
+import { useCallback, useRef, useState } from 'react';
+
 import BackToTop from '@/components/BackToTop';
 import CursorGlow from '@/components/CursorGlow';
 import Footer from '@/components/Footer';
 import SiteHeader from '@/components/SiteHeader';
+import IntroOverlay from '@/components/IntroOverlay';
+
 import { sectionIds } from '@/data/portfolio';
 import { useActiveSection } from '@/hooks/useActiveSection';
 import { useTheme } from '@/hooks/useTheme';
@@ -20,12 +24,35 @@ export default function App() {
   const { theme, toggleTheme } = useTheme();
   const activeId = useActiveSection(sectionIds);
 
+  const heroNameRef = useRef<HTMLHeadingElement>(null);
+
+  const [introComplete, setIntroComplete] = useState(() => {
+    try {
+      return sessionStorage.getItem('portfolio-intro-seen') === 'true';
+    } catch {
+      return true;
+    }
+  });
+
+  const finishIntro = useCallback(() => {
+    try {
+      sessionStorage.setItem('portfolio-intro-seen', 'true');
+    } catch {
+      // Intro can still finish if session storage is unavailable.
+    }
+
+    setIntroComplete(true);
+  }, []);
+
   return (
     <div className="relative isolate">
       <CursorGlow />
 
       <main className="relative z-10">
-        <Hero />
+        <Hero
+          nameRef={heroNameRef}
+          introComplete={introComplete}
+        />
 
         <SiteHeader
           activeId={activeId}
@@ -47,6 +74,13 @@ export default function App() {
       </div>
 
       <BackToTop />
+
+      {!introComplete && (
+        <IntroOverlay
+          targetRef={heroNameRef}
+          onComplete={finishIntro}
+        />
+      )}
     </div>
   );
 }
