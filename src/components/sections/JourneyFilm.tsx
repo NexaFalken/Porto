@@ -5,67 +5,39 @@ import Reveal from '@/components/Reveal';
 
 const VIDEO_SRC = '/videos/beyond-the-journey.mp4';
 
-const HEXAGON_PATH =
-  'M 50 7 C 63 7 70 14 82 25 C 93 36 93 64 82 75 C 70 86 63 93 50 93 C 37 93 30 86 18 75 C 7 64 7 36 18 25 C 30 14 37 7 50 7 Z';
-
-const SPHERE_PATH =
-  'M 50 7 C 66 7 80 16 88 29 C 96 42 96 58 88 71 C 80 84 66 93 50 93 C 34 93 20 84 12 71 C 4 58 4 42 12 29 C 20 16 34 7 50 7 Z';
-
-function JourneyLoader() {
-  return (
-    <div
-      className="absolute inset-0 flex items-center justify-center bg-surface"
-      role="status"
-      aria-label="Loading journey film"
-    >
-      <svg
-        viewBox="0 0 100 100"
-        className="h-16 w-16 overflow-visible sm:h-20 sm:w-20"
-        aria-hidden="true"
-      >
-        <g className="journey-loader__ball">
-          <path d={HEXAGON_PATH} fill="#2563EB">
-            <animate
-              attributeName="d"
-              begin="5s"
-              dur="1.35s"
-              values={`${HEXAGON_PATH};${SPHERE_PATH}`}
-              calcMode="spline"
-              keyTimes="0;1"
-              keySplines="0.42 0 0.58 1"
-              fill="freeze"
-            />
-          </path>
-        </g>
-
-        <g className="journey-loader__eyes">
-          <path
-            d="M 41 42 L 41 57"
-            stroke="white"
-            strokeWidth="4"
-            strokeLinecap="round"
-          />
-          <path
-            d="M 59 42 L 59 57"
-            stroke="white"
-            strokeWidth="4"
-            strokeLinecap="round"
-          />
-        </g>
-      </svg>
-    </div>
-  );
-}
-
 export default function JourneyFilm() {
   const sectionRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const loadingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const controlsTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [isMuted, setIsMuted] = useState(true);
   const [isVideoReady, setIsVideoReady] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
+  const [showControls, setShowControls] = useState(false);
   const [hasError, setHasError] = useState(false);
+
+  const clearLoadingTimer = () => {
+    if (loadingTimerRef.current) {
+      clearTimeout(loadingTimerRef.current);
+      loadingTimerRef.current = null;
+    }
+  };
+
+  const startLoadingTimer = () => {
+    clearLoadingTimer();
+
+    loadingTimerRef.current = setTimeout(() => {
+      const video = videoRef.current;
+
+      if (
+        video &&
+        video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA
+      ) {
+        setShowLoader(true);
+      }
+    }, 10000);
+  };
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -74,32 +46,16 @@ export default function JourneyFilm() {
     if (!section || !video) return;
 
     let sourceLoaded = false;
-    let loaderTimerStarted = false;
-
-    const clearLoadingTimer = () => {
-      if (loadingTimerRef.current) {
-        clearTimeout(loadingTimerRef.current);
-        loadingTimerRef.current = null;
-      }
-    };
 
     const loadAndPlay = () => {
       if (!sourceLoaded) {
+        setHasError(false);
+
         video.src = VIDEO_SRC;
         video.load();
+
         sourceLoaded = true;
-
-        if (!loaderTimerStarted) {
-          loaderTimerStarted = true;
-
-          // Loader hanya muncul jika video masih belum siap
-          // setelah 10 detik sejak proses loading dimulai.
-          loadingTimerRef.current = setTimeout(() => {
-            if (video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) {
-              setShowLoader(true);
-            }
-          }, 10000);
-        }
+        startLoadingTimer();
       }
 
       video.play().catch(() => {
@@ -116,7 +72,7 @@ export default function JourneyFilm() {
         }
       },
       {
-        rootMargin: '400px 0px',
+        rootMargin: '150px 0px',
         threshold: 0,
       },
     );
@@ -130,25 +86,66 @@ export default function JourneyFilm() {
     };
   }, []);
 
+  // Automatically reveal controls during page activity.
+  useEffect(() => {
+    if (!isVideoReady) return;
+
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const revealControls = () => {
+      const rect = section.getBoundingClientRect();
+
+      const sectionVisible =
+        rect.top < window.innerHeight && rect.bottom > 0;
+
+      if (!sectionVisible) return;
+
+      setShowControls(true);
+
+      if (controlsTimerRef.current) {
+        clearTimeout(controlsTimerRef.current);
+      }
+
+      controlsTimerRef.current = setTimeout(() => {
+        setShowControls(false);
+      }, 2000);
+    };
+
+    window.addEventListener('pointermove', revealControls, {
+      passive: true,
+    });
+
+    window.addEventListener('scroll', revealControls, {
+      passive: true,
+    });
+
+    window.addEventListener('touchstart', revealControls, {
+      passive: true,
+    });
+
+    return () => {
+      window.removeEventListener('pointermove', revealControls);
+      window.removeEventListener('scroll', revealControls);
+      window.removeEventListener('touchstart', revealControls);
+
+      if (controlsTimerRef.current) {
+        clearTimeout(controlsTimerRef.current);
+      }
+    };
+  }, [isVideoReady]);
+
   const handleVideoReady = () => {
     setIsVideoReady(true);
     setShowLoader(false);
     setHasError(false);
-
-    if (loadingTimerRef.current) {
-      clearTimeout(loadingTimerRef.current);
-      loadingTimerRef.current = null;
-    }
+    clearLoadingTimer();
   };
 
   const handleVideoError = () => {
-    setHasError(true);
     setShowLoader(false);
-
-    if (loadingTimerRef.current) {
-      clearTimeout(loadingTimerRef.current);
-      loadingTimerRef.current = null;
-    }
+    setHasError(true);
+    clearLoadingTimer();
   };
 
   const retryVideo = () => {
@@ -160,15 +157,11 @@ export default function JourneyFilm() {
     setShowLoader(false);
 
     video.load();
+    startLoadingTimer();
+
     video.play().catch(() => {
       // Autoplay may be restricted by the browser.
     });
-
-    loadingTimerRef.current = setTimeout(() => {
-      if (video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) {
-        setShowLoader(true);
-      }
-    }, 10000);
   };
 
   const toggleSound = () => {
@@ -211,7 +204,7 @@ export default function JourneyFilm() {
               onCanPlay={handleVideoReady}
               onPlaying={handleVideoReady}
               onError={handleVideoError}
-              className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-[1400ms] ease-in-out ${
+              className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-[1200ms] ease-in-out ${
                 isVideoReady && !hasError
                   ? 'opacity-100'
                   : 'opacity-0'
@@ -222,17 +215,23 @@ export default function JourneyFilm() {
               preload="none"
             />
 
-            {/* Loader */}
+            {/* Minimal loading animation */}
             <div
-              className={`absolute inset-0 z-10 transition-opacity duration-[1400ms] ease-in-out ${
+              className={`absolute inset-0 z-10 flex items-center justify-center bg-surface transition-opacity duration-1000 ease-in-out ${
                 showLoader && !isVideoReady && !hasError
                   ? 'opacity-100'
                   : 'pointer-events-none opacity-0'
               }`}
             >
-              {showLoader && !isVideoReady && !hasError && (
-                <JourneyLoader />
-              )}
+              <div className="flex w-36 flex-col items-center gap-4">
+                <div className="journey-loading-track relative h-[2px] w-full overflow-hidden rounded-full">
+                  <div className="journey-loading-line absolute inset-y-0 w-1/3 rounded-full bg-blue-500" />
+                </div>
+
+                <span className="text-[9px] font-medium uppercase tracking-[0.28em] text-muted">
+                  Preparing the journey
+                </span>
+              </div>
             </div>
 
             {/* Error fallback */}
@@ -252,21 +251,20 @@ export default function JourneyFilm() {
               </div>
             )}
 
-            {/* Video gradient */}
+            {/* Gradient and video controls */}
             <div
-              className={`pointer-events-none absolute inset-0 z-[2] bg-gradient-to-t from-black/55 via-transparent to-black/10 transition-opacity duration-[1400ms] ${
-                isVideoReady && !hasError
+              className={`pointer-events-none absolute inset-0 z-[2] bg-gradient-to-t from-black/55 via-transparent to-black/10 transition-opacity duration-700 ${
+                isVideoReady && showControls && !hasError
                   ? 'opacity-100'
                   : 'opacity-0'
               }`}
             />
 
-            {/* Video information */}
             <div
-              className={`absolute bottom-0 left-0 right-0 z-[3] flex items-end justify-between gap-4 p-5 transition-opacity duration-[1400ms] sm:p-7 ${
-                isVideoReady && !hasError
-                  ? 'opacity-100'
-                  : 'pointer-events-none opacity-0'
+              className={`absolute bottom-0 left-0 right-0 z-[3] flex items-end justify-between gap-4 p-5 transition-all duration-700 ease-in-out sm:p-7 ${
+                isVideoReady && showControls && !hasError
+                  ? 'translate-y-0 opacity-100'
+                  : 'pointer-events-none translate-y-2 opacity-0'
               }`}
             >
               <div className="text-white">
@@ -282,6 +280,7 @@ export default function JourneyFilm() {
               <button
                 type="button"
                 onClick={toggleSound}
+                tabIndex={showControls ? 0 : -1}
                 aria-label={isMuted ? 'Enable video sound' : 'Mute video'}
                 className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/30 bg-black/30 text-white backdrop-blur-md transition hover:bg-white/20"
               >
@@ -297,62 +296,30 @@ export default function JourneyFilm() {
       </div>
 
       <style>{`
-        .journey-loader__eyes {
-          transform-box: fill-box;
-          transform-origin: center;
-          animation:
-            journey-eye-look 3.2s ease-in-out infinite,
-            journey-eye-fade 500ms ease-in 5s forwards;
+        .journey-loading-track {
+          background: rgb(128 128 128 / 18%);
         }
 
-        .journey-loader__ball {
-          transform-box: fill-box;
-          transform-origin: center;
-          animation: journey-ball-bounce 780ms ease-in-out 6.35s infinite;
+        .journey-loading-line {
+          animation: journey-loading-motion 1.5s
+            cubic-bezier(0.65, 0, 0.35, 1) infinite;
+          will-change: transform;
         }
 
-        @keyframes journey-eye-look {
-          0%, 15%, 100% {
-            transform: translate(0, 0);
+        @keyframes journey-loading-motion {
+          0% {
+            transform: translateX(-110%);
           }
 
-          25%, 40% {
-            transform: translate(4px, 0);
-          }
-
-          55%, 70% {
-            transform: translate(-4px, 1px);
-          }
-
-          82% {
-            transform: translate(0, -3px);
-          }
-        }
-
-        @keyframes journey-eye-fade {
-          to {
-            opacity: 0;
-          }
-        }
-
-        @keyframes journey-ball-bounce {
-          0%, 100% {
-            transform: translateY(0) scale(1, 1);
-          }
-
-          42% {
-            transform: translateY(8px) scale(1.08, 0.91);
-          }
-
-          70% {
-            transform: translateY(-3px) scale(0.96, 1.04);
+          100% {
+            transform: translateX(310%);
           }
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .journey-loader__eyes,
-          .journey-loader__ball {
+          .journey-loading-line {
             animation: none;
+            transform: translateX(100%);
           }
         }
       `}</style>
