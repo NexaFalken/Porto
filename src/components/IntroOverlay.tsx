@@ -6,41 +6,21 @@ interface IntroOverlayProps {
   onComplete: () => void;
 }
 
-type IntroPhase = 'hello' | 'welcome' | 'name' | 'moving' | 'fading';
-
-interface Destination {
-  left: number;
-  top: number;
-  fontSize: string;
-  fontFamily: string;
-  fontWeight: string;
-  letterSpacing: string;
-  lineHeight: string;
-}
-
-const overlayStyle: CSSProperties = {
-  position: 'fixed',
-  inset: 0,
-  zIndex: 999999,
-  backgroundColor: '#000000',
-  color: '#ffffff',
-  opacity: 1,
-  transition: 'opacity 500ms ease',
-};
+type Phase = 'hello' | 'welcome' | 'name' | 'moving' | 'fading';
 
 export default function IntroOverlay({
   targetRef,
   onComplete,
 }: IntroOverlayProps) {
-  const [phase, setPhase] = useState<IntroPhase>('hello');
-  const [destination, setDestination] = useState<Destination | null>(null);
+  const [phase, setPhase] = useState<Phase>('hello');
 
   useEffect(() => {
-    const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
 
     const timers: number[] = [];
-    let frameId = 0;
+    let frame = 0;
+    let destination: DOMRect | null = null;
+    let targetStyle: CSSStyleDeclaration | null = null;
 
     const schedule = (callback: () => void, delay: number) => {
       timers.push(window.setTimeout(callback, delay));
@@ -57,20 +37,10 @@ export default function IntroOverlay({
         return;
       }
 
-      const rect = target.getBoundingClientRect();
-      const computed = window.getComputedStyle(target);
+      destination = target.getBoundingClientRect();
+      targetStyle = window.getComputedStyle(target);
 
-      setDestination({
-        left: rect.left,
-        top: rect.top,
-        fontSize: computed.fontSize,
-        fontFamily: computed.fontFamily,
-        fontWeight: computed.fontWeight,
-        letterSpacing: computed.letterSpacing,
-        lineHeight: computed.lineHeight,
-      });
-
-      frameId = window.requestAnimationFrame(() => {
+      frame = window.requestAnimationFrame(() => {
         setPhase('moving');
       });
     }, 3900);
@@ -80,52 +50,11 @@ export default function IntroOverlay({
 
     return () => {
       timers.forEach(window.clearTimeout);
-      window.cancelAnimationFrame(frameId);
-      document.body.style.overflow = previousOverflow;
+      window.cancelAnimationFrame(frame);
+      document.body.style.overflow = '';
+
     };
   }, [targetRef, onComplete]);
-
-  const isNameVisible =
-    phase === 'name' ||
-    phase === 'moving' ||
-    phase === 'fading';
-
-  const isMoving =
-    phase === 'moving' || phase === 'fading';
-
-  const nameStyle: CSSProperties = {
-    position: 'fixed',
-    zIndex: 1000000,
-    whiteSpace: 'nowrap',
-    color: '#ffffff',
-    left: isMoving && destination ? `${destination.left}px` : '50%',
-    top: isMoving && destination ? `${destination.top}px` : '50%',
-    transform:
-      isMoving && destination
-        ? 'none'
-        : 'translate(-50%, -50%)',
-    fontSize:
-      isMoving && destination
-        ? destination.fontSize
-        : 'clamp(1.8rem, 5vw, 3.5rem)',
-    fontFamily: isMoving && destination
-      ? destination.fontFamily
-      : 'inherit',
-    fontWeight: isMoving && destination
-      ? destination.fontWeight
-      : 500,
-    letterSpacing: isMoving && destination
-      ? destination.letterSpacing
-      : '-0.04em',
-    lineHeight: isMoving && destination
-      ? destination.lineHeight
-      : 1.15,
-    opacity: phase === 'fading' ? 0 : 1,
-    transition: isMoving
-      ? 'left 1100ms cubic-bezier(0.22, 1, 0.36, 1), top 1100ms cubic-bezier(0.22, 1, 0.36, 1), transform 1100ms cubic-bezier(0.22, 1, 0.36, 1), font-size 1100ms cubic-bezier(0.22, 1, 0.36, 1), opacity 500ms ease'
-      : 'opacity 500ms ease',
-    textShadow: '0 0 12px rgba(255,255,255,0.10)',
-  };
 
   const message =
     phase === 'hello'
@@ -134,56 +63,92 @@ export default function IntroOverlay({
         ? 'Welcome to my world.'
         : '';
 
-  const textStyle: CSSProperties = {
+  const isName = phase === 'name' || phase === 'moving' || phase === 'fading';
+  const isMoving = phase === 'moving' || phase === 'fading';
+
+  const nameStyle: CSSProperties = {
     position: 'fixed',
+    zIndex: 1000000,
     left: '50%',
     top: '50%',
     transform: 'translate(-50%, -50%)',
-    margin: 0,
-    padding: '0 16px',
-    width: '100%',
-    textAlign: 'center',
+    color: '#fff',
     whiteSpace: 'nowrap',
     fontSize: 'clamp(1.8rem, 5vw, 3.5rem)',
     fontWeight: 500,
     letterSpacing: '-0.04em',
-    color: '#ffffff',
-    textShadow: '0 0 12px rgba(255,255,255,0.10)',
-    animation: 'intro-text-in 700ms ease both',
+    opacity: phase === 'fading' ? 0 : 1,
+    textShadow: '0 0 12px rgba(255,255,255,0.1)',
+    transition: 'all 1100ms cubic-bezier(0.22, 1, 0.36, 1)',
   };
+
+  // Keep the name transition aligned with the actual Hero heading.
+  if (isMoving && targetRef.current) {
+    const rect = targetRef.current.getBoundingClientRect();
+    const computed = window.getComputedStyle(targetRef.current);
+
+    Object.assign(nameStyle, {
+      left: `${rect.left}px`,
+      top: `${rect.top}px`,
+      transform: 'none',
+      fontSize: computed.fontSize,
+      fontFamily: computed.fontFamily,
+      fontWeight: computed.fontWeight,
+      letterSpacing: computed.letterSpacing,
+      lineHeight: computed.lineHeight,
+    });
+  }
 
   return (
     <div
       style={{
-        ...overlayStyle,
+        position: 'fixed',
+        inset: 0,
+        zIndex: 999999,
+        background: '#000',
         opacity: phase === 'fading' ? 0 : 1,
+        transition: 'opacity 500ms ease',
       }}
       aria-live="polite"
-      aria-label="Welcome introduction"
     >
-      {!isNameVisible && (
-        <p key={phase} style={textStyle}>
+      {!isName && (
+        <p
+          key={phase}
+          style={{
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
+            margin: 0,
+            whiteSpace: 'nowrap',
+            color: '#fff',
+            fontSize: 'clamp(1.8rem, 5vw, 3.5rem)',
+            fontWeight: 500,
+            letterSpacing: '-0.04em',
+            textShadow: '0 0 12px rgba(255,255,255,0.1)',
+            animation: 'introFadeIn 700ms ease both',
+          }}
+        >
           {message}
         </p>
       )}
 
-      {isNameVisible && (
+      {isName && (
         <span style={nameStyle}>
           Haryo Bimo Wistoro
         </span>
       )}
 
       <button
-        type="button"
         onClick={onComplete}
         style={{
           position: 'absolute',
-          right: '32px',
-          bottom: '32px',
+          right: 32,
+          bottom: 32,
+          background: 'none',
           border: 0,
-          background: 'transparent',
           color: 'rgba(255,255,255,0.4)',
-          fontSize: '11px',
+          fontSize: 11,
           letterSpacing: '0.18em',
           cursor: 'pointer',
         }}
@@ -192,7 +157,7 @@ export default function IntroOverlay({
       </button>
 
       <style>{`
-        @keyframes intro-text-in {
+        @keyframes introFadeIn {
           from {
             opacity: 0;
             transform: translate(-50%, calc(-50% + 8px));

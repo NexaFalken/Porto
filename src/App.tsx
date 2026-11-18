@@ -25,8 +25,6 @@ export default function App() {
   const activeId = useActiveSection(sectionIds);
 
   const heroNameRef = useRef<HTMLHeadingElement>(null);
-
-  // TEMPORARY TEST: Always show the intro.
   const [introComplete, setIntroComplete] = useState(false);
 
   const finishIntro = useCallback(() => {

@@ -38,9 +38,7 @@ export default function Hero({ nameRef, introComplete }: HeroProps) {
       className="relative flex min-h-[100svh] scroll-mt-20 items-center overflow-hidden px-6 pb-16 pt-8 md:px-10 md:pt-12 lg:px-16"
     >
       <div className="relative mx-auto grid w-full max-w-7xl items-center gap-16 lg:grid-cols-12 lg:gap-10">
-        {/* Hero Text */}
         <div className="lg:col-span-7">
-          {/* Status */}
           <p
             className="animate-fade-up inline-flex items-center gap-3 rounded-full border border-line bg-surface/60 px-4 py-2 text-xs font-medium uppercase tracking-[0.18em] text-muted"
             style={{ '--delay': '0ms' } as CSSProperties}
@@ -52,7 +50,6 @@ export default function Hero({ nameRef, introComplete }: HeroProps) {
             {profile.status}
           </p>
 
-          {/* Name */}
           <h1
             ref={nameRef}
             className={`animate-fade-up mt-8 whitespace-nowrap font-display text-[clamp(2.5rem,8vw,5rem)] leading-tight tracking-[-0.04em] transition-opacity duration-500 lg:text-[4.4rem] ${
@@ -63,13 +60,11 @@ export default function Hero({ nameRef, introComplete }: HeroProps) {
             {profile.name}
           </h1>
 
-          {/* Name Divider */}
           <div
             className="animate-fade-up mt-1.5 h-px w-full max-w-md bg-line"
             style={{ '--delay': '180ms' } as CSSProperties}
           />
 
-          {/* Role */}
           <p
             className="animate-fade-up mt-2.5 font-display text-xl leading-[1.2] text-fg md:text-2xl"
             style={{ '--delay': '240ms' } as CSSProperties}
@@ -77,7 +72,6 @@ export default function Hero({ nameRef, introComplete }: HeroProps) {
             {profile.role}
           </p>
 
-          {/* Statement */}
           <p
             className="animate-fade-up mt-6 max-w-xl text-base leading-relaxed text-muted md:text-lg"
             style={{ '--delay': '360ms' } as CSSProperties}
@@ -85,7 +79,6 @@ export default function Hero({ nameRef, introComplete }: HeroProps) {
             {profile.statement}
           </p>
 
-          {/* Hero Buttons */}
           <div
             className="animate-fade-up mt-10 flex flex-wrap items-center gap-4"
             style={{ '--delay': '480ms' } as CSSProperties}
@@ -106,7 +99,6 @@ export default function Hero({ nameRef, introComplete }: HeroProps) {
             </a>
           </div>
 
-          {/* Hero Information */}
           <dl
             className="animate-fade-up mt-14 flex gap-10 border-t border-line pt-6 text-sm"
             style={{ '--delay': '600ms' } as CSSProperties}
@@ -127,11 +119,7 @@ export default function Hero({ nameRef, introComplete }: HeroProps) {
           </dl>
         </div>
 
-        {/* Hero Portrait */}
-        <div
-          className="relative lg:col-span-5"
-          style={{ marginTop: '0px' }}
-        >
+        <div className="relative lg:col-span-5" style={{ marginTop: '0px' }}>
           <div
             className="animate-fade-up"
             style={{ '--delay': '300ms' } as CSSProperties}
@@ -155,7 +143,6 @@ export default function Hero({ nameRef, introComplete }: HeroProps) {
         </div>
       </div>
 
-      {/* Scroll Indicator */}
       <a
         href="#about"
         aria-label="Scroll to about"
