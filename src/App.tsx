@@ -26,21 +26,10 @@ export default function App() {
 
   const heroNameRef = useRef<HTMLHeadingElement>(null);
 
-  const [introComplete, setIntroComplete] = useState(() => {
-    try {
-      return sessionStorage.getItem('portfolio-intro-seen') === 'true';
-    } catch {
-      return true;
-    }
-  });
+  // TEMPORARY TEST: Always show the intro.
+  const [introComplete, setIntroComplete] = useState(false);
 
   const finishIntro = useCallback(() => {
-    try {
-      sessionStorage.setItem('portfolio-intro-seen', 'true');
-    } catch {
-      // Intro can still finish if session storage is unavailable.
-    }
-
     setIntroComplete(true);
   }, []);
 
