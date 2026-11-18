@@ -1,5 +1,5 @@
 
-import { useEffect, useState, type RefObject } from 'react';
+import { useEffect, useState, type CSSProperties, type RefObject } from 'react';
 
 interface IntroOverlayProps {
   targetRef: RefObject<HTMLHeadingElement>;
@@ -17,6 +17,16 @@ interface Destination {
   letterSpacing: string;
   lineHeight: string;
 }
+
+const overlayStyle: CSSProperties = {
+  position: 'fixed',
+  inset: 0,
+  zIndex: 999999,
+  backgroundColor: '#000000',
+  color: '#ffffff',
+  opacity: 1,
+  transition: 'opacity 500ms ease',
+};
 
 export default function IntroOverlay({
   targetRef,
@@ -36,8 +46,8 @@ export default function IntroOverlay({
       timers.push(window.setTimeout(callback, delay));
     };
 
-    schedule(() => setPhase('welcome'), 1200);
-    schedule(() => setPhase('name'), 2400);
+    schedule(() => setPhase('welcome'), 1400);
+    schedule(() => setPhase('name'), 2800);
 
     schedule(() => {
       const target = targetRef.current;
@@ -63,10 +73,10 @@ export default function IntroOverlay({
       frameId = window.requestAnimationFrame(() => {
         setPhase('moving');
       });
-    }, 3500);
+    }, 3900);
 
-    schedule(() => setPhase('fading'), 4700);
-    schedule(onComplete, 5200);
+    schedule(() => setPhase('fading'), 5100);
+    schedule(onComplete, 5600);
 
     return () => {
       timers.forEach(window.clearTimeout);
@@ -83,15 +93,21 @@ export default function IntroOverlay({
   const isMoving =
     phase === 'moving' || phase === 'fading';
 
-  const nameStyle: React.CSSProperties = {
+  const nameStyle: CSSProperties = {
+    position: 'fixed',
+    zIndex: 1000000,
+    whiteSpace: 'nowrap',
+    color: '#ffffff',
     left: isMoving && destination ? `${destination.left}px` : '50%',
     top: isMoving && destination ? `${destination.top}px` : '50%',
-    transform: isMoving && destination
-      ? 'none'
-      : 'translate(-50%, -50%)',
-    fontSize: isMoving && destination
-      ? destination.fontSize
-      : 'clamp(1.8rem, 5vw, 3.5rem)',
+    transform:
+      isMoving && destination
+        ? 'none'
+        : 'translate(-50%, -50%)',
+    fontSize:
+      isMoving && destination
+        ? destination.fontSize
+        : 'clamp(1.8rem, 5vw, 3.5rem)',
     fontFamily: isMoving && destination
       ? destination.fontFamily
       : 'inherit',
@@ -118,32 +134,41 @@ export default function IntroOverlay({
         ? 'Welcome to my world.'
         : '';
 
+  const textStyle: CSSProperties = {
+    position: 'fixed',
+    left: '50%',
+    top: '50%',
+    transform: 'translate(-50%, -50%)',
+    margin: 0,
+    padding: '0 16px',
+    width: '100%',
+    textAlign: 'center',
+    whiteSpace: 'nowrap',
+    fontSize: 'clamp(1.8rem, 5vw, 3.5rem)',
+    fontWeight: 500,
+    letterSpacing: '-0.04em',
+    color: '#ffffff',
+    textShadow: '0 0 12px rgba(255,255,255,0.10)',
+    animation: 'intro-text-in 700ms ease both',
+  };
+
   return (
     <div
-      className={`fixed inset-0 z-[100] bg-black transition-opacity duration-500 ${
-        phase === 'fading' ? 'opacity-0' : 'opacity-100'
-      }`}
+      style={{
+        ...overlayStyle,
+        opacity: phase === 'fading' ? 0 : 1,
+      }}
       aria-live="polite"
       aria-label="Welcome introduction"
     >
       {!isNameVisible && (
-        <p
-          key={phase}
-          className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap px-4 text-center text-[clamp(1.8rem,5vw,3.5rem)] font-medium tracking-[-0.04em] text-white"
-          style={{
-            textShadow: '0 0 12px rgba(255,255,255,0.10)',
-            animation: 'intro-text-in 700ms ease both',
-          }}
-        >
+        <p key={phase} style={textStyle}>
           {message}
         </p>
       )}
 
       {isNameVisible && (
-        <span
-          className="fixed z-[101] whitespace-nowrap text-white"
-          style={nameStyle}
-        >
+        <span style={nameStyle}>
           Haryo Bimo Wistoro
         </span>
       )}
@@ -151,7 +176,17 @@ export default function IntroOverlay({
       <button
         type="button"
         onClick={onComplete}
-        className="absolute bottom-8 right-8 text-xs tracking-[0.18em] text-white/40 transition-colors duration-300 hover:text-white/90"
+        style={{
+          position: 'absolute',
+          right: '32px',
+          bottom: '32px',
+          border: 0,
+          background: 'transparent',
+          color: 'rgba(255,255,255,0.4)',
+          fontSize: '11px',
+          letterSpacing: '0.18em',
+          cursor: 'pointer',
+        }}
       >
         SKIP INTRO
       </button>
