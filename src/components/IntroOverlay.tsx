@@ -6,41 +6,86 @@ interface IntroOverlayProps {
   onComplete: () => void;
 }
 
-type Phase = 'blank' | 'hello' | 'welcome' | 'name' | 'moving' | 'fading';
+interface NamePosition {
+  left: number;
+  top: number;
+  fontSize: string;
+  fontFamily: string;
+  fontWeight: string;
+  letterSpacing: string;
+  lineHeight: string;
+}
 
-const FADE_IN = 'opacity 1800ms cubic-bezier(0.16, 1, 0.3, 1)';
-const FADE_OUT = 'opacity 1800ms cubic-bezier(0.7, 0, 0.84, 0)';
+type Phase = 'blank' | 'message' | 'name' | 'moving' | 'fading';
+
+const TEXT_TRANSITION =
+  'opacity 950ms cubic-bezier(0.4, 0, 0.2, 1)';
 
 export default function IntroOverlay({
   targetRef,
   onComplete,
 }: IntroOverlayProps) {
   const [phase, setPhase] = useState<Phase>('blank');
-  const [namePosition, setNamePosition] = useState<{
-    left: number;
-    top: number;
-    fontSize: string;
-    fontFamily: string;
-    fontWeight: string;
-    letterSpacing: string;
-    lineHeight: string;
-  } | null>(null);
+  const [message, setMessage] = useState('');
+  const [textVisible, setTextVisible] = useState(false);
+  const [namePosition, setNamePosition] = useState<NamePosition | null>(null);
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
 
     const timers: number[] = [];
-    let frame = 0;
+    const frames: number[] = [];
 
     const schedule = (callback: () => void, delay: number) => {
       timers.push(window.setTimeout(callback, delay));
     };
 
-    schedule(() => setPhase('hello'), 500);
-    schedule(() => setPhase('welcome'), 4200);
-    schedule(() => setPhase('name'), 7900);
+    const reveal = (text: string) => {
+      setTextVisible(false);
+      setMessage(text);
+      setPhase('message');
 
+      const firstFrame = window.requestAnimationFrame(() => {
+        const secondFrame = window.requestAnimationFrame(() => {
+          setTextVisible(true);
+        });
+
+        frames.push(secondFrame);
+      });
+
+      frames.push(firstFrame);
+    };
+
+    // Initial blank screen
+    schedule(() => reveal('Hello there.'), 400);
+
+    // Hello fades out
+    schedule(() => setTextVisible(false), 1800);
+
+    // Welcome appears after the previous text fades away
+    schedule(() => reveal('Welcome to my world.'), 2830);
+
+    // Welcome fades out
+    schedule(() => setTextVisible(false), 4230);
+
+    // Name appears
+    schedule(() => {
+      setPhase('name');
+      setTextVisible(false);
+
+      const firstFrame = window.requestAnimationFrame(() => {
+        const secondFrame = window.requestAnimationFrame(() => {
+          setTextVisible(true);
+        });
+
+        frames.push(secondFrame);
+      });
+
+      frames.push(firstFrame);
+    }, 5180);
+
+    // Name moves into the Hero position
     schedule(() => {
       const target = targetRef.current;
 
@@ -62,33 +107,47 @@ export default function IntroOverlay({
         lineHeight: computed.lineHeight,
       });
 
-      frame = window.requestAnimationFrame(() => {
-        setPhase('moving');
-      });
-    }, 11100);
+      setPhase('moving');
+    }, 6580);
 
-    schedule(() => setPhase('fading'), 12800);
-    schedule(onComplete, 14700);
+    // Fade away the entire intro
+    schedule(() => setPhase('fading'), 8230);
+
+    schedule(onComplete, 9430);
 
     return () => {
       timers.forEach(window.clearTimeout);
-      window.cancelAnimationFrame(frame);
+      frames.forEach(window.cancelAnimationFrame);
       document.body.style.overflow = previousOverflow;
     };
   }, [targetRef, onComplete]);
 
-  const message =
-    phase === 'hello'
-      ? 'Hello there.'
-      : phase === 'welcome'
-        ? 'Welcome to my world.'
-        : '';
+  const isMessage = phase === 'message';
 
-  const isMessage = phase === 'hello' || phase === 'welcome';
-  const isName = phase === 'name' || phase === 'moving' || phase === 'fading';
-  const isMoving = phase === 'moving' || phase === 'fading';
+  const isName =
+    phase === 'name' ||
+    phase === 'moving' ||
+    phase === 'fading';
 
-  const textVisible = isMessage || phase === 'name';
+  const isMoving =
+    phase === 'moving' ||
+    phase === 'fading';
+
+  const messageStyle: CSSProperties = {
+    position: 'absolute',
+    left: '50%',
+    top: '50%',
+    transform: 'translate(-50%, -50%)',
+    margin: 0,
+    whiteSpace: 'nowrap',
+    color: '#fff',
+    fontSize: 'clamp(1.8rem, 5vw, 3.5rem)',
+    fontWeight: 500,
+    letterSpacing: '-0.04em',
+    textShadow: '0 0 22px rgba(255,255,255,0.12)',
+    opacity: textVisible ? 1 : 0,
+    transition: TEXT_TRANSITION,
+  };
 
   const nameStyle: CSSProperties = {
     position: 'fixed',
@@ -96,17 +155,17 @@ export default function IntroOverlay({
     left: '50%',
     top: '50%',
     transform: 'translate(-50%, -50%)',
-    color: '#fff',
     whiteSpace: 'nowrap',
+    color: '#fff',
     fontSize: 'clamp(1.8rem, 5vw, 3.5rem)',
     fontWeight: 500,
     letterSpacing: '-0.04em',
     lineHeight: 1.15,
-    opacity: phase === 'name' || isMoving ? 1 : 0,
     textShadow: '0 0 22px rgba(255,255,255,0.12)',
+    opacity: textVisible ? 1 : 0,
     transition: isMoving
-      ? 'left 1600ms cubic-bezier(0.22, 1, 0.36, 1), top 1600ms cubic-bezier(0.22, 1, 0.36, 1), transform 1600ms cubic-bezier(0.22, 1, 0.36, 1), font-size 1600ms cubic-bezier(0.22, 1, 0.36, 1), opacity 1000ms ease'
-      : 'opacity 1600ms cubic-bezier(0.16, 1, 0.3, 1)',
+      ? 'left 1500ms cubic-bezier(0.22, 1, 0.36, 1), top 1500ms cubic-bezier(0.22, 1, 0.36, 1), transform 1500ms cubic-bezier(0.22, 1, 0.36, 1), font-size 1500ms cubic-bezier(0.22, 1, 0.36, 1), opacity 950ms ease'
+      : TEXT_TRANSITION,
   };
 
   if (isMoving && namePosition) {
@@ -131,12 +190,14 @@ export default function IntroOverlay({
         overflow: 'hidden',
         background: '#000',
         opacity: phase === 'fading' ? 0 : 1,
-        transition: 'opacity 1900ms cubic-bezier(0.16, 1, 0.3, 1)',
+        transition: 'opacity 1200ms cubic-bezier(0.4, 0, 0.2, 1)',
       }}
       aria-live="polite"
       aria-label="Welcome introduction"
     >
+      {/* Very subtle ambient glow */}
       <div
+        aria-hidden="true"
         style={{
           position: 'absolute',
           left: '50%',
@@ -146,38 +207,22 @@ export default function IntroOverlay({
           transform: 'translate(-50%, -50%)',
           background:
             'radial-gradient(ellipse, rgba(255,255,255,0.045), rgba(255,255,255,0.012) 45%, transparent 75%)',
-          opacity: textVisible ? 1 : 0,
-          transition: 'opacity 1800ms ease',
+          opacity: textVisible && phase !== 'moving' ? 1 : 0,
+          transition: 'opacity 1200ms ease',
           pointerEvents: 'none',
         }}
       />
 
+      {/* Messages */}
       {isMessage && (
-        <span
-          key={message}
-          style={{
-            position: 'absolute',
-            left: '50%',
-            top: '50%',
-            transform: 'translate(-50%, -50%)',
-            display: 'inline-flex',
-            alignItems: 'center',
-            color: '#fff',
-            whiteSpace: 'nowrap',
-            fontSize: 'clamp(1.8rem, 5vw, 3.5rem)',
-            fontWeight: 500,
-            letterSpacing: '-0.04em',
-            textShadow: '0 0 22px rgba(255,255,255,0.12)',
-            opacity: 1,
-            animation: 'introFadeIn 1800ms cubic-bezier(0.16, 1, 0.3, 1) both',
-          }}
-        >
+        <p style={messageStyle}>
           <span className="intro-light intro-light-left" />
           {message}
           <span className="intro-light intro-light-right" />
-        </span>
+        </p>
       )}
 
+      {/* Name */}
       {isName && (
         <span style={nameStyle}>
           <span className="intro-light intro-light-left" />
@@ -186,6 +231,7 @@ export default function IntroOverlay({
         </span>
       )}
 
+      {/* Skip */}
       <button
         type="button"
         onClick={onComplete}
@@ -205,11 +251,6 @@ export default function IntroOverlay({
       </button>
 
       <style>{`
-        @keyframes introFadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-
         .intro-light {
           position: absolute;
           top: 50%;
