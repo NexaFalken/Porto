@@ -1,5 +1,9 @@
 
-import { useCallback, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 
 import BackToTop from '@/components/BackToTop';
 import CursorGlow from '@/components/CursorGlow';
@@ -20,16 +24,40 @@ import JourneyFilm from '@/components/sections/JourneyFilm';
 import Portfolio from '@/components/sections/Portfolio';
 import Projects from '@/components/sections/Projects';
 
+const CONSTRUCTION_DURATION_MS = 7000;
+
 export default function App() {
-  const { theme, toggleTheme } = useTheme();
+  // Force dark mode temporarily while preserving the saved preference.
+  const {
+    theme,
+    toggleTheme,
+    setTemporaryTheme,
+  } = useTheme('dark');
+
   const activeId = useActiveSection(sectionIds);
 
-  const heroNameRef = useRef<HTMLHeadingElement>(null);
-  const [introComplete, setIntroComplete] = useState(false);
+  const [constructionStarted, setConstructionStarted] = useState(false);
+  const [constructionComplete, setConstructionComplete] = useState(false);
+  const [introVisible, setIntroVisible] = useState(true);
 
-  const finishIntro = useCallback(() => {
-    setIntroComplete(true);
+  const startConstruction = useCallback(() => {
+    setConstructionStarted(true);
   }, []);
+
+  const finishIntroOverlay = useCallback(() => {
+    setIntroVisible(false);
+  }, []);
+
+  useEffect(() => {
+    if (!constructionStarted) return;
+
+    const timer = window.setTimeout(() => {
+      setConstructionComplete(true);
+      setTemporaryTheme(null);
+    }, CONSTRUCTION_DURATION_MS);
+
+    return () => window.clearTimeout(timer);
+  }, [constructionStarted, setTemporaryTheme]);
 
   return (
     <div className="relative isolate">
@@ -37,8 +65,8 @@ export default function App() {
 
       <main className="relative z-10">
         <Hero
-          nameRef={heroNameRef}
-          introComplete={introComplete}
+          constructionStarted={constructionStarted}
+          constructionComplete={constructionComplete}
         />
 
         <SiteHeader
@@ -62,10 +90,10 @@ export default function App() {
 
       <BackToTop />
 
-      {!introComplete && (
+      {introVisible && (
         <IntroOverlay
-          targetRef={heroNameRef}
-          onComplete={finishIntro}
+          onConstructionStart={startConstruction}
+          onComplete={finishIntroOverlay}
         />
       )}
     </div>
