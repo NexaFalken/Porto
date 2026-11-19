@@ -19,34 +19,6 @@ interface HeroProps {
   constructionComplete: boolean;
 }
 
-const frameTargets = [
-  { id: 'status', label: 'STATUS', delay: 250 },
-  { id: 'portrait', label: 'IMAGE', delay: 650 },
-  { id: 'name', label: 'TYPE', delay: 1950 },
-  { id: 'divider', label: 'ALIGN', delay: 3300 },
-  { id: 'role', label: 'TEXT', delay: 3850 },
-  { id: 'statement', label: 'COPY', delay: 4750 },
-  { id: 'actions', label: 'COMPONENT', delay: 6350 },
-  { id: 'metadata', label: 'DETAIL', delay: 8500 },
-  { id: 'scroll', label: 'NAVIGATION', delay: 9600 },
-] as const;
-
-const cursorTargets = [
-  { id: 'status', label: 'Status', color: '#69a8ff', x: 0.18, y: 0.5, delay: 250, kind: 'quick' },
-  { id: 'portrait', label: 'Visual', color: '#f58bc5', x: 0.12, y: 0.2, delay: 650, kind: 'drag' },
-  { id: 'portrait', label: 'Resize', color: '#ffb86b', x: 0.96, y: 0.96, delay: 1150, kind: 'resize' },
-  { id: 'portrait', label: 'Crop', color: '#65d8c0', x: 0.82, y: 0.12, delay: 1850, kind: 'quick' },
-  { id: 'name', label: 'Typography', color: '#b99aff', x: 0.48, y: 0.55, delay: 2050, kind: 'type' },
-  { id: 'name', label: 'Font', color: '#ff8f9c', x: 0.82, y: 0.25, delay: 2650, kind: 'quick' },
-  { id: 'divider', label: 'Align', color: '#65d8c0', x: 0.05, y: 0.5, delay: 3300, kind: 'draw' },
-  { id: 'role', label: 'Content', color: '#69a8ff', x: 0.18, y: 0.5, delay: 3900, kind: 'type' },
-  { id: 'statement', label: 'Copy', color: '#ffb86b', x: 0.12, y: 0.35, delay: 4700, kind: 'type' },
-  { id: 'actions', label: 'Button', color: '#f58bc5', x: 0.16, y: 0.5, delay: 6300, kind: 'build' },
-  { id: 'actions', label: 'Style', color: '#b99aff', x: 0.78, y: 0.5, delay: 6900, kind: 'build' },
-  { id: 'metadata', label: 'Details', color: '#65d8c0', x: 0.18, y: 0.2, delay: 8500, kind: 'quick' },
-  { id: 'scroll', label: 'Finish', color: '#ffb86b', x: 0.5, y: 0.5, delay: 9650, kind: 'quick' },
-] as const;
-
 function LocalClock() {
   const [now, setNow] = useState(() => new Date());
 
@@ -74,7 +46,7 @@ function BuildItem({
   children: ReactNode;
   className?: string;
   delay: number;
-  target: string;
+  target?: string;
 }) {
   return (
     <div
@@ -87,27 +59,170 @@ function BuildItem({
   );
 }
 
+const selectionTargets = [
+  'status',
+  'portrait',
+  'name',
+  'divider',
+  'role',
+  'statement',
+  'actions',
+  'metadata',
+  'scroll',
+] as const;
+
+const cursorTargets = [
+  {
+    id: 'visual',
+    target: 'portrait',
+    label: 'VISUAL',
+    color: '#69a8ff',
+    delay: 650,
+    x: 0.12,
+    y: 0.22,
+    movement: 'drag',
+  },
+  {
+    id: 'resize',
+    target: 'portrait',
+    label: 'RESIZE',
+    color: '#f58bc5',
+    delay: 1050,
+    x: 0.96,
+    y: 0.94,
+    movement: 'resize',
+  },
+  {
+    id: 'status',
+    target: 'status',
+    label: 'DETAIL',
+    color: '#65d8c0',
+    delay: 250,
+    x: 0.82,
+    y: 0.5,
+    movement: 'inspect',
+  },
+  {
+    id: 'type',
+    target: 'name',
+    label: 'TYPE',
+    color: '#b99aff',
+    delay: 1850,
+    x: 0.48,
+    y: 0.55,
+    movement: 'type',
+  },
+  {
+    id: 'font',
+    target: 'name',
+    label: 'FONT',
+    color: '#ffb86b',
+    delay: 2350,
+    x: 0.82,
+    y: 0.25,
+    movement: 'inspect',
+  },
+  {
+    id: 'align',
+    target: 'divider',
+    label: 'ALIGN',
+    color: '#69d5ff',
+    delay: 3500,
+    x: 0.12,
+    y: 0.5,
+    movement: 'draw',
+  },
+  {
+    id: 'content',
+    target: 'role',
+    label: 'CONTENT',
+    color: '#a5df83',
+    delay: 4150,
+    x: 0.16,
+    y: 0.5,
+    movement: 'type',
+  },
+  {
+    id: 'copy',
+    target: 'statement',
+    label: 'COPY',
+    color: '#ff9d75',
+    delay: 4900,
+    x: 0.08,
+    y: 0.35,
+    movement: 'inspect',
+  },
+  {
+    id: 'button',
+    target: 'actions',
+    label: 'BUTTON',
+    color: '#f58bc5',
+    delay: 6600,
+    x: 0.18,
+    y: 0.55,
+    movement: 'button',
+  },
+  {
+    id: 'button-detail',
+    target: 'actions',
+    label: 'STYLE',
+    color: '#69a8ff',
+    delay: 7050,
+    x: 0.78,
+    y: 0.55,
+    movement: 'inspect',
+  },
+  {
+    id: 'metadata',
+    target: 'metadata',
+    label: 'DETAIL',
+    color: '#c6a0ff',
+    delay: 8500,
+    x: 0.18,
+    y: 0.3,
+    movement: 'inspect',
+  },
+  {
+    id: 'motion',
+    target: 'scroll',
+    label: 'MOTION',
+    color: '#65d8c0',
+    delay: 9300,
+    x: 0.5,
+    y: 0.5,
+    movement: 'inspect',
+  },
+  {
+    id: 'polish',
+    target: 'name',
+    label: 'POLISH',
+    color: '#ffd166',
+    delay: 10100,
+    x: 0.92,
+    y: 0.75,
+    movement: 'inspect',
+  },
+] as const;
+
 function SelectionFrame({
-  label,
-  setFrameRef,
-  delay,
+  frameRef,
+  target,
 }: {
-  label: string;
-  setFrameRef: (node: HTMLDivElement | null) => void;
-  delay: number;
+  frameRef: (node: HTMLDivElement | null) => void;
+  target: string;
 }) {
   return (
     <div
-      ref={setFrameRef}
+      ref={frameRef}
       className="hero-selection"
-      style={{ '--selection-delay': `${delay}ms` } as CSSProperties}
+      data-selection={target}
       aria-hidden="true"
     >
       <i />
       <i />
       <i />
       <i />
-      <span className="hero-selection-size">{label}</span>
+      <span className="hero-selection-size">{target.toUpperCase()}</span>
     </div>
   );
 }
@@ -125,25 +240,27 @@ function HeroConstruction({
     if (!section) return;
 
     let animationFrame = 0;
-    const startTime = performance.now();
+    let active = true;
 
     const updatePositions = () => {
+      if (!active) return;
+
       const sectionRect = section.getBoundingClientRect();
 
-      frameTargets.forEach(({ id }) => {
-        const target = section.querySelector<HTMLElement>(
-          `[data-hero-target="${id}"]`,
+      selectionTargets.forEach((target) => {
+        const frame = frameRefs.current[target];
+        const element = section.querySelector<HTMLElement>(
+          `[data-hero-target="${target}"]`,
         );
-        const frame = frameRefs.current[id];
 
-        if (!target || !frame) return;
+        if (!frame || !element) return;
 
-        const rect = target.getBoundingClientRect();
-        const visible = rect.width > 1 && rect.height > 1;
+        const rect = element.getBoundingClientRect();
 
-        frame.style.opacity = visible ? '' : '0';
-
-        if (!visible) return;
+        if (rect.width < 1 || rect.height < 1) {
+          frame.style.opacity = '0';
+          return;
+        }
 
         frame.style.left = `${rect.left - sectionRect.left}px`;
         frame.style.top = `${rect.top - sectionRect.top}px`;
@@ -151,37 +268,43 @@ function HeroConstruction({
         frame.style.height = `${rect.height}px`;
       });
 
-      cursorTargets.forEach((cursorTarget, index) => {
-        const target = section.querySelector<HTMLElement>(
-          `[data-hero-target="${cursorTarget.id}"]`,
+      cursorTargets.forEach((cursorTarget) => {
+        const cursor = cursorRefs.current[cursorTarget.id];
+        const element = section.querySelector<HTMLElement>(
+          `[data-hero-target="${cursorTarget.target}"]`,
         );
-        const cursor = cursorRefs.current[`cursor-${index}`];
 
-        if (!target || !cursor) return;
+        if (!cursor || !element) return;
 
-        const rect = target.getBoundingClientRect();
-        const visible = rect.width > 1 && rect.height > 1;
+        const rect = element.getBoundingClientRect();
 
-        cursor.style.visibility = visible ? 'visible' : 'hidden';
+        if (rect.width < 1 || rect.height < 1) {
+          cursor.style.visibility = 'hidden';
+          return;
+        }
 
-        if (!visible) return;
-
+        cursor.style.visibility = 'visible';
         cursor.style.left = `${
-          rect.left - sectionRect.left + rect.width * cursorTarget.x
+          rect.left -
+          sectionRect.left +
+          rect.width * cursorTarget.x
         }px`;
         cursor.style.top = `${
-          rect.top - sectionRect.top + rect.height * cursorTarget.y
+          rect.top -
+          sectionRect.top +
+          rect.height * cursorTarget.y
         }px`;
       });
 
-      if (performance.now() - startTime < 14_500) {
-        animationFrame = requestAnimationFrame(updatePositions);
-      }
+      animationFrame = requestAnimationFrame(updatePositions);
     };
 
     animationFrame = requestAnimationFrame(updatePositions);
 
-    return () => cancelAnimationFrame(animationFrame);
+    return () => {
+      active = false;
+      cancelAnimationFrame(animationFrame);
+    };
   }, [sectionRef]);
 
   return (
@@ -189,40 +312,46 @@ function HeroConstruction({
       <div className="hero-alignment-guide guide-vertical" />
       <div className="hero-alignment-guide guide-horizontal" />
       <div className="hero-alignment-guide guide-portrait" />
+      <div className="hero-alignment-guide guide-name" />
 
-      {frameTargets.map((target) => (
+      {selectionTargets.map((target) => (
         <SelectionFrame
-          key={target.id}
-          label={target.label}
-          delay={target.delay}
-          setFrameRef={(node) => {
-            frameRefs.current[target.id] = node;
+          key={target}
+          target={target}
+          frameRef={(node) => {
+            frameRefs.current[target] = node;
           }}
         />
       ))}
 
       <div className="hero-cursor-team">
-        {cursorTargets.map((target, index) => (
+        {cursorTargets.map((cursor) => (
           <div
-            key={`${target.id}-${target.label}`}
+            key={cursor.id}
             ref={(node) => {
-              cursorRefs.current[`cursor-${index}`] = node;
+              cursorRefs.current[cursor.id] = node;
             }}
-            className={`hero-cursor cursor-${target.kind}`}
+            className={`hero-cursor cursor-${cursor.movement}`}
             style={
               {
-                '--cursor-color': target.color,
-                '--cursor-delay': `${target.delay}ms`,
-                '--cursor-index': index,
+                '--cursor-color': cursor.color,
+                '--cursor-delay': `${cursor.delay}ms`,
               } as CSSProperties
             }
           >
-            <MousePointer2 />
-            <span>{target.label}</span>
-            <i className="hero-cursor-click" />
+            <div className="hero-cursor-inner">
+              <MousePointer2 />
+              <span>{cursor.label}</span>
+            </div>
           </div>
         ))}
       </div>
+
+      <div className="hero-click-effect click-one" />
+      <div className="hero-click-effect click-two" />
+      <div className="hero-click-effect click-three" />
+      <div className="hero-click-effect click-four" />
+      <div className="hero-click-effect click-five" />
 
       <div className="hero-code-window">
         <div className="hero-code-topbar">
@@ -246,15 +375,15 @@ function HeroConstruction({
           </div>
           <div className="hero-code-line code-line-three">
             <span className="code-number">03</span>
-            <span>hero.<em>compose</em>(<b>'typography'</b>);</span>
+            <span>hero.<em>refine</em>(<b>'typography'</b>);</span>
           </div>
           <div className="hero-code-line code-line-four">
             <span className="code-number">04</span>
-            <span>hero.<em>build</em>(<b>'components'</b>);</span>
+            <span>hero.<em>compose</em>(<b>'components'</b>);</span>
           </div>
           <div className="hero-code-line code-line-five">
             <span className="code-number">05</span>
-            <span>hero.<em>align</em>().<em>refine</em>();</span>
+            <span>hero.<em>align</em>().<em>polish</em>();</span>
           </div>
         </div>
       </div>
@@ -285,7 +414,11 @@ export default function Hero({
     >
       <div className="relative mx-auto grid w-full max-w-7xl items-center gap-16 lg:grid-cols-12 lg:gap-10">
         <div className="lg:col-span-7">
-          <BuildItem delay={250} target="status" className="hero-build-status">
+          <BuildItem
+            target="status"
+            delay={250}
+            className="hero-build-status"
+          >
             <p className="inline-flex items-center gap-3 rounded-full border border-line bg-surface/60 px-4 py-2 text-xs font-medium uppercase tracking-[0.18em] text-muted">
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60" />
@@ -295,36 +428,56 @@ export default function Hero({
             </p>
           </BuildItem>
 
-          <BuildItem delay={1850} target="name" className="hero-build-name">
-            <h1 className="hero-name-typography mt-8 whitespace-nowrap font-display text-[clamp(2.5rem,8vw,5rem)] leading-tight tracking-[-0.04em] lg:text-[4.4rem]">
+          <BuildItem
+            target="name"
+            delay={1850}
+            className="hero-build-name"
+          >
+            <h1 className="hero-name-preview mt-8 whitespace-nowrap font-display text-[clamp(2.5rem,8vw,5rem)] leading-tight tracking-[-0.04em] lg:text-[4.4rem]">
               {profile.name}
             </h1>
           </BuildItem>
 
-          <BuildItem delay={3200} target="divider" className="hero-build-divider">
+          <BuildItem
+            target="divider"
+            delay={3500}
+            className="hero-build-divider"
+          >
             <div className="mt-1.5 h-px w-full max-w-md bg-line" />
           </BuildItem>
 
-          <BuildItem delay={3750} target="role" className="hero-build-role">
+          <BuildItem
+            target="role"
+            delay={4150}
+            className="hero-build-role"
+          >
             <p className="mt-2.5 font-display text-xl leading-[1.2] text-fg md:text-2xl">
               {profile.role}
             </p>
           </BuildItem>
 
-          <BuildItem delay={4650} target="statement" className="hero-build-statement">
+          <BuildItem
+            target="statement"
+            delay={4900}
+            className="hero-build-statement"
+          >
             <p className="mt-6 max-w-xl text-base leading-relaxed text-muted md:text-lg">
               {profile.statement}
             </p>
           </BuildItem>
 
-          <BuildItem delay={6200} target="actions" className="hero-build-actions">
+          <BuildItem
+            target="actions"
+            delay={6600}
+            className="hero-build-actions"
+          >
             <div className="mt-10 flex flex-wrap items-center gap-4">
               <a
                 href="#portfolio"
                 className="hero-button hero-button-primary group inline-flex items-center gap-2 px-6 py-3 text-sm font-medium"
               >
                 <span className="hero-button-label">The Journey</span>
-                <ArrowUpRight className="hero-button-icon h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </a>
 
               <a
@@ -336,7 +489,11 @@ export default function Hero({
             </div>
           </BuildItem>
 
-          <BuildItem delay={8400} target="metadata" className="hero-build-meta">
+          <BuildItem
+            target="metadata"
+            delay={8500}
+            className="hero-build-meta"
+          >
             <dl className="mt-14 flex gap-10 border-t border-line pt-6 text-sm">
               <div>
                 <dt className="text-muted">Local time</dt>
@@ -355,8 +512,12 @@ export default function Hero({
         </div>
 
         <div className="relative lg:col-span-5">
-          <BuildItem delay={550} target="portrait" className="hero-build-portrait">
-            <div className="relative mx-auto aspect-[4/5] w-full max-w-md">
+          <BuildItem
+            target="portrait"
+            delay={650}
+            className="hero-build-portrait"
+          >
+            <div className="hero-portrait-art relative mx-auto aspect-[4/5] w-full max-w-md">
               <div
                 className="absolute -inset-3 rounded-[2rem] border border-line"
                 aria-hidden="true"
@@ -376,14 +537,16 @@ export default function Hero({
 
       <a
         href="#about"
-        data-hero-target="scroll"
         aria-label="Scroll to about"
-        className="absolute bottom-8 left-1/2 hidden -translate-x-1/2 text-muted transition-colors hover:text-accent hover:text-accent md:block"
+        data-hero-target="scroll"
+        className="absolute bottom-8 left-1/2 hidden -translate-x-1/2 text-muted transition-colors hover:text-accent md:block"
       >
         <ArrowDown className="h-5 w-5 animate-bounce" />
       </a>
 
-      {constructionActive && <HeroConstruction sectionRef={sectionRef} />}
+      {constructionActive && (
+        <HeroConstruction sectionRef={sectionRef} />
+      )}
     </section>
   );
 }
