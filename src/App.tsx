@@ -24,7 +24,7 @@ import JourneyFilm from '@/components/sections/JourneyFilm';
 import Portfolio from '@/components/sections/Portfolio';
 import Projects from '@/components/sections/Projects';
 
-const CONSTRUCTION_DURATION_MS = 7000;
+const CONSTRUCTION_DURATION_MS = 14000;
 
 export default function App() {
   // Force dark mode temporarily while preserving the saved preference.

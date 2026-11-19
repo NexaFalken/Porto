@@ -1,15 +1,5 @@
-
-import {
-  ArrowDown,
-  ArrowUpRight,
-  MousePointer2,
-} from 'lucide-react';
-import {
-  useEffect,
-  useState,
-  type CSSProperties,
-  type ReactNode,
-} from 'react';
+import { ArrowDown, ArrowUpRight, MousePointer2 } from 'lucide-react';
+import { useEffect, useState, type CSSProperties, type ReactNode } from 'react';
 import { profile } from '@/data/portfolio';
 
 interface HeroProps {
@@ -21,10 +11,7 @@ function LocalClock() {
   const [now, setNow] = useState(() => new Date());
 
   useEffect(() => {
-    const id = window.setInterval(() => {
-      setNow(new Date());
-    }, 30_000);
-
+    const id = window.setInterval(() => setNow(new Date()), 30_000);
     return () => window.clearInterval(id);
   }, []);
 
@@ -38,17 +25,15 @@ function LocalClock() {
   );
 }
 
-interface BuildItemProps {
-  children: ReactNode;
-  delay: number;
-  className?: string;
-}
-
 function BuildItem({
   children,
-  delay,
   className = '',
-}: BuildItemProps) {
+  delay,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  delay: number;
+}) {
   return (
     <div
       className={`hero-build-item ${className}`}
@@ -59,28 +44,40 @@ function BuildItem({
   );
 }
 
-interface ConstructionCursorProps {
-  name: string;
-  color: string;
-  className: string;
+const cursors = [
+  { name: 'Layout', className: 'cursor-layout', color: '#69a8ff' },
+  { name: 'Visual', className: 'cursor-visual', color: '#f58bc5' },
+  { name: 'Type', className: 'cursor-type', color: '#b99aff' },
+  { name: 'Motion', className: 'cursor-motion', color: '#65d8c0' },
+  { name: 'Detail', className: 'cursor-detail', color: '#ffc477' },
+  { name: 'Polish', className: 'cursor-polish', color: '#ff8c82' },
+];
+
+function CursorTeam() {
+  return (
+    <div className="hero-cursor-team" aria-hidden="true">
+      {cursors.map((cursor) => (
+        <div
+          key={cursor.className}
+          className={`hero-cursor ${cursor.className}`}
+          style={{ '--cursor-color': cursor.color } as CSSProperties}
+        >
+          <MousePointer2 className="h-5 w-5 fill-current" />
+          <span>{cursor.name}</span>
+        </div>
+      ))}
+    </div>
+  );
 }
 
-function ConstructionCursor({
-  name,
-  color,
-  className,
-}: ConstructionCursorProps) {
+function SelectionFrame({ className = '' }: { className?: string }) {
   return (
-    <div
-      className={`construction-cursor ${className}`}
-      style={{ '--cursor-color': color } as CSSProperties}
-    >
-      <MousePointer2
-        className="h-5 w-5"
-        strokeWidth={2.5}
-        fill={color}
-      />
-      <span>{name}</span>
+    <div className={`hero-selection ${className}`} aria-hidden="true">
+      <i />
+      <i />
+      <i />
+      <i />
+      <span className="hero-selection-size">W · H</span>
     </div>
   );
 }
@@ -88,95 +85,47 @@ function ConstructionCursor({
 function HeroConstruction() {
   return (
     <div className="hero-construction-layer" aria-hidden="true">
-      <div className="construction-cursor-field">
-        <ConstructionCursor
-          name="Layout"
-          color="#7DD3C0"
-          className="cursor-one"
-        />
-        <ConstructionCursor
-          name="Visual"
-          color="#A78BFA"
-          className="cursor-two"
-        />
-        <ConstructionCursor
-          name="Typography"
-          color="#F59E9B"
-          className="cursor-three"
-        />
-        <ConstructionCursor
-          name="Frontend"
-          color="#60A5FA"
-          className="cursor-four"
-        />
-        <ConstructionCursor
-          name="Motion"
-          color="#FBBF24"
-          className="cursor-five"
-        />
-        <ConstructionCursor
-          name="Detail"
-          color="#F472B6"
-          className="cursor-six"
-        />
-        <ConstructionCursor
-          name="Creative"
-          color="#34D399"
-          className="cursor-seven"
-        />
-        <ConstructionCursor
-          name="Polish"
-          color="#FB923C"
-          className="cursor-eight"
-        />
-      </div>
+      <div className="hero-alignment-guide guide-vertical" />
+      <div className="hero-alignment-guide guide-horizontal" />
 
-      <div className="construction-code-window">
-        <div className="construction-code-header">
-          <div className="flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-full bg-[#F87171]" />
-            <span className="h-2 w-2 rounded-full bg-[#FBBF24]" />
-            <span className="h-2 w-2 rounded-full bg-[#34D399]" />
+      <SelectionFrame className="selection-portrait" />
+      <SelectionFrame className="selection-name" />
+      <SelectionFrame className="selection-actions" />
+
+      <div className="hero-drag-line" />
+      <div className="hero-click-effect click-portrait" />
+      <div className="hero-click-effect click-name" />
+      <div className="hero-click-effect click-actions" />
+
+      <CursorTeam />
+
+      <div className="hero-code-window">
+        <div className="hero-code-topbar">
+          <div className="flex gap-1.5">
+            <i />
+            <i />
+            <i />
           </div>
-
-          <span className="font-mono text-[10px] tracking-wide text-white/45">
-            hero.tsx
-          </span>
-
-          <span className="text-[9px] text-white/30">TSX</span>
+          <span>hero-layout.tsx</span>
+          <span className="hero-code-live">LIVE</span>
         </div>
 
-        <div className="construction-code-content">
-          <div className="code-typing-line line-one">
-            <span className="text-[#C792EA]">const</span>
-            {' '}
-            <span className="text-[#82AAFF]">identity</span>
-            {' '}
-            <span className="text-white/60">=</span>
-            {' '}
-            <span className="text-[#C3E88D]">
-              "Haryo Bimo Wistoro"
-            </span>
+        <div className="hero-code-body">
+          <div className="hero-code-line code-line-one">
+            <span className="code-number">01</span>
+            <span><b>const</b> hero = <em>createCanvas</em>();</span>
           </div>
-
-          <div className="code-typing-line line-two">
-            <span className="text-[#C792EA]">const</span>
-            {' '}
-            <span className="text-[#82AAFF]">portfolio</span>
-            {' '}
-            <span className="text-white/60">=</span>
-            {' '}
-            <span className="text-[#FFCB6B]">createWorld</span>
-            <span className="text-white/70">()</span>
+          <div className="hero-code-line code-line-two">
+            <span className="code-number">02</span>
+            <span>hero.<em>place</em>(<b>'portrait'</b>, <strong>'right'</strong>);</span>
           </div>
-
-          <div className="code-typing-line line-three">
-            <span className="text-[#89DDFF]">return</span>
-            {' '}
-            <span className="text-[#FFCB6B]">build</span>
-            <span className="text-white/70">(</span>
-            <span className="text-[#C3E88D]">portfolio</span>
-            <span className="text-white/70">)</span>
+          <div className="hero-code-line code-line-three">
+            <span className="code-number">03</span>
+            <span>hero.<em>compose</em>(<b>'typography'</b>);</span>
+          </div>
+          <div className="hero-code-line code-line-four">
+            <span className="code-number">04</span>
+            <span>hero.<em>align</em>().<em>refine</em>();</span>
           </div>
         </div>
       </div>
@@ -191,16 +140,15 @@ export default function Hero({
   return (
     <section
       id="intro"
-      data-building={constructionStarted && !constructionComplete}
-      data-complete={constructionComplete}
-      className="hero-construction relative flex min-h-[100svh] scroll-mt-20 items-center overflow-hidden px-6 pb-16 pt-8 md:px-10 md:pt-12 lg:px-16"
+      className={`hero-section relative flex min-h-[100svh] scroll-mt-20 items-center overflow-hidden px-6 pb-16 pt-8 md:px-10 md:pt-12 lg:px-16 ${
+        constructionStarted && !constructionComplete
+          ? 'is-constructing'
+          : ''
+      }`}
     >
-      <div
-        className="relative mx-auto grid w-full max-w-7xl items-center gap-16 lg:grid-cols-12 lg:gap-10"
-        aria-busy={!constructionComplete}
-      >
+      <div className="relative mx-auto grid w-full max-w-7xl items-center gap-16 lg:grid-cols-12 lg:gap-10">
         <div className="lg:col-span-7">
-          <BuildItem delay={150}>
+          <BuildItem delay={350} className="hero-build-status">
             <p className="inline-flex items-center gap-3 rounded-full border border-line bg-surface/60 px-4 py-2 text-xs font-medium uppercase tracking-[0.18em] text-muted">
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60" />
@@ -210,29 +158,29 @@ export default function Hero({
             </p>
           </BuildItem>
 
-          <BuildItem delay={850}>
+          <BuildItem delay={3900} className="hero-build-name">
             <h1 className="mt-8 whitespace-nowrap font-display text-[clamp(2.5rem,8vw,5rem)] leading-tight tracking-[-0.04em] lg:text-[4.4rem]">
               {profile.name}
             </h1>
           </BuildItem>
 
-          <BuildItem delay={1350}>
+          <BuildItem delay={5700} className="hero-build-divider">
             <div className="mt-1.5 h-px w-full max-w-md bg-line" />
           </BuildItem>
 
-          <BuildItem delay={1750}>
+          <BuildItem delay={6500} className="hero-build-role">
             <p className="mt-2.5 font-display text-xl leading-[1.2] text-fg md:text-2xl">
               {profile.role}
             </p>
           </BuildItem>
 
-          <BuildItem delay={2350}>
+          <BuildItem delay={7900} className="hero-build-statement">
             <p className="mt-6 max-w-xl text-base leading-relaxed text-muted md:text-lg">
               {profile.statement}
             </p>
           </BuildItem>
 
-          <BuildItem delay={3100}>
+          <BuildItem delay={9900} className="hero-build-actions">
             <div className="mt-10 flex flex-wrap items-center gap-4">
               <a
                 href="#portfolio"
@@ -251,7 +199,7 @@ export default function Hero({
             </div>
           </BuildItem>
 
-          <BuildItem delay={3750}>
+          <BuildItem delay={11200} className="hero-build-meta">
             <dl className="mt-14 flex gap-10 border-t border-line pt-6 text-sm">
               <div>
                 <dt className="text-muted">Local time</dt>
@@ -271,7 +219,7 @@ export default function Hero({
         </div>
 
         <div className="relative lg:col-span-5">
-          <BuildItem delay={650}>
+          <BuildItem delay={900} className="hero-build-portrait">
             <div className="relative mx-auto aspect-[4/5] w-full max-w-md">
               <div
                 className="absolute -inset-3 rounded-[2rem] border border-line"
@@ -291,19 +239,17 @@ export default function Hero({
         </div>
       </div>
 
-      {constructionStarted && !constructionComplete && (
-        <HeroConstruction />
-      )}
-
       <a
         href="#about"
         aria-label="Scroll to about"
-        className={`absolute bottom-8 left-1/2 hidden -translate-x-1/2 text-muted transition-opacity duration-700 hover:text-accent md:block ${
-          constructionComplete ? 'opacity-100' : 'pointer-events-none opacity-0'
-        }`}
+        className="absolute bottom-8 left-1/2 hidden -translate-x-1/2 text-muted transition-colors hover:text-accent md:block"
       >
         <ArrowDown className="h-5 w-5 animate-bounce" />
       </a>
+
+      {constructionStarted && !constructionComplete && (
+        <HeroConstruction />
+      )}
     </section>
   );
 }
