@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -147,15 +148,8 @@ html[data-theme-switching] *::after {
 }
 
 /* =========================================
-   HERO CONSTRUCTION
+   HERO CONSTRUCTION — DESIGN SESSION
 ========================================= */
-
-/*
-  Important:
-  The hidden state exists ONLY while constructing.
-  When is-constructing is removed, the elements
-  automatically return to normal visible state.
-*/
 
 .hero-section.is-constructing {
   isolation: isolate;
@@ -164,90 +158,147 @@ html[data-theme-switching] *::after {
 .hero-section.is-constructing .hero-build-item {
   opacity: 0;
   will-change: transform, opacity, clip-path;
-  animation: hero-element-place 900ms cubic-bezier(.2, .75, .25, 1) both;
+  animation: hero-element-place 680ms cubic-bezier(.16, .78, .24, 1) both;
   animation-delay: var(--build-delay);
 }
 
 .hero-section.is-constructing .hero-build-portrait {
-  animation-name: hero-portrait-place;
-  animation-duration: 1500ms;
+  animation-name: hero-portrait-drag-in;
+  animation-duration: 1050ms;
 }
 
 .hero-section.is-constructing .hero-build-name {
-  animation-name: hero-type-reveal;
-  animation-duration: 1700ms;
+  animation-name: hero-name-place;
+  animation-duration: 850ms;
 }
 
 .hero-section.is-constructing .hero-build-divider {
   animation-name: hero-line-draw;
-  animation-duration: 900ms;
+  animation-duration: 620ms;
 }
 
 .hero-section.is-constructing .hero-build-role,
 .hero-section.is-constructing .hero-build-statement {
   animation-name: hero-text-place;
+  animation-duration: 720ms;
 }
 
 .hero-section.is-constructing .hero-build-actions {
-  animation-name: hero-actions-place;
-  animation-duration: 1100ms;
+  animation-name: hero-element-place;
+  animation-duration: 650ms;
 }
 
 .hero-section.is-constructing .hero-build-meta {
   animation-name: hero-meta-place;
-  animation-duration: 1000ms;
+  animation-duration: 750ms;
 }
 
 /* Element entrance */
 
 @keyframes hero-element-place {
-  from {
-    opacity: 0;
-    transform: translateY(22px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes hero-portrait-place {
   0% {
     opacity: 0;
-    transform: translate(-100px, 35px) scale(.78);
-  }
-
-  55% {
-    opacity: 1;
-    transform: translate(10px, -5px) scale(1.035);
+    transform: translate3d(0, 18px, 0) scale(.985);
   }
 
   75% {
-    transform: translate(-3px, 2px) scale(.99);
+    opacity: 1;
+    transform: translate3d(0, -2px, 0) scale(1.005);
   }
 
   100% {
     opacity: 1;
-    transform: translate(0) scale(1);
+    transform: translate3d(0, 0, 0) scale(1);
   }
 }
 
-@keyframes hero-type-reveal {
+/* Portrait is visually dragged into the canvas */
+
+@keyframes hero-portrait-drag-in {
+  0% {
+    opacity: 0;
+    transform: translate3d(-115px, 42px, 0) scale(.72);
+  }
+
+  28% {
+    opacity: 1;
+    transform: translate3d(-48px, 18px, 0) scale(.86);
+  }
+
+  68% {
+    opacity: 1;
+    transform: translate3d(7px, -3px, 0) scale(1.025);
+  }
+
+  86% {
+    transform: translate3d(-2px, 1px, 0) scale(.995);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes hero-name-place {
   0% {
     opacity: 0;
     clip-path: inset(0 100% 0 0);
-    transform: translateX(-12px);
+    transform: translate3d(-24px, 0, 0);
   }
 
-  15% {
+  22% {
     opacity: 1;
   }
 
   100% {
     opacity: 1;
     clip-path: inset(0 0 0 0);
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Font preview: several quick typography comparisons, then final font */
+
+.hero-section.is-constructing .hero-name-typography {
+  animation: hero-font-preview 1.55s steps(1, end) 2.35s both;
+}
+
+@keyframes hero-font-preview {
+  0% {
+    font-family: inherit;
+    letter-spacing: inherit;
+    transform: scaleX(1);
+  }
+
+  18% {
+    font-family: Georgia, 'Times New Roman', serif;
+    letter-spacing: -.055em;
+    transform: scaleX(.98);
+  }
+
+  36% {
+    font-family: 'Arial Narrow', Arial, sans-serif;
+    letter-spacing: -.035em;
+    transform: scaleX(.94);
+  }
+
+  54% {
+    font-family: Impact, 'Arial Narrow', sans-serif;
+    letter-spacing: -.025em;
+    transform: scaleX(1.015);
+  }
+
+  72% {
+    font-family: Arial, sans-serif;
+    letter-spacing: -.045em;
+    transform: scaleX(.99);
+  }
+
+  100% {
+    font-family: inherit;
+    letter-spacing: inherit;
+    transform: scaleX(1);
   }
 }
 
@@ -255,49 +306,162 @@ html[data-theme-switching] *::after {
   from {
     opacity: 0;
     transform: scaleX(0);
-    transform-origin: left;
+    transform-origin: left center;
   }
 
   to {
     opacity: 1;
     transform: scaleX(1);
-    transform-origin: left;
+    transform-origin: left center;
   }
 }
 
 @keyframes hero-text-place {
-  from {
-    opacity: 0;
-    transform: translate(-24px, 12px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translate(0);
-  }
-}
-
-@keyframes hero-actions-place {
   0% {
     opacity: 0;
-    transform: translateY(18px) scale(.96);
+    clip-path: inset(0 100% 0 0);
+    transform: translate3d(-18px, 8px, 0);
   }
 
-  70% {
+  25% {
     opacity: 1;
-    transform: translateY(-2px) scale(1.01);
   }
 
   100% {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    clip-path: inset(0 0 0 0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
 @keyframes hero-meta-place {
   from {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translate3d(0, 14px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Buttons are assembled from a shape, fill, radius and text */
+
+.hero-button {
+  position: relative;
+  isolation: isolate;
+  min-height: 46px;
+  border-radius: 999px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.hero-button::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  content: '';
+  border-radius: inherit;
+}
+
+.hero-button-primary {
+  color: rgb(var(--bg));
+}
+
+.hero-button-primary::before {
+  background: rgb(var(--fg));
+}
+
+.hero-button-secondary {
+  color: rgb(var(--fg));
+}
+
+.hero-button-secondary::before {
+  border: 1px solid rgb(var(--line));
+  background: transparent;
+}
+
+.hero-button-label,
+.hero-button-icon {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-section.is-constructing .hero-button {
+  border-radius: 2px;
+}
+
+.hero-section.is-constructing .hero-button::before {
+  clip-path: inset(0 100% 0 0);
+  border-radius: 2px;
+}
+
+.hero-section.is-constructing .hero-button-primary::before {
+  animation: hero-button-fill 780ms cubic-bezier(.2, .8, .2, 1) 6.45s both;
+}
+
+.hero-section.is-constructing .hero-button-secondary::before {
+  animation: hero-button-outline 720ms cubic-bezier(.2, .8, .2, 1) 6.85s both;
+}
+
+.hero-section.is-constructing .hero-button-label {
+  opacity: 0;
+  animation: hero-button-text 420ms ease 7.15s both;
+}
+
+.hero-section.is-constructing .hero-button-secondary .hero-button-label {
+  animation-delay: 7.55s;
+}
+
+.hero-section.is-constructing .hero-button-icon {
+  opacity: 0;
+  animation: hero-button-text 350ms ease 7.35s both;
+}
+
+@keyframes hero-button-fill {
+  0% {
+    clip-path: inset(0 100% 0 0);
+    border-radius: 2px;
+  }
+
+  38% {
+    clip-path: inset(0 0 0 0);
+    border-radius: 2px;
+  }
+
+  65% {
+    clip-path: inset(0 0 0 0);
+    border-radius: 8px;
+  }
+
+  100% {
+    clip-path: inset(0 0 0 0);
+    border-radius: 999px;
+  }
+}
+
+@keyframes hero-button-outline {
+  0% {
+    clip-path: inset(0 100% 0 0);
+    border-radius: 2px;
+  }
+
+  48% {
+    clip-path: inset(0 0 0 0);
+    border-radius: 2px;
+  }
+
+  100% {
+    clip-path: inset(0 0 0 0);
+    border-radius: 999px;
+  }
+}
+
+@keyframes hero-button-text {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
   }
 
   to {
@@ -310,8 +474,8 @@ html[data-theme-switching] *::after {
 
 .hero-construction-layer {
   position: absolute;
-  inset: 0;
   z-index: 30;
+  inset: 0;
   overflow: hidden;
   pointer-events: none;
   animation: construction-layer-exit 700ms ease 13.3s forwards;
@@ -333,6 +497,7 @@ html[data-theme-switching] *::after {
   border: 1px solid rgba(105, 168, 255, .95);
   opacity: 0;
   pointer-events: none;
+  animation: selection-flash 1.15s cubic-bezier(.2, .7, .2, 1) var(--selection-delay) both;
 }
 
 .hero-selection i {
@@ -360,14 +525,14 @@ html[data-theme-switching] *::after {
 }
 
 .hero-selection i:nth-child(4) {
-  bottom: -4px;
   right: -4px;
+  bottom: -4px;
 }
 
 .hero-selection-size {
   position: absolute;
   right: 0;
-  bottom: -22px;
+  bottom: -21px;
   padding: 2px 5px;
   border-radius: 3px;
   background: #3478d8;
@@ -377,52 +542,18 @@ html[data-theme-switching] *::after {
   white-space: nowrap;
 }
 
-.selection-portrait {
-  animation: select-portrait 2.2s ease 1.7s both;
-}
-
-.selection-name {
-  animation: select-name 1.8s ease 4.1s both;
-}
-
-.selection-actions {
-  animation: select-actions 1.8s ease 10s both;
-}
-
-@keyframes select-portrait {
-  0%, 12% {
+@keyframes selection-flash {
+  0% {
     opacity: 0;
+    transform: scale(.99);
   }
 
-  20%, 78% {
+  16% {
     opacity: 1;
+    transform: scale(1);
   }
 
-  100% {
-    opacity: 0;
-  }
-}
-
-@keyframes select-name {
-  0%, 10% {
-    opacity: 0;
-  }
-
-  20%, 75% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0;
-  }
-}
-
-@keyframes select-actions {
-  0%, 10% {
-    opacity: 0;
-  }
-
-  20%, 75% {
+  72% {
     opacity: 1;
   }
 
@@ -435,8 +566,8 @@ html[data-theme-switching] *::after {
 
 .hero-cursor-team {
   position: absolute;
-  inset: 0;
   z-index: 8;
+  inset: 0;
 }
 
 .hero-cursor {
@@ -444,15 +575,21 @@ html[data-theme-switching] *::after {
   display: flex;
   align-items: center;
   gap: 5px;
-  opacity: 0;
   color: var(--cursor-color, #69a8ff);
+  opacity: 0;
+  visibility: hidden;
   filter: drop-shadow(0 2px 5px rgba(0, 0, 0, .35));
   will-change: transform, opacity;
+  animation-duration: 1050ms;
+  animation-timing-function: cubic-bezier(.2, .75, .2, 1);
+  animation-delay: var(--cursor-delay);
+  animation-fill-mode: both;
 }
 
 .hero-cursor svg {
   width: 20px;
   height: 20px;
+  flex: 0 0 auto;
   fill: currentColor;
   filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .4));
 }
@@ -468,193 +605,260 @@ html[data-theme-switching] *::after {
   white-space: nowrap;
 }
 
-.cursor-layout {
-  --cursor-color: #69a8ff;
-  animation: cursor-drag 2.8s cubic-bezier(.45, 0, .2, 1) .8s both;
+.hero-cursor-click {
+  position: absolute;
+  top: 7px;
+  left: 7px;
+  width: 16px;
+  height: 16px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  opacity: 0;
+  transform: scale(.25);
 }
 
-.cursor-visual {
-  --cursor-color: #f58bc5;
-  animation: cursor-resize 2.3s cubic-bezier(.45, 0, .2, 1) 2.5s both;
+.cursor-quick {
+  animation-name: cursor-quick-work;
+}
+
+.cursor-drag {
+  animation-name: cursor-drag-work;
+  animation-duration: 1350ms;
+}
+
+.cursor-resize {
+  animation-name: cursor-resize-work;
+  animation-duration: 1150ms;
 }
 
 .cursor-type {
-  --cursor-color: #b99aff;
-  animation: cursor-type-work 2.8s cubic-bezier(.45, 0, .2, 1) 4s both;
+  animation-name: cursor-type-work;
+  animation-duration: 1250ms;
 }
 
-.cursor-detail {
-  --cursor-color: #65d8c0;
-  animation: cursor-action-work 2.8s cubic-bezier(.45, 0, .2, 1) 9.5s both;
+.cursor-draw {
+  animation-name: cursor-draw-work;
 }
 
-/* Drag portrait */
+.cursor-build {
+  animation-name: cursor-build-work;
+  animation-duration: 1200ms;
+}
 
-@keyframes cursor-drag {
+/* Quick select and click */
+
+@keyframes cursor-quick-work {
   0% {
     opacity: 0;
-    transform: translate(-35px, 25px);
+    transform: translate(-22px, 18px);
   }
 
-  15% {
+  18% {
     opacity: 1;
     transform: translate(0, 0);
   }
 
-  35% {
-    transform: translate(18px, 12px) scale(.88);
+  34% {
+    transform: translate(0, 0) scale(.78);
   }
 
-  50% {
-    transform: translate(18px, 12px) scale(1);
+  48% {
+    transform: translate(0, 0) scale(1);
   }
 
   78% {
-    transform: translate(38px, 22px);
     opacity: 1;
+    transform: translate(17px, -8px);
   }
 
   100% {
-    transform: translate(38px, 22px);
+    opacity: 0;
+    transform: translate(24px, -13px);
+  }
+}
+
+/* Cursor follows the portrait while it is dragged into place */
+
+@keyframes cursor-drag-work {
+  0% {
+    opacity: 0;
+    transform: translate(-42px, 24px);
+  }
+
+  14% {
+    opacity: 1;
+    transform: translate(-8px, 4px);
+  }
+
+  28% {
+    transform: translate(0, 0) scale(.8);
+  }
+
+  42% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  66% {
+    transform: translate(22px, 12px);
+    opacity: 1;
+  }
+
+  82% {
+    transform: translate(28px, 17px) scale(.82);
+  }
+
+  100% {
+    transform: translate(34px, 20px);
     opacity: 0;
   }
 }
 
-/* Resize portrait */
+/* Resize handle gesture */
 
-@keyframes cursor-resize {
+@keyframes cursor-resize-work {
   0% {
     opacity: 0;
-    transform: translate(25px, 20px);
+    transform: translate(22px, 20px);
   }
 
-  15% {
+  18% {
     opacity: 1;
     transform: translate(0, 0);
   }
 
-  40% {
-    transform: translate(-14px, -14px) scale(.85);
+  38% {
+    transform: translate(-15px, -13px) scale(.8);
   }
 
-  55% {
-    transform: translate(-14px, -14px) scale(1);
+  52% {
+    transform: translate(-15px, -13px) scale(1);
   }
 
-  80% {
-    transform: translate(-28px, -24px);
+  78% {
+    transform: translate(-28px, -23px);
     opacity: 1;
   }
 
   100% {
-    transform: translate(-28px, -24px);
+    transform: translate(-34px, -28px);
     opacity: 0;
   }
 }
 
-/* Typography */
+/* Typography cursor selects, compares and confirms */
 
 @keyframes cursor-type-work {
   0% {
     opacity: 0;
-    transform: translate(-25px, 18px);
+    transform: translate(-26px, 15px);
   }
 
-  15% {
+  16% {
     opacity: 1;
     transform: translate(0, 0);
   }
 
-  38% {
-    transform: translate(18px, 0) scale(.88);
+  32% {
+    transform: translate(12px, -5px) scale(.8);
   }
 
-  52% {
-    transform: translate(18px, 0) scale(1);
+  45% {
+    transform: translate(12px, -5px) scale(1);
   }
 
-  78% {
-    transform: translate(45px, 8px);
+  62% {
+    transform: translate(36px, -12px);
     opacity: 1;
   }
 
+  78% {
+    transform: translate(26px, 3px) scale(.8);
+  }
+
   100% {
-    transform: translate(45px, 8px);
+    transform: translate(38px, 8px);
     opacity: 0;
   }
 }
 
-/* Actions */
+/* Divider is drawn from left to right */
 
-@keyframes cursor-action-work {
+@keyframes cursor-draw-work {
   0% {
     opacity: 0;
-    transform: translate(-25px, 18px);
+    transform: translate(-22px, 8px);
   }
 
-  15% {
+  18% {
     opacity: 1;
     transform: translate(0, 0);
   }
 
-  38% {
-    transform: translate(18px, -8px) scale(.88);
-  }
-
-  52% {
-    transform: translate(18px, -8px) scale(1);
-  }
-
-  78% {
-    transform: translate(40px, -5px);
+  70% {
     opacity: 1;
+    transform: translate(115px, 0);
+  }
+
+  84% {
+    transform: translate(125px, 0) scale(.8);
   }
 
   100% {
-    transform: translate(40px, -5px);
+    opacity: 0;
+    transform: translate(135px, 0);
+  }
+}
+
+/* Button construction cursor: shape, fill, radius, label */
+
+@keyframes cursor-build-work {
+  0% {
+    opacity: 0;
+    transform: translate(-24px, 15px);
+  }
+
+  16% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+
+  32% {
+    transform: translate(0, 0) scale(.8);
+  }
+
+  44% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  62% {
+    transform: translate(18px, -5px);
+    opacity: 1;
+  }
+
+  78% {
+    transform: translate(28px, 2px) scale(.82);
+  }
+
+  100% {
+    transform: translate(38px, 7px);
     opacity: 0;
   }
 }
 
-/* Click feedback */
+/* Cursor click pulse */
 
-.hero-click-effect {
-  position: absolute;
-  z-index: 5;
-  width: 22px;
-  height: 22px;
-  border: 1px solid rgba(105, 168, 255, .85);
-  border-radius: 50%;
-  opacity: 0;
-  transform: scale(.2);
+.hero-cursor-click {
+  animation: cursor-click-pulse 420ms ease calc(var(--cursor-delay) + 360ms) both;
 }
 
-.click-portrait {
-  top: 40%;
-  right: 25%;
-  animation: click-pulse 500ms ease 2.6s 2;
-}
-
-.click-name {
-  top: 37%;
-  left: 27%;
-  animation: click-pulse 500ms ease 4.9s 2;
-}
-
-.click-actions {
-  top: 72%;
-  left: 27%;
-  animation: click-pulse 500ms ease 10.8s 2;
-}
-
-@keyframes click-pulse {
+@keyframes cursor-click-pulse {
   0% {
     opacity: 0;
     transform: scale(.2);
   }
 
   35% {
-    opacity: .8;
+    opacity: .85;
     transform: scale(1);
   }
 
@@ -670,23 +874,32 @@ html[data-theme-switching] *::after {
   position: absolute;
   z-index: 1;
   opacity: 0;
-  background: rgba(105, 168, 255, .5);
+  background: rgba(105, 168, 255, .58);
+  pointer-events: none;
 }
 
 .guide-vertical {
-  top: 8%;
+  top: 7%;
   bottom: 12%;
   left: 50%;
   width: 1px;
-  animation: guide-flash 700ms ease 10.9s 2;
+  animation: guide-flash 600ms ease 10.1s 2;
 }
 
 .guide-horizontal {
   top: 50%;
-  left: 8%;
   right: 8%;
+  left: 8%;
   height: 1px;
-  animation: guide-flash 700ms ease 11.3s 2;
+  animation: guide-flash 600ms ease 10.45s 2;
+}
+
+.guide-portrait {
+  top: 20%;
+  bottom: 20%;
+  left: 72%;
+  width: 1px;
+  animation: guide-flash 550ms ease 2.1s 2;
 }
 
 @keyframes guide-flash {
@@ -716,7 +929,7 @@ html[data-theme-switching] *::after {
   opacity: 0;
   transform: translate(-50%, 18px) scale(.96);
   animation:
-    code-window-enter 700ms ease 1.2s forwards,
+    code-window-enter 650ms ease 650ms forwards,
     code-window-exit 700ms ease 12.5s forwards;
 }
 
@@ -789,30 +1002,29 @@ html[data-theme-switching] *::after {
   font-style: normal;
 }
 
-.hero-code-line strong {
-  color: #c3e88d;
-  font-weight: 500;
-}
-
 .code-number {
   color: #596579;
   user-select: none;
 }
 
 .code-line-one {
-  animation: code-line-show 1.4s steps(30, end) 1.7s forwards;
+  animation: code-line-show 1ms linear 1.2s forwards;
 }
 
 .code-line-two {
-  animation: code-line-show 1.8s steps(38, end) 3.7s forwards;
+  animation: code-line-show 1ms linear 2.9s forwards;
 }
 
 .code-line-three {
-  animation: code-line-show 1.8s steps(36, end) 6s forwards;
+  animation: code-line-show 1ms linear 4.8s forwards;
 }
 
 .code-line-four {
-  animation: code-line-show 1.8s steps(32, end) 8.3s forwards;
+  animation: code-line-show 1ms linear 6.7s forwards;
+}
+
+.code-line-five {
+  animation: code-line-show 1ms linear 8.6s forwards;
 }
 
 @keyframes code-line-show {
@@ -822,35 +1034,29 @@ html[data-theme-switching] *::after {
 }
 
 .code-line-one span:last-child {
-  animation: code-type-one 1.4s steps(30, end) 1.7s forwards;
+  animation: code-type 1.15s steps(30, end) 1.2s forwards;
 }
 
 .code-line-two span:last-child {
-  animation: code-type-two 1.8s steps(38, end) 3.7s forwards;
+  animation: code-type 1.35s steps(38, end) 2.9s forwards;
 }
 
 .code-line-three span:last-child {
-  animation: code-type-three 1.8s steps(36, end) 6s forwards;
+  animation: code-type 1.35s steps(36, end) 4.8s forwards;
 }
 
 .code-line-four span:last-child {
-  animation: code-type-four 1.8s steps(32, end) 8.3s forwards;
+  animation: code-type 1.35s steps(36, end) 6.7s forwards;
 }
 
-@keyframes code-type-one {
-  to { width: 220px; }
+.code-line-five span:last-child {
+  animation: code-type 1.25s steps(32, end) 8.6s forwards;
 }
 
-@keyframes code-type-two {
-  to { width: 240px; }
-}
-
-@keyframes code-type-three {
-  to { width: 250px; }
-}
-
-@keyframes code-type-four {
-  to { width: 230px; }
+@keyframes code-type {
+  to {
+    width: 260px;
+  }
 }
 
 /* Responsive adjustments */
@@ -862,11 +1068,25 @@ html[data-theme-switching] *::after {
   }
 
   .hero-cursor span {
+    padding: 2px 5px;
     font-size: 8px;
+  }
+
+  .hero-cursor svg {
+    width: 17px;
+    height: 17px;
   }
 
   .guide-vertical {
     left: 50%;
+  }
+
+  .guide-portrait {
+    display: none;
+  }
+
+  .hero-selection-size {
+    font-size: 8px;
   }
 }
 
@@ -886,14 +1106,18 @@ html[data-theme-switching] *::after {
   .animate-fade-up,
   .animate-marquee,
   .hero-section.is-constructing .hero-build-item,
+  .hero-section.is-constructing .hero-name-typography,
+  .hero-section.is-constructing .hero-button::before,
+  .hero-section.is-constructing .hero-button-label,
+  .hero-section.is-constructing .hero-button-icon,
   .hero-construction-layer,
   .hero-cursor,
+  .hero-cursor-click,
   .hero-selection,
   .hero-code-window,
   .hero-code-line,
   .hero-code-line span:last-child,
-  .hero-alignment-guide,
-  .hero-click-effect {
+  .hero-alignment-guide {
     animation-duration: .01ms !important;
     animation-delay: 0ms !important;
   }
