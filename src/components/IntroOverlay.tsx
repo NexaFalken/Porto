@@ -6,21 +6,25 @@ interface IntroOverlayProps {
   onComplete: () => void;
 }
 
-type Phase =
-  | 'blank'
-  | 'helloIn'
-  | 'helloOut'
-  | 'welcomeIn'
-  | 'welcomeOut'
-  | 'nameIn'
-  | 'moving'
-  | 'fading';
+type Phase = 'blank' | 'hello' | 'welcome' | 'name' | 'moving' | 'fading';
+
+const FADE_IN = 'opacity 1800ms cubic-bezier(0.16, 1, 0.3, 1)';
+const FADE_OUT = 'opacity 1800ms cubic-bezier(0.7, 0, 0.84, 0)';
 
 export default function IntroOverlay({
   targetRef,
   onComplete,
 }: IntroOverlayProps) {
   const [phase, setPhase] = useState<Phase>('blank');
+  const [namePosition, setNamePosition] = useState<{
+    left: number;
+    top: number;
+    fontSize: string;
+    fontFamily: string;
+    fontWeight: string;
+    letterSpacing: string;
+    lineHeight: string;
+  } | null>(null);
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
@@ -33,27 +37,38 @@ export default function IntroOverlay({
       timers.push(window.setTimeout(callback, delay));
     };
 
-    schedule(() => setPhase('helloIn'), 500);
-    schedule(() => setPhase('helloOut'), 1850);
-
-    schedule(() => setPhase('welcomeIn'), 2350);
-    schedule(() => setPhase('welcomeOut'), 3900);
-
-    schedule(() => setPhase('nameIn'), 4400);
+    schedule(() => setPhase('hello'), 500);
+    schedule(() => setPhase('welcome'), 4200);
+    schedule(() => setPhase('name'), 7900);
 
     schedule(() => {
-      if (!targetRef.current) {
+      const target = targetRef.current;
+
+      if (!target) {
         onComplete();
         return;
       }
 
+      const rect = target.getBoundingClientRect();
+      const computed = window.getComputedStyle(target);
+
+      setNamePosition({
+        left: rect.left,
+        top: rect.top,
+        fontSize: computed.fontSize,
+        fontFamily: computed.fontFamily,
+        fontWeight: computed.fontWeight,
+        letterSpacing: computed.letterSpacing,
+        lineHeight: computed.lineHeight,
+      });
+
       frame = window.requestAnimationFrame(() => {
         setPhase('moving');
       });
-    }, 5650);
+    }, 11100);
 
-    schedule(() => setPhase('fading'), 7300);
-    schedule(onComplete, 8150);
+    schedule(() => setPhase('fading'), 12800);
+    schedule(onComplete, 14700);
 
     return () => {
       timers.forEach(window.clearTimeout);
@@ -63,27 +78,17 @@ export default function IntroOverlay({
   }, [targetRef, onComplete]);
 
   const message =
-    phase === 'helloIn' || phase === 'helloOut'
+    phase === 'hello'
       ? 'Hello there.'
-      : phase === 'welcomeIn' || phase === 'welcomeOut'
+      : phase === 'welcome'
         ? 'Welcome to my world.'
         : '';
 
-  const isMessage =
-    phase === 'helloIn' ||
-    phase === 'helloOut' ||
-    phase === 'welcomeIn' ||
-    phase === 'welcomeOut';
-
-  const isName =
-    phase === 'nameIn' ||
-    phase === 'moving' ||
-    phase === 'fading';
-
+  const isMessage = phase === 'hello' || phase === 'welcome';
+  const isName = phase === 'name' || phase === 'moving' || phase === 'fading';
   const isMoving = phase === 'moving' || phase === 'fading';
 
-  const isTextLeaving =
-    phase === 'helloOut' || phase === 'welcomeOut';
+  const textVisible = isMessage || phase === 'name';
 
   const nameStyle: CSSProperties = {
     position: 'fixed',
@@ -91,55 +96,31 @@ export default function IntroOverlay({
     left: '50%',
     top: '50%',
     transform: 'translate(-50%, -50%)',
-    display: 'inline-flex',
-    alignItems: 'center',
     color: '#fff',
     whiteSpace: 'nowrap',
     fontSize: 'clamp(1.8rem, 5vw, 3.5rem)',
     fontWeight: 500,
     letterSpacing: '-0.04em',
     lineHeight: 1.15,
-    opacity: phase === 'fading' ? 0 : 1,
-    textShadow: '0 0 18px rgba(255,255,255,0.13)',
-    transition:
-      'left 1600ms cubic-bezier(0.22, 1, 0.36, 1), top 1600ms cubic-bezier(0.22, 1, 0.36, 1), transform 1600ms cubic-bezier(0.22, 1, 0.36, 1), font-size 1600ms cubic-bezier(0.22, 1, 0.36, 1), opacity 750ms ease',
+    opacity: phase === 'name' || isMoving ? 1 : 0,
+    textShadow: '0 0 22px rgba(255,255,255,0.12)',
+    transition: isMoving
+      ? 'left 1600ms cubic-bezier(0.22, 1, 0.36, 1), top 1600ms cubic-bezier(0.22, 1, 0.36, 1), transform 1600ms cubic-bezier(0.22, 1, 0.36, 1), font-size 1600ms cubic-bezier(0.22, 1, 0.36, 1), opacity 1000ms ease'
+      : 'opacity 1600ms cubic-bezier(0.16, 1, 0.3, 1)',
   };
 
-  if (isMoving && targetRef.current) {
-    const rect = targetRef.current.getBoundingClientRect();
-    const computed = window.getComputedStyle(targetRef.current);
-
+  if (isMoving && namePosition) {
     Object.assign(nameStyle, {
-      left: `${rect.left}px`,
-      top: `${rect.top}px`,
+      left: `${namePosition.left}px`,
+      top: `${namePosition.top}px`,
       transform: 'none',
-      fontSize: computed.fontSize,
-      fontFamily: computed.fontFamily,
-      fontWeight: computed.fontWeight,
-      letterSpacing: computed.letterSpacing,
-      lineHeight: computed.lineHeight,
+      fontSize: namePosition.fontSize,
+      fontFamily: namePosition.fontFamily,
+      fontWeight: namePosition.fontWeight,
+      letterSpacing: namePosition.letterSpacing,
+      lineHeight: namePosition.lineHeight,
     });
   }
-
-  const messageStyle: CSSProperties = {
-    position: 'fixed',
-    zIndex: 2,
-    left: '50%',
-    top: '50%',
-    transform: isTextLeaving
-      ? 'translate(-50%, calc(-50% - 5px))'
-      : 'translate(-50%, -50%)',
-    display: 'inline-flex',
-    alignItems: 'center',
-    color: '#fff',
-    whiteSpace: 'nowrap',
-    fontSize: 'clamp(1.8rem, 5vw, 3.5rem)',
-    fontWeight: 500,
-    letterSpacing: '-0.04em',
-    opacity: isTextLeaving ? 0 : 1,
-    textShadow: '0 0 18px rgba(255,255,255,0.13)',
-    transition: 'opacity 750ms ease, transform 750ms ease',
-  };
 
   return (
     <div
@@ -150,48 +131,61 @@ export default function IntroOverlay({
         overflow: 'hidden',
         background: '#000',
         opacity: phase === 'fading' ? 0 : 1,
-        transition: 'opacity 850ms ease',
+        transition: 'opacity 1900ms cubic-bezier(0.16, 1, 0.3, 1)',
       }}
       aria-live="polite"
       aria-label="Welcome introduction"
     >
-      {/* Subtle ambient light */}
       <div
-        aria-hidden="true"
         style={{
           position: 'absolute',
           left: '50%',
           top: '50%',
           width: 'min(70vw, 650px)',
-          height: '180px',
+          height: 180,
           transform: 'translate(-50%, -50%)',
           background:
-            'radial-gradient(ellipse, rgba(255,255,255,0.045) 0%, rgba(255,255,255,0.012) 42%, transparent 75%)',
-          opacity: isMessage || isName ? 1 : 0,
-          transition: 'opacity 1000ms ease',
+            'radial-gradient(ellipse, rgba(255,255,255,0.045), rgba(255,255,255,0.012) 45%, transparent 75%)',
+          opacity: textVisible ? 1 : 0,
+          transition: 'opacity 1800ms ease',
           pointerEvents: 'none',
         }}
       />
 
-      {/* Intro messages */}
       {isMessage && (
-        <span style={messageStyle}>
-          <span className="intro-side-light intro-side-light-left" />
+        <span
+          key={message}
+          style={{
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
+            display: 'inline-flex',
+            alignItems: 'center',
+            color: '#fff',
+            whiteSpace: 'nowrap',
+            fontSize: 'clamp(1.8rem, 5vw, 3.5rem)',
+            fontWeight: 500,
+            letterSpacing: '-0.04em',
+            textShadow: '0 0 22px rgba(255,255,255,0.12)',
+            opacity: 1,
+            animation: 'introFadeIn 1800ms cubic-bezier(0.16, 1, 0.3, 1) both',
+          }}
+        >
+          <span className="intro-light intro-light-left" />
           {message}
-          <span className="intro-side-light intro-side-light-right" />
+          <span className="intro-light intro-light-right" />
         </span>
       )}
 
-      {/* Name transition */}
       {isName && (
         <span style={nameStyle}>
-          <span className="intro-side-light intro-side-light-left" />
-          <span>{'Haryo Bimo Wistoro'}</span>
-          <span className="intro-side-light intro-side-light-right" />
+          <span className="intro-light intro-light-left" />
+          Haryo Bimo Wistoro
+          <span className="intro-light intro-light-right" />
         </span>
       )}
 
-      {/* Skip */}
       <button
         type="button"
         onClick={onComplete}
@@ -199,53 +193,44 @@ export default function IntroOverlay({
           position: 'absolute',
           right: 32,
           bottom: 32,
-          padding: '10px 0 10px 10px',
           background: 'none',
           border: 0,
-          color: 'rgba(255,255,255,0.32)',
+          color: 'rgba(255,255,255,0.3)',
           fontSize: 10,
           letterSpacing: '0.18em',
           cursor: 'pointer',
-          transition: 'color 300ms ease',
-        }}
-        onMouseEnter={(event) => {
-          event.currentTarget.style.color = 'rgba(255,255,255,0.8)';
-        }}
-        onMouseLeave={(event) => {
-          event.currentTarget.style.color = 'rgba(255,255,255,0.32)';
         }}
       >
         SKIP INTRO
       </button>
 
       <style>{`
-        .intro-side-light {
+        @keyframes introFadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        .intro-light {
           position: absolute;
           top: 50%;
-          width: 52px;
+          width: 48px;
           height: 1px;
           background: linear-gradient(
             90deg,
             transparent,
-            rgba(255,255,255,0.32),
+            rgba(255,255,255,0.3),
             transparent
           );
           filter: blur(1px);
           pointer-events: none;
         }
 
-        .intro-side-light-left {
-          right: calc(100% + 15px);
+        .intro-light-left {
+          right: calc(100% + 16px);
         }
 
-        .intro-side-light-right {
-          left: calc(100% + 15px);
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .intro-side-light {
-            filter: none;
-          }
+        .intro-light-right {
+          left: calc(100% + 16px);
         }
       `}</style>
     </div>
