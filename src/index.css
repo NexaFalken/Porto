@@ -148,7 +148,7 @@ html[data-theme-switching] *::after {
 }
 
 /* =========================================
-   HERO CONSTRUCTION — DESIGN SESSION
+   HERO CONSTRUCTION — PARALLEL DESIGN SESSION
 ========================================= */
 
 .hero-section.is-constructing {
@@ -212,7 +212,7 @@ html[data-theme-switching] *::after {
   }
 }
 
-/* Portrait is visually dragged into the canvas */
+/* Portrait drag */
 
 @keyframes hero-portrait-drag-in {
   0% {
@@ -240,6 +240,8 @@ html[data-theme-switching] *::after {
   }
 }
 
+/* Typography reveal */
+
 @keyframes hero-name-place {
   0% {
     opacity: 0;
@@ -258,10 +260,10 @@ html[data-theme-switching] *::after {
   }
 }
 
-/* Font preview: several quick typography comparisons, then final font */
+/* Font preview */
 
 .hero-section.is-constructing .hero-name-typography {
-  animation: hero-font-preview 1.55s steps(1, end) 2.35s both;
+  animation: hero-font-preview 1.55s steps(1, end) 1.05s both;
 }
 
 @keyframes hero-font-preview {
@@ -302,6 +304,8 @@ html[data-theme-switching] *::after {
   }
 }
 
+/* Divider */
+
 @keyframes hero-line-draw {
   from {
     opacity: 0;
@@ -315,6 +319,8 @@ html[data-theme-switching] *::after {
     transform-origin: left center;
   }
 }
+
+/* Text */
 
 @keyframes hero-text-place {
   0% {
@@ -334,6 +340,8 @@ html[data-theme-switching] *::after {
   }
 }
 
+/* Metadata */
+
 @keyframes hero-meta-place {
   from {
     opacity: 0;
@@ -346,7 +354,7 @@ html[data-theme-switching] *::after {
   }
 }
 
-/* Buttons are assembled from a shape, fill, radius and text */
+/* Buttons */
 
 .hero-button {
   position: relative;
@@ -398,25 +406,25 @@ html[data-theme-switching] *::after {
 }
 
 .hero-section.is-constructing .hero-button-primary::before {
-  animation: hero-button-fill 780ms cubic-bezier(.2, .8, .2, 1) 6.45s both;
+  animation: hero-button-fill 780ms cubic-bezier(.2, .8, .2, 1) 3.35s both;
 }
 
 .hero-section.is-constructing .hero-button-secondary::before {
-  animation: hero-button-outline 720ms cubic-bezier(.2, .8, .2, 1) 6.85s both;
+  animation: hero-button-outline 720ms cubic-bezier(.2, .8, .2, 1) 3.55s both;
 }
 
 .hero-section.is-constructing .hero-button-label {
   opacity: 0;
-  animation: hero-button-text 420ms ease 7.15s both;
+  animation: hero-button-text 420ms ease 4.05s both;
 }
 
 .hero-section.is-constructing .hero-button-secondary .hero-button-label {
-  animation-delay: 7.55s;
+  animation-delay: 4.25s;
 }
 
 .hero-section.is-constructing .hero-button-icon {
   opacity: 0;
-  animation: hero-button-text 350ms ease 7.35s both;
+  animation: hero-button-text 350ms ease 4.15s both;
 }
 
 @keyframes hero-button-fill {
@@ -478,7 +486,7 @@ html[data-theme-switching] *::after {
   inset: 0;
   overflow: hidden;
   pointer-events: none;
-  animation: construction-layer-exit 700ms ease 13.3s forwards;
+  animation: construction-layer-exit 700ms ease 6.65s forwards;
 }
 
 @keyframes construction-layer-exit {
@@ -677,7 +685,7 @@ html[data-theme-switching] *::after {
   }
 }
 
-/* Cursor follows the portrait while it is dragged into place */
+/* Drag */
 
 @keyframes cursor-drag-work {
   0% {
@@ -713,7 +721,7 @@ html[data-theme-switching] *::after {
   }
 }
 
-/* Resize handle gesture */
+/* Resize */
 
 @keyframes cursor-resize-work {
   0% {
@@ -745,7 +753,7 @@ html[data-theme-switching] *::after {
   }
 }
 
-/* Typography cursor selects, compares and confirms */
+/* Typography */
 
 @keyframes cursor-type-work {
   0% {
@@ -781,7 +789,7 @@ html[data-theme-switching] *::after {
   }
 }
 
-/* Divider is drawn from left to right */
+/* Divider drawing */
 
 @keyframes cursor-draw-work {
   0% {
@@ -809,7 +817,7 @@ html[data-theme-switching] *::after {
   }
 }
 
-/* Button construction cursor: shape, fill, radius, label */
+/* Button construction */
 
 @keyframes cursor-build-work {
   0% {
@@ -845,7 +853,7 @@ html[data-theme-switching] *::after {
   }
 }
 
-/* Cursor click pulse */
+/* Click pulse */
 
 .hero-cursor-click {
   animation: cursor-click-pulse 420ms ease calc(var(--cursor-delay) + 360ms) both;
@@ -883,7 +891,7 @@ html[data-theme-switching] *::after {
   bottom: 12%;
   left: 50%;
   width: 1px;
-  animation: guide-flash 600ms ease 10.1s 2;
+  animation: guide-flash 600ms ease 5.15s 2;
 }
 
 .guide-horizontal {
@@ -891,7 +899,7 @@ html[data-theme-switching] *::after {
   right: 8%;
   left: 8%;
   height: 1px;
-  animation: guide-flash 600ms ease 10.45s 2;
+  animation: guide-flash 600ms ease 5.35s 2;
 }
 
 .guide-portrait {
@@ -899,7 +907,7 @@ html[data-theme-switching] *::after {
   bottom: 20%;
   left: 72%;
   width: 1px;
-  animation: guide-flash 550ms ease 2.1s 2;
+  animation: guide-flash 550ms ease 1.7s 2;
 }
 
 @keyframes guide-flash {
@@ -929,8 +937,8 @@ html[data-theme-switching] *::after {
   opacity: 0;
   transform: translate(-50%, 18px) scale(.96);
   animation:
-    code-window-enter 650ms ease 650ms forwards,
-    code-window-exit 700ms ease 12.5s forwards;
+    code-window-enter 650ms ease 250ms forwards,
+    code-window-exit 700ms ease 6.25s forwards;
 }
 
 @keyframes code-window-enter {
@@ -1008,23 +1016,23 @@ html[data-theme-switching] *::after {
 }
 
 .code-line-one {
-  animation: code-line-show 1ms linear 1.2s forwards;
+  animation: code-line-show 1ms linear 450ms forwards;
 }
 
 .code-line-two {
-  animation: code-line-show 1ms linear 2.9s forwards;
+  animation: code-line-show 1ms linear 1.45s forwards;
 }
 
 .code-line-three {
-  animation: code-line-show 1ms linear 4.8s forwards;
+  animation: code-line-show 1ms linear 2.45s forwards;
 }
 
 .code-line-four {
-  animation: code-line-show 1ms linear 6.7s forwards;
+  animation: code-line-show 1ms linear 3.45s forwards;
 }
 
 .code-line-five {
-  animation: code-line-show 1ms linear 8.6s forwards;
+  animation: code-line-show 1ms linear 4.45s forwards;
 }
 
 @keyframes code-line-show {
@@ -1034,23 +1042,23 @@ html[data-theme-switching] *::after {
 }
 
 .code-line-one span:last-child {
-  animation: code-type 1.15s steps(30, end) 1.2s forwards;
+  animation: code-type 1.15s steps(30, end) 450ms forwards;
 }
 
 .code-line-two span:last-child {
-  animation: code-type 1.35s steps(38, end) 2.9s forwards;
+  animation: code-type 1.35s steps(38, end) 1.45s forwards;
 }
 
 .code-line-three span:last-child {
-  animation: code-type 1.35s steps(36, end) 4.8s forwards;
+  animation: code-type 1.35s steps(36, end) 2.45s forwards;
 }
 
 .code-line-four span:last-child {
-  animation: code-type 1.35s steps(36, end) 6.7s forwards;
+  animation: code-type 1.35s steps(36, end) 3.45s forwards;
 }
 
 .code-line-five span:last-child {
-  animation: code-type 1.25s steps(32, end) 8.6s forwards;
+  animation: code-type 1.25s steps(32, end) 4.45s forwards;
 }
 
 @keyframes code-type {
@@ -1059,7 +1067,7 @@ html[data-theme-switching] *::after {
   }
 }
 
-/* Responsive adjustments */
+/* Responsive */
 
 @media (max-width: 767px) {
   .hero-code-window {

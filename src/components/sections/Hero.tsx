@@ -20,31 +20,31 @@ interface HeroProps {
 }
 
 const frameTargets = [
-  { id: 'status', label: 'STATUS', delay: 250 },
-  { id: 'portrait', label: 'IMAGE', delay: 650 },
-  { id: 'name', label: 'TYPE', delay: 1950 },
-  { id: 'divider', label: 'ALIGN', delay: 3300 },
-  { id: 'role', label: 'TEXT', delay: 3850 },
-  { id: 'statement', label: 'COPY', delay: 4750 },
-  { id: 'actions', label: 'COMPONENT', delay: 6350 },
-  { id: 'metadata', label: 'DETAIL', delay: 8500 },
-  { id: 'scroll', label: 'NAVIGATION', delay: 9600 },
+  { id: 'status', label: 'STATUS', delay: 150 },
+  { id: 'portrait', label: 'IMAGE', delay: 350 },
+  { id: 'name', label: 'TYPE', delay: 850 },
+  { id: 'divider', label: 'ALIGN', delay: 1650 },
+  { id: 'role', label: 'TEXT', delay: 2000 },
+  { id: 'statement', label: 'COPY', delay: 2400 },
+  { id: 'actions', label: 'COMPONENT', delay: 3150 },
+  { id: 'metadata', label: 'DETAIL', delay: 4650 },
+  { id: 'scroll', label: 'NAVIGATION', delay: 5200 },
 ] as const;
 
 const cursorTargets = [
-  { id: 'status', label: 'Status', color: '#69a8ff', x: 0.18, y: 0.5, delay: 250, kind: 'quick' },
-  { id: 'portrait', label: 'Visual', color: '#f58bc5', x: 0.12, y: 0.2, delay: 650, kind: 'drag' },
-  { id: 'portrait', label: 'Resize', color: '#ffb86b', x: 0.96, y: 0.96, delay: 1150, kind: 'resize' },
-  { id: 'portrait', label: 'Crop', color: '#65d8c0', x: 0.82, y: 0.12, delay: 1850, kind: 'quick' },
-  { id: 'name', label: 'Typography', color: '#b99aff', x: 0.48, y: 0.55, delay: 2050, kind: 'type' },
-  { id: 'name', label: 'Font', color: '#ff8f9c', x: 0.82, y: 0.25, delay: 2650, kind: 'quick' },
-  { id: 'divider', label: 'Align', color: '#65d8c0', x: 0.05, y: 0.5, delay: 3300, kind: 'draw' },
-  { id: 'role', label: 'Content', color: '#69a8ff', x: 0.18, y: 0.5, delay: 3900, kind: 'type' },
-  { id: 'statement', label: 'Copy', color: '#ffb86b', x: 0.12, y: 0.35, delay: 4700, kind: 'type' },
-  { id: 'actions', label: 'Button', color: '#f58bc5', x: 0.16, y: 0.5, delay: 6300, kind: 'build' },
-  { id: 'actions', label: 'Style', color: '#b99aff', x: 0.78, y: 0.5, delay: 6900, kind: 'build' },
-  { id: 'metadata', label: 'Details', color: '#65d8c0', x: 0.18, y: 0.2, delay: 8500, kind: 'quick' },
-  { id: 'scroll', label: 'Finish', color: '#ffb86b', x: 0.5, y: 0.5, delay: 9650, kind: 'quick' },
+  { id: 'status', label: 'Status', color: '#69a8ff', x: 0.18, y: 0.5, delay: 150, kind: 'quick' },
+  { id: 'portrait', label: 'Visual', color: '#f58bc5', x: 0.12, y: 0.2, delay: 350, kind: 'drag' },
+  { id: 'portrait', label: 'Resize', color: '#ffb86b', x: 0.96, y: 0.96, delay: 650, kind: 'resize' },
+  { id: 'portrait', label: 'Crop', color: '#65d8c0', x: 0.82, y: 0.12, delay: 950, kind: 'quick' },
+  { id: 'name', label: 'Typography', color: '#b99aff', x: 0.48, y: 0.55, delay: 850, kind: 'type' },
+  { id: 'name', label: 'Font', color: '#ff8f9c', x: 0.82, y: 0.25, delay: 1250, kind: 'quick' },
+  { id: 'divider', label: 'Align', color: '#65d8c0', x: 0.05, y: 0.5, delay: 1700, kind: 'draw' },
+  { id: 'role', label: 'Content', color: '#69a8ff', x: 0.18, y: 0.5, delay: 2050, kind: 'type' },
+  { id: 'statement', label: 'Copy', color: '#ffb86b', x: 0.12, y: 0.35, delay: 2450, kind: 'type' },
+  { id: 'actions', label: 'Button', color: '#f58bc5', x: 0.16, y: 0.5, delay: 3250, kind: 'build' },
+  { id: 'actions', label: 'Style', color: '#b99aff', x: 0.78, y: 0.5, delay: 3550, kind: 'build' },
+  { id: 'metadata', label: 'Details', color: '#65d8c0', x: 0.18, y: 0.2, delay: 4700, kind: 'quick' },
+  { id: 'scroll', label: 'Finish', color: '#ffb86b', x: 0.5, y: 0.5, delay: 5200, kind: 'quick' },
 ] as const;
 
 function LocalClock() {
@@ -174,7 +174,7 @@ function HeroConstruction({
         }px`;
       });
 
-      if (performance.now() - startTime < 14_500) {
+      if (performance.now() - startTime < 7200) {
         animationFrame = requestAnimationFrame(updatePositions);
       }
     };
@@ -285,7 +285,7 @@ export default function Hero({
     >
       <div className="relative mx-auto grid w-full max-w-7xl items-center gap-16 lg:grid-cols-12 lg:gap-10">
         <div className="lg:col-span-7">
-          <BuildItem delay={250} target="status" className="hero-build-status">
+          <BuildItem delay={150} target="status" className="hero-build-status">
             <p className="inline-flex items-center gap-3 rounded-full border border-line bg-surface/60 px-4 py-2 text-xs font-medium uppercase tracking-[0.18em] text-muted">
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60" />
@@ -295,29 +295,29 @@ export default function Hero({
             </p>
           </BuildItem>
 
-          <BuildItem delay={1850} target="name" className="hero-build-name">
+          <BuildItem delay={850} target="name" className="hero-build-name">
             <h1 className="hero-name-typography mt-8 whitespace-nowrap font-display text-[clamp(2.5rem,8vw,5rem)] leading-tight tracking-[-0.04em] lg:text-[4.4rem]">
               {profile.name}
             </h1>
           </BuildItem>
 
-          <BuildItem delay={3200} target="divider" className="hero-build-divider">
+          <BuildItem delay={1650} target="divider" className="hero-build-divider">
             <div className="mt-1.5 h-px w-full max-w-md bg-line" />
           </BuildItem>
 
-          <BuildItem delay={3750} target="role" className="hero-build-role">
+          <BuildItem delay={2000} target="role" className="hero-build-role">
             <p className="mt-2.5 font-display text-xl leading-[1.2] text-fg md:text-2xl">
               {profile.role}
             </p>
           </BuildItem>
 
-          <BuildItem delay={4650} target="statement" className="hero-build-statement">
+          <BuildItem delay={2400} target="statement" className="hero-build-statement">
             <p className="mt-6 max-w-xl text-base leading-relaxed text-muted md:text-lg">
               {profile.statement}
             </p>
           </BuildItem>
 
-          <BuildItem delay={6200} target="actions" className="hero-build-actions">
+          <BuildItem delay={3150} target="actions" className="hero-build-actions">
             <div className="mt-10 flex flex-wrap items-center gap-4">
               <a
                 href="#portfolio"
@@ -336,7 +336,7 @@ export default function Hero({
             </div>
           </BuildItem>
 
-          <BuildItem delay={8400} target="metadata" className="hero-build-meta">
+          <BuildItem delay={4650} target="metadata" className="hero-build-meta">
             <dl className="mt-14 flex gap-10 border-t border-line pt-6 text-sm">
               <div>
                 <dt className="text-muted">Local time</dt>
@@ -355,7 +355,7 @@ export default function Hero({
         </div>
 
         <div className="relative lg:col-span-5">
-          <BuildItem delay={550} target="portrait" className="hero-build-portrait">
+          <BuildItem delay={350} target="portrait" className="hero-build-portrait">
             <div className="relative mx-auto aspect-[4/5] w-full max-w-md">
               <div
                 className="absolute -inset-3 rounded-[2rem] border border-line"
@@ -378,7 +378,7 @@ export default function Hero({
         href="#about"
         data-hero-target="scroll"
         aria-label="Scroll to about"
-        className="absolute bottom-8 left-1/2 hidden -translate-x-1/2 text-muted transition-colors hover:text-accent hover:text-accent md:block"
+        className="absolute bottom-8 left-1/2 hidden -translate-x-1/2 text-muted transition-colors hover:text-accent md:block"
       >
         <ArrowDown className="h-5 w-5 animate-bounce" />
       </a>
