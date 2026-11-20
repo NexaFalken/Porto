@@ -1,13 +1,17 @@
 
 import {
+  ArrowDown,
   ArrowUpRight,
-  Instagram,
-  Linkedin,
-  Github,
-  MessageCircle,
-  Settings,
+  MousePointer2,
 } from 'lucide-react';
-
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+  type RefObject,
+} from 'react';
 import { profile } from '@/data/portfolio';
 
 interface HeroProps {
@@ -15,210 +19,371 @@ interface HeroProps {
   constructionComplete: boolean;
 }
 
-const socialLinks = [
-  {
-    label: 'Instagram',
-    href: 'https://www.instagram.com/ncho_owen/',
-    Icon: Instagram,
-  },
-  {
-    label: 'Discord',
-    href: 'https://discord.com/app',
-    Icon: MessageCircle,
-  },
-  {
-    label: 'LinkedIn',
-    href: 'https://www.linkedin.com/in/haryo-bimo-wistoro-194782344/',
-    Icon: Linkedin,
-  },
-  {
-    label: 'GitHub',
-    href: 'https://github.com/NexaFalken',
-    Icon: Github,
-  },
-];
+const frameTargets = [
+  { id: 'status', label: 'STATUS', delay: 150 },
+  { id: 'portrait', label: 'IMAGE', delay: 350 },
+  { id: 'name', label: 'TYPE', delay: 850 },
+  { id: 'divider', label: 'ALIGN', delay: 1650 },
+  { id: 'role', label: 'TEXT', delay: 2000 },
+  { id: 'statement', label: 'COPY', delay: 2400 },
+  { id: 'actions', label: 'COMPONENT', delay: 3150 },
+  { id: 'metadata', label: 'DETAIL', delay: 4650 },
+  { id: 'scroll', label: 'NAVIGATION', delay: 5200 },
+] as const;
+
+const cursorTargets = [
+  { id: 'status', label: 'Status', color: '#69a8ff', x: 0.18, y: 0.5, delay: 150, kind: 'quick' },
+  { id: 'portrait', label: 'Visual', color: '#f58bc5', x: 0.12, y: 0.2, delay: 350, kind: 'drag' },
+  { id: 'portrait', label: 'Resize', color: '#ffb86b', x: 0.96, y: 0.96, delay: 650, kind: 'resize' },
+  { id: 'portrait', label: 'Crop', color: '#65d8c0', x: 0.82, y: 0.12, delay: 950, kind: 'quick' },
+  { id: 'name', label: 'Typography', color: '#b99aff', x: 0.48, y: 0.55, delay: 850, kind: 'type' },
+  { id: 'name', label: 'Font', color: '#ff8f9c', x: 0.82, y: 0.25, delay: 1250, kind: 'quick' },
+  { id: 'divider', label: 'Align', color: '#65d8c0', x: 0.05, y: 0.5, delay: 1700, kind: 'draw' },
+  { id: 'role', label: 'Content', color: '#69a8ff', x: 0.18, y: 0.5, delay: 2050, kind: 'type' },
+  { id: 'statement', label: 'Copy', color: '#ffb86b', x: 0.12, y: 0.35, delay: 2450, kind: 'type' },
+  { id: 'actions', label: 'Button', color: '#f58bc5', x: 0.16, y: 0.5, delay: 3250, kind: 'build' },
+  { id: 'actions', label: 'Style', color: '#b99aff', x: 0.78, y: 0.5, delay: 3550, kind: 'build' },
+  { id: 'metadata', label: 'Details', color: '#65d8c0', x: 0.18, y: 0.2, delay: 4700, kind: 'quick' },
+  { id: 'scroll', label: 'Finish', color: '#ffb86b', x: 0.5, y: 0.5, delay: 5200, kind: 'quick' },
+] as const;
+
+function LocalClock() {
+  const [now, setNow] = useState(() => new Date());
+
+  useEffect(() => {
+    const id = window.setInterval(() => setNow(new Date()), 30_000);
+    return () => window.clearInterval(id);
+  }, []);
+
+  return (
+    <span className="tabular-nums">
+      {now.toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+      })}
+    </span>
+  );
+}
+
+function BuildItem({
+  children,
+  className = '',
+  delay,
+  target,
+}: {
+  children: ReactNode;
+  className?: string;
+  delay: number;
+  target: string;
+}) {
+  return (
+    <div
+      data-hero-target={target}
+      className={`hero-build-item ${className}`}
+      style={{ '--build-delay': `${delay}ms` } as CSSProperties}
+    >
+      {children}
+    </div>
+  );
+}
+
+function SelectionFrame({
+  label,
+  setFrameRef,
+  delay,
+}: {
+  label: string;
+  setFrameRef: (node: HTMLDivElement | null) => void;
+  delay: number;
+}) {
+  return (
+    <div
+      ref={setFrameRef}
+      className="hero-selection"
+      style={{ '--selection-delay': `${delay}ms` } as CSSProperties}
+      aria-hidden="true"
+    >
+      <i />
+      <i />
+      <i />
+      <i />
+      <span className="hero-selection-size">{label}</span>
+    </div>
+  );
+}
+
+function HeroConstruction({
+  sectionRef,
+}: {
+  sectionRef: RefObject<HTMLElement | null>;
+}) {
+  const frameRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const cursorRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    let animationFrame = 0;
+    const startTime = performance.now();
+
+    const updatePositions = () => {
+      const sectionRect = section.getBoundingClientRect();
+
+      frameTargets.forEach(({ id }) => {
+        const target = section.querySelector<HTMLElement>(
+          `[data-hero-target="${id}"]`,
+        );
+        const frame = frameRefs.current[id];
+
+        if (!target || !frame) return;
+
+        const rect = target.getBoundingClientRect();
+        const visible = rect.width > 1 && rect.height > 1;
+
+        frame.style.opacity = visible ? '' : '0';
+
+        if (!visible) return;
+
+        frame.style.left = `${rect.left - sectionRect.left}px`;
+        frame.style.top = `${rect.top - sectionRect.top}px`;
+        frame.style.width = `${rect.width}px`;
+        frame.style.height = `${rect.height}px`;
+      });
+
+      cursorTargets.forEach((cursorTarget, index) => {
+        const target = section.querySelector<HTMLElement>(
+          `[data-hero-target="${cursorTarget.id}"]`,
+        );
+        const cursor = cursorRefs.current[`cursor-${index}`];
+
+        if (!target || !cursor) return;
+
+        const rect = target.getBoundingClientRect();
+        const visible = rect.width > 1 && rect.height > 1;
+
+        cursor.style.visibility = visible ? 'visible' : 'hidden';
+
+        if (!visible) return;
+
+        cursor.style.left = `${
+          rect.left - sectionRect.left + rect.width * cursorTarget.x
+        }px`;
+        cursor.style.top = `${
+          rect.top - sectionRect.top + rect.height * cursorTarget.y
+        }px`;
+      });
+
+      if (performance.now() - startTime < 7200) {
+        animationFrame = requestAnimationFrame(updatePositions);
+      }
+    };
+
+    animationFrame = requestAnimationFrame(updatePositions);
+
+    return () => cancelAnimationFrame(animationFrame);
+  }, [sectionRef]);
+
+  return (
+    <div className="hero-construction-layer" aria-hidden="true">
+      <div className="hero-alignment-guide guide-vertical" />
+      <div className="hero-alignment-guide guide-horizontal" />
+      <div className="hero-alignment-guide guide-portrait" />
+
+      {frameTargets.map((target) => (
+        <SelectionFrame
+          key={target.id}
+          label={target.label}
+          delay={target.delay}
+          setFrameRef={(node) => {
+            frameRefs.current[target.id] = node;
+          }}
+        />
+      ))}
+
+      <div className="hero-cursor-team">
+        {cursorTargets.map((target, index) => (
+          <div
+            key={`${target.id}-${target.label}`}
+            ref={(node) => {
+              cursorRefs.current[`cursor-${index}`] = node;
+            }}
+            className={`hero-cursor cursor-${target.kind}`}
+            style={
+              {
+                '--cursor-color': target.color,
+                '--cursor-delay': `${target.delay}ms`,
+                '--cursor-index': index,
+              } as CSSProperties
+            }
+          >
+            <MousePointer2 />
+            <span>{target.label}</span>
+            <i className="hero-cursor-click" />
+          </div>
+        ))}
+      </div>
+
+      <div className="hero-code-window">
+        <div className="hero-code-topbar">
+          <div className="flex gap-1.5">
+            <i />
+            <i />
+            <i />
+          </div>
+          <span>hero-layout.tsx</span>
+          <span className="hero-code-live">LIVE</span>
+        </div>
+
+        <div className="hero-code-body">
+          <div className="hero-code-line code-line-one">
+            <span className="code-number">01</span>
+            <span><b>const</b> hero = <em>createCanvas</em>();</span>
+          </div>
+          <div className="hero-code-line code-line-two">
+            <span className="code-number">02</span>
+            <span>hero.<em>place</em>(<b>'portrait'</b>);</span>
+          </div>
+          <div className="hero-code-line code-line-three">
+            <span className="code-number">03</span>
+            <span>hero.<em>compose</em>(<b>'typography'</b>);</span>
+          </div>
+          <div className="hero-code-line code-line-four">
+            <span className="code-number">04</span>
+            <span>hero.<em>build</em>(<b>'components'</b>);</span>
+          </div>
+          <div className="hero-code-line code-line-five">
+            <span className="code-number">05</span>
+            <span>hero.<em>align</em>().<em>refine</em>();</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Hero({
   constructionStarted,
   constructionComplete,
 }: HeroProps) {
+  const sectionRef = useRef<HTMLElement | null>(null);
+
+  const constructionActive =
+    constructionStarted && !constructionComplete;
+
   return (
     <section
+      ref={sectionRef}
       id="intro"
-      data-construction-started={constructionStarted}
-      data-construction-complete={constructionComplete}
-      className="hero-redesign"
+      className={`hero-section relative flex min-h-[100svh] scroll-mt-20 items-center overflow-hidden px-6 pb-16 pt-8 md:px-10 md:pt-12 lg:px-16 ${
+        constructionActive
+          ? 'is-constructing'
+          : constructionComplete
+            ? 'is-complete'
+            : ''
+      }`}
     >
-      <div className="hero-redesign-background" />
-
-      <div className="hero-redesign-inner">
-
-        {/* LEFT IDENTITY PANEL */}
-        <div className="hero-left-panel">
-          <svg
-            className="hero-panel-outline hero-left-outline"
-            viewBox="0 0 640 510"
-            preserveAspectRatio="none"
-            aria-hidden="true"
-          >
-            <path
-              d="
-                M 70 4
-                H 390
-                C 418 4 440 22 440 50
-                V 100
-                C 440 125 460 145 485 145
-                H 590
-                C 620 145 636 164 636 194
-                V 430
-                C 636 460 617 480 588 480
-                H 370
-                C 350 480 340 468 340 450
-                V 430
-                C 340 412 327 400 308 400
-                H 70
-                C 32 400 4 374 4 340
-                V 290
-                C 4 255 28 230 65 230
-                H 320
-                C 355 230 365 207 365 180
-                V 170
-                C 365 140 345 125 315 125
-                H 70
-                C 30 125 4 100 4 65
-                V 65
-                C 4 30 32 4 70 4
-                Z
-              "
-            />
-          </svg>
-
-          <div className="hero-left-content">
-
-            <div className="hero-identity">
-              <h1>{profile.name}</h1>
-
-              <div className="hero-signature">
-                <span className="hero-dot" />
-                <span>Sastaria Wistoro de Falkenrath</span>
-              </div>
-            </div>
-
-            <p className="hero-introduction">
-              Digital enthusiast focused on software engineering
-              and creative design.
+      <div className="relative mx-auto grid w-full max-w-7xl items-center gap-16 lg:grid-cols-12 lg:gap-10">
+        <div className="lg:col-span-7">
+          <BuildItem delay={150} target="status" className="hero-build-status">
+            <p className="inline-flex items-center gap-3 rounded-full border border-line bg-surface/60 px-4 py-2 text-xs font-medium uppercase tracking-[0.18em] text-muted">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
+              </span>
+              {profile.status}
             </p>
+          </BuildItem>
 
-            <div className="hero-primary-actions">
+          <BuildItem delay={850} target="name" className="hero-build-name">
+            <h1 className="hero-name-typography mt-8 whitespace-nowrap font-display text-[clamp(2.5rem,8vw,5rem)] leading-tight tracking-[-0.04em] lg:text-[4.4rem]">
+              {profile.name}
+            </h1>
+          </BuildItem>
+
+          <BuildItem delay={1650} target="divider" className="hero-build-divider">
+            <div className="mt-1.5 h-px w-full max-w-md bg-line" />
+          </BuildItem>
+
+          <BuildItem delay={2000} target="role" className="hero-build-role">
+            <p className="mt-2.5 font-display text-xl leading-[1.2] text-fg md:text-2xl">
+              {profile.role}
+            </p>
+          </BuildItem>
+
+          <BuildItem delay={2400} target="statement" className="hero-build-statement">
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-muted md:text-lg">
+              {profile.statement}
+            </p>
+          </BuildItem>
+
+          <BuildItem delay={3150} target="actions" className="hero-build-actions">
+            <div className="mt-10 flex flex-wrap items-center gap-4">
               <a
                 href="#portfolio"
-                className="hero-redesign-button hero-services-button"
+                className="hero-button hero-button-primary group inline-flex items-center gap-2 px-6 py-3 text-sm font-medium"
               >
-                <span>SERVICES</span>
-                <span className="hero-button-symbol">
-                  <Settings size={18} />
-                </span>
+                <span className="hero-button-label">The Journey</span>
+                <ArrowUpRight className="hero-button-icon h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </a>
 
               <a
                 href="#contact"
-                className="hero-redesign-button hero-connect-button"
+                className="hero-button hero-button-secondary inline-flex items-center gap-2 px-6 py-3 text-sm font-medium"
               >
-                <span>CONNECT</span>
-                <span className="hero-button-symbol">
-                  <ArrowUpRight size={20} />
-                </span>
+                <span className="hero-button-label">Get in Touch</span>
               </a>
             </div>
-          </div>
+          </BuildItem>
+
+          <BuildItem delay={4650} target="metadata" className="hero-build-meta">
+            <dl className="mt-14 flex gap-10 border-t border-line pt-6 text-sm">
+              <div>
+                <dt className="text-muted">Local time</dt>
+                <dd className="mt-1 font-display text-2xl text-fg">
+                  <LocalClock />
+                </dd>
+              </div>
+              <div>
+                <dt className="text-muted">Focus</dt>
+                <dd className="mt-1 font-display text-2xl text-fg">
+                  Software &amp; Design
+                </dd>
+              </div>
+            </dl>
+          </BuildItem>
         </div>
 
-        {/* RIGHT PERSONAL PANEL */}
-        <div className="hero-right-panel">
-          <svg
-            className="hero-panel-outline hero-right-outline"
-            viewBox="0 0 390 510"
-            preserveAspectRatio="none"
-            aria-hidden="true"
-          >
-            <path
-              d="
-                M 55 5
-                H 335
-                C 365 5 385 25 385 55
-                V 110
-                C 385 130 365 138 365 155
-                V 285
-                C 365 305 385 315 385 335
-                V 450
-                C 385 480 365 505 330 505
-                H 125
-                C 95 505 70 485 70 455
-                V 375
-                C 70 340 45 315 15 315
-                V 185
-                C 45 185 70 160 70 130
-                V 65
-                C 70 30 35 5 55 5
-                Z
-              "
-            />
-          </svg>
-
-          <div className="hero-right-content">
-
-            <div className="hero-status">
-              <span className="hero-dot" />
-              <span>EXPLORING NEW HORIZON</span>
-            </div>
-
-            <div className="hero-personal-list">
-              {[
-                'Digitalist Enthusiast',
-                'Young Solo Traveler',
-                'Volunteer National',
-                'Creative Designer',
-              ].map((item) => (
-                <div key={item} className="hero-personal-item">
-                  <span className="hero-personal-marker" />
-                  <span>{item}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="hero-socials">
-              {socialLinks.map(({ label, href, Icon }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={label}
-                >
-                  <Icon size={25} strokeWidth={2.7} />
-                </a>
-              ))}
-            </div>
-
-            <div className="hero-small-portrait">
-              <img
-                src={profile.aboutPortraitUrl}
-                alt="Haryo Bimo Wistoro"
+        <div className="relative lg:col-span-5">
+          <BuildItem delay={350} target="portrait" className="hero-build-portrait">
+            <div className="relative mx-auto aspect-[4/5] w-full max-w-md">
+              <div
+                className="absolute -inset-3 rounded-[2rem] border border-line"
+                aria-hidden="true"
               />
+              <div className="relative h-full w-full overflow-hidden rounded-[1.5rem] bg-surface-2">
+                <img
+                  src={profile.portraitUrl}
+                  alt={profile.portraitAlt}
+                  className="h-full w-full object-cover grayscale transition-all duration-[1400ms] ease-out hover:scale-[1.03] hover:grayscale-0"
+                  fetchPriority="high"
+                />
+              </div>
             </div>
-          </div>
+          </BuildItem>
         </div>
-
-        {/* CENTRAL TRAVELER */}
-        <div className="hero-traveler">
-          <img
-            src={profile.portraitUrl}
-            alt={profile.portraitAlt}
-            fetchPriority="high"
-          />
-        </div>
-
       </div>
+
+      <a
+        href="#about"
+        data-hero-target="scroll"
+        aria-label="Scroll to about"
+        className="absolute bottom-8 left-1/2 hidden -translate-x-1/2 text-muted transition-colors hover:text-accent md:block"
+      >
+        <ArrowDown className="h-5 w-5 animate-bounce" />
+      </a>
+
+      {constructionActive && <HeroConstruction sectionRef={sectionRef} />}
     </section>
   );
 }
